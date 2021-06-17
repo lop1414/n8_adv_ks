@@ -41,5 +41,9 @@ class Kernel extends ConsoleKernel
         // 二版
         $schedule->command('second_version:sync_ks_account')->cron('5 * * * *');
         $schedule->command('second_version:reload_ks_account')->cron('* * * * *');
+
+        // 任务
+        $schedule->command('task:ks_video_upload')->cron('* * * * *');
+        $schedule->command('task:ks_sync --type=video')->cron('* * * * *');
     }
 }

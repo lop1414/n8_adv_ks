@@ -4,10 +4,7 @@ namespace App\Services\Ks;
 
 use App\Common\Helpers\Functions;
 use App\Common\Tools\CustomException;
-use App\Enums\Ks\KsSyncTypeEnum;
-use App\Models\Ks\KsAccountVideoModel;
-use App\Models\Ks\KsVideoModel;
-use App\Services\Task\TaskKsSyncService;
+use App\Models\Ks\KsCreativeModel;
 
 class KsCreativeService extends KsService
 {
@@ -30,7 +27,7 @@ class KsCreativeService extends KsService
      * sdk并发获取列表
      */
     public function sdkMultiGetList($accounts, $page, $pageSize, $param = []){
-        return $this->sdk->multiGetPackageCreativeList($accounts, $page, $pageSize, $param);
+        return $this->sdk->multiGetCreativeList($accounts, $page, $pageSize, $param);
     }
 
     /**
@@ -40,10 +37,6 @@ class KsCreativeService extends KsService
      * 同步
      */
     public function sync($option = []){
-        $option = [
-            'account_ids' => '10157725',
-            'date' => '2021-08-30'
-        ];
         $accountIds = [];
         // 账户id过滤
         if(!empty($option['account_ids'])){
@@ -52,10 +45,9 @@ class KsCreativeService extends KsService
 
         $param = [];
         if(!empty($option['date'])){
-            $param['start'] = Functions::getDate($option['date']);
-            $param['end'] = Functions::getDate($option['date']);
+            $param['start_date'] = Functions::getDate($option['date']);
+            $param['end_date'] = Functions::getDate($option['date']);
         }
-        $param['unit_ids'] = [368827437];
 
         $accountGroup = $this->getAccountGroup($accountIds);
 
@@ -64,13 +56,12 @@ class KsCreativeService extends KsService
         $pageSize = 100;
         foreach($accountGroup as $g){
             $creatives = $this->multiGetPageList($g, $pageSize, $param);
-            dd($creatives);
             Functions::consoleDump('count:'. count($creatives));
 
 
             // 保存
-            foreach($videos as $video) {
-                $this->save($video);
+            foreach($creatives as $creative) {
+                $this->save($creative);
             }
         }
 
@@ -82,43 +73,41 @@ class KsCreativeService extends KsService
 
 
     /**
-     * @param $video
+     * @param $creative
      * @return bool
      * 保存
      */
-    public function save($video){
-        $ksVideoModel = new KsVideoModel();
-        $ksVideo = $ksVideoModel->where('id', $video['photo_id'])->first();
+    public function save($creative){
+        $ksCreativeModel = new KsCreativeModel();
+        $ksCreative = $ksCreativeModel->where('id', $creative['creative_id'])->first();
 
-        if(empty($ksVideo)){
-            $ksVideo = new KsVideoModel();
+        if(empty($ksCreative)){
+            $ksCreative = new KsCreativeModel();
+            $isChangeTrackUrl = true;
+        }else{
+            $isChangeTrackUrl = $ksCreative->extends->click_track_url == $creative['click_track_url'] ? false :true;
         }
 
-        $ksVideo->id = $video['photo_id'];
-        $ksVideo->width = $video['width'];
-        $ksVideo->height = $video['height'];
-        $ksVideo->url = $video['url'];
-        $ksVideo->cover_url = $video['cover_url'];
-        $ksVideo->signature = $video['signature'];
-        $ksVideo->upload_time = $video['upload_time'];
-        $ksVideo->photo_name = $video['photo_name'];
-        $ksVideo->duration = $video['duration'];
-        $ksVideo->source = $video['source'];
-
-        $ret = $ksVideo->save();
+        $ksCreative->id = $creative['creative_id'];
+        $ksCreative->account_id = $creative['account_id'];
+        $ksCreative->unit_id = $creative['unit_id'];
+        $ksCreative->name = $creative['creative_name'];
+        $ksCreative->creative_material_type = $creative['creative_material_type'];
+        $ksCreative->photo_id = $creative['photo_id'];
+        $ksCreative->status = $creative['status'];
+        $ksCreative->put_status = $creative['put_status'];
+        $ksCreative->create_channel = $creative['create_channel'];
+        $ksCreative->create_time = $creative['create_time'];
+        $ksCreative->update_time = $creative['update_time'];
+        $ksCreative->extends = $creative;
+        $ret = $ksCreative->save();
 
         if($ret){
             // 添加关联关系
-            $ksAccountVideoModel = new KsAccountVideoModel();
-            $ksAccountVideo = $ksAccountVideoModel->where('account_id', $video['advertiser_id'])
-                ->where('video_id', $video['photo_id'])
-                ->first();
+            (new KsVideoService())->relationAccount($ksCreative['account_id'],$ksCreative['photo_id']);
 
-            if(empty($ksAccountVideo)){
-                $ksAccountVideo = new KsAccountVideoModel();
-                $ksAccountVideo->account_id = $video['advertiser_id'];
-                $ksAccountVideo->video_id = $video['photo_id'];
-                $ksAccountVideo->save();
+            if($isChangeTrackUrl){
+                // 更改计划渠道关联
             }
         }
 

@@ -156,19 +156,31 @@ class KsVideoService extends KsService
 
         if($ret){
             // 添加关联关系
-            $ksAccountVideoModel = new KsAccountVideoModel();
-            $ksAccountVideo = $ksAccountVideoModel->where('account_id', $video['advertiser_id'])
-                ->where('video_id', $video['photo_id'])
-                ->first();
-
-            if(empty($ksAccountVideo)){
-                $ksAccountVideo = new KsAccountVideoModel();
-                $ksAccountVideo->account_id = $video['advertiser_id'];
-                $ksAccountVideo->video_id = $video['photo_id'];
-                $ksAccountVideo->save();
-            }
+            $this->relationAccount($video['advertiser_id'],$video['photo_id']);
         }
 
         return $ret;
+    }
+
+
+    /**
+     * @param $accountId
+     * @param $videoId
+     * @return KsAccountVideoModel
+     * 关联账户
+     */
+    public function relationAccount($accountId,$videoId){
+        $ksAccountVideoModel = new KsAccountVideoModel();
+        $ksAccountVideo = $ksAccountVideoModel->where('account_id', $accountId)
+            ->where('video_id', $videoId)
+            ->first();
+
+        if(empty($ksAccountVideo)){
+            $ksAccountVideo = new KsAccountVideoModel();
+            $ksAccountVideo->account_id = $accountId;
+            $ksAccountVideo->video_id = $videoId;
+            $ksAccountVideo->save();
+        }
+        return $ksAccountVideo;
     }
 }

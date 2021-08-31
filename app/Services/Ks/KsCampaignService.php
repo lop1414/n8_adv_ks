@@ -45,8 +45,8 @@ class KsCampaignService extends KsService
 
         $param = [];
         if(!empty($option['date'])){
-            $param['start'] = Functions::getDate($option['date']);
-            $param['end'] = Functions::getDate($option['date']);
+            $param['start_date'] = Functions::getDate($option['date']);
+            $param['end_date'] = Functions::getDate($option['date']);
         }
 
 

@@ -84,9 +84,6 @@ class KsProgramCreativeService extends KsService
 
         if(empty($ksProgramCreative)){
             $ksProgramCreative = new KsProgramCreativeModel();
-            $isChangeTrackUrl = true;
-        }else{
-            $isChangeTrackUrl = $ksProgramCreative->extends->click_url == $creative['click_url'] ? false :true;
         }
 
         $ksProgramCreative->id = $creative['unit_id'];
@@ -112,10 +109,6 @@ class KsProgramCreativeService extends KsService
                 foreach ($creative['vertical_photo_ids'] as $photoId){
                     $ksVideoService->relationAccount($ksProgramCreative['account_id'],$photoId);
                 }
-            }
-
-            if($isChangeTrackUrl){
-                // 更改计划渠道关联
             }
         }
 

@@ -83,9 +83,6 @@ class KsCreativeService extends KsService
 
         if(empty($ksCreative)){
             $ksCreative = new KsCreativeModel();
-            $isChangeTrackUrl = true;
-        }else{
-            $isChangeTrackUrl = $ksCreative->extends->click_track_url == $creative['click_track_url'] ? false :true;
         }
 
         $ksCreative->id = $creative['creative_id'];
@@ -105,10 +102,6 @@ class KsCreativeService extends KsService
         if($ret){
             // 添加关联关系
             (new KsVideoService())->relationAccount($ksCreative['account_id'],$ksCreative['photo_id']);
-
-            if($isChangeTrackUrl){
-                // 更改计划渠道关联
-            }
         }
 
         return $ret;

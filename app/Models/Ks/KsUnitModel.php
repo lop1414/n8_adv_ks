@@ -2,14 +2,14 @@
 
 namespace App\Models\Ks;
 
-class KsAdUnitModel extends KsModel
+class KsUnitModel extends KsModel
 {
     /**
      * 关联到模型的数据表
      *
      * @var string
      */
-    protected $table = 'ks_ad_units';
+    protected $table = 'ks_units';
 
 
     /**

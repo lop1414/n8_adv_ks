@@ -4,7 +4,7 @@ namespace App\Services\Ks;
 
 use App\Common\Helpers\Functions;
 use App\Common\Tools\CustomException;
-use App\Models\Ks\KsAdUnitModel;
+use App\Models\Ks\KsUnitModel;
 
 class KsAdUnitService extends KsService
 {
@@ -80,11 +80,11 @@ class KsAdUnitService extends KsService
      * 保存
      */
     public function save($adUnit){
-        $ksAdUnitModel = new KsAdUnitModel();
+        $ksAdUnitModel = new KsUnitModel();
         $ksAdUnit = $ksAdUnitModel->where('id', $adUnit['unit_id'])->first();
 
         if(empty($ksAdUnit)){
-            $ksAdUnit = new KsAdUnitModel();
+            $ksAdUnit = new KsUnitModel();
         }
 
         $ksAdUnit->id = $adUnit['unit_id'];

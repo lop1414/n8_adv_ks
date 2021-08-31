@@ -20,8 +20,8 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 -- Table structure for ks_ad_units
 -- ----------------------------
-DROP TABLE IF EXISTS `ks_ad_units`;
-CREATE TABLE `ks_ad_units` (
+DROP TABLE IF EXISTS `ks_units`;
+CREATE TABLE `ks_units` (
   `id` bigint(11) NOT NULL,
   `name` varchar(255) NOT NULL DEFAULT '' COMMENT '名称',
   `account_id` varchar(50) NOT NULL COMMENT '账户id',

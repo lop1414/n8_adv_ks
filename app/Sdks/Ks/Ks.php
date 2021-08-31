@@ -4,6 +4,7 @@ namespace App\Sdks\Ks;
 
 use App\Sdks\Ks\Traits\AccessToken;
 use App\Sdks\Ks\Traits\Account;
+use App\Sdks\Ks\Traits\AdUnit;
 use App\Sdks\Ks\Traits\App;
 use App\Sdks\Ks\Traits\Campaign;
 use App\Sdks\Ks\Traits\Creative;
@@ -25,6 +26,7 @@ class Ks
     use Report;
     use Creative;
     use Campaign;
+    use AdUnit;
 
     /**
      * 公共接口地址

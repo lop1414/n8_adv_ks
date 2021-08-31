@@ -11,7 +11,7 @@
  Target Server Version : 50731
  File Encoding         : 65001
 
- Date: 31/08/2021 10:37:04
+ Date: 31/08/2021 15:03:08
 */
 
 SET NAMES utf8mb4;
@@ -23,7 +23,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `ks_campaigns`;
 CREATE TABLE `ks_campaigns` (
   `id` bigint(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '计划id',
-  `account_id` bigint(11) NOT NULL COMMENT '账户id',
+  `account_id` varchar(50) NOT NULL COMMENT '账户id',
   `name` varchar(255) NOT NULL DEFAULT '' COMMENT '名称',
   `put_status` tinyint(4) NOT NULL COMMENT '投放状态',
   `status` int(11) NOT NULL COMMENT '状态',

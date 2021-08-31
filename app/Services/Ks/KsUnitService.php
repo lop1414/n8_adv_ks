@@ -6,7 +6,7 @@ use App\Common\Helpers\Functions;
 use App\Common\Tools\CustomException;
 use App\Models\Ks\KsUnitModel;
 
-class KsAdUnitService extends KsService
+class KsUnitService extends KsService
 {
     /**
      * constructor.

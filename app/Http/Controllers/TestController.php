@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Common\Controllers\Front\FrontController;
 
 
-use App\Services\Ks\KsAdUnitService;
+use App\Services\Ks\KsUnitService;
 use App\Services\Ks\KsCampaignService;
 use App\Services\Ks\KsCreativeService;
 use App\Services\Ks\KsProgramCreativeService;

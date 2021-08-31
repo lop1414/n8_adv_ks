@@ -65,3 +65,6 @@ $router->group([
     });
 });
 
+// 测试
+$router->post('test', 'TestController@test');
+

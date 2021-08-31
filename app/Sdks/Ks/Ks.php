@@ -5,6 +5,8 @@ namespace App\Sdks\Ks;
 use App\Sdks\Ks\Traits\AccessToken;
 use App\Sdks\Ks\Traits\Account;
 use App\Sdks\Ks\Traits\App;
+use App\Sdks\Ks\Traits\Campaign;
+use App\Sdks\Ks\Traits\Creative;
 use App\Sdks\Ks\Traits\Error;
 use App\Sdks\Ks\Traits\Multi;
 use App\Sdks\Ks\Traits\Report;
@@ -21,6 +23,8 @@ class Ks
     use Multi;
     use Error;
     use Report;
+    use Creative;
+    use Campaign;
 
     /**
      * 公共接口地址

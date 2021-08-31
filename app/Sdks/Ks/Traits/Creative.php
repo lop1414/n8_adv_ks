@@ -29,7 +29,7 @@ trait Creative
      * @return mixed
      * 并发获取程序化创意列表
      */
-    public function multiGetPackageCreativeList(array $accounts, $page = 1, $pageSize = 10, $param = []){
+    public function multiGetProgramCreativeList(array $accounts, $page = 1, $pageSize = 10, $param = []){
         $url = $this->getUrl('v2/creative/advanced/program/list');
 
         return $this->multiGetPageList($url, $accounts, $page, $pageSize, $param);

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Common\Controllers\Front\FrontController;
 
 
+use App\Models\ChannelUnitModel;
+use App\Services\ChannelUnitService;
 use App\Services\Ks\KsUnitService;
 use App\Services\Ks\KsCampaignService;
 use App\Services\Ks\KsCreativeService;
@@ -30,14 +32,16 @@ class TestController extends FrontController
         }
 
         $option = [
-//            'date' => '2021-08-31',
-            'account_ids' => [10157752]
+            'date' => '2021-08-31'
+//            'account_ids' => [10157752]
         ];
 //        (new KsCampaignService())->sync($option);
 //        (new KsAdUnitService())->sync($option);
 //        (new KsCreativeService())->sync($option);
-        (new KsProgramCreativeService())->sync($option);
+//        (new KsProgramCreativeService())->sync($option);
+        (new ChannelUnitService())->sync($option);
     }
+
 
 
 

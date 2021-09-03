@@ -180,6 +180,14 @@ class ChannelUnitService extends BaseService
     }
 
 
+    public function getKeyWord(){
+        if(empty($this->keyword)){
+            $this->keyword = 'sign='. Advs::getAdvClickSign(AdvAliasEnum::KS);
+        }
+        return $this->keyword;
+    }
+
+
 
 
     /**
@@ -193,7 +201,6 @@ class ChannelUnitService extends BaseService
         $startTime = date('Y-m-d H:i:s', strtotime('-2 hours', strtotime($date)));
         $endTime = "{$date} 23:59:59";
 
-        $this->keyword = 'sign='. Advs::getAdvClickSign(AdvAliasEnum::KS);
 
 
         $this->programCreative($startTime,$endTime);
@@ -261,7 +268,8 @@ class ChannelUnitService extends BaseService
             return;
         }
 
-        if(strpos($clickUrl, $this->keyword) === false){
+        $keyword = $this->getKeyWord();
+        if(strpos($clickUrl, $keyword) === false){
 //            var_dump($clickUrl);
             return;
         }

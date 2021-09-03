@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Common\Console\Queue\QueueClickCommand;
 use App\Console\Commands\Ks\KsSyncVideoCommand;
 use App\Console\Commands\Ks\Report\KsSyncAccountReportCommand;
 use App\Console\Commands\Ks\Report\KsSyncCreativeReportCommand;
@@ -22,6 +23,9 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         // 二版
         ReloadKsAccountCommand::class,
+
+        // 队列
+        QueueClickCommand::class,
 
         // 同步
         KsSyncVideoCommand::class,
@@ -44,6 +48,9 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        // 队列
+        $schedule->command('queue:click')->cron('* * * * *');
+
         // 二版
         $schedule->command('second_version:sync_ks_account')->cron('5 * * * *');
         $schedule->command('second_version:reload_ks_account')->cron('* * * * *');

@@ -6,6 +6,7 @@ use App\Common\Controllers\Front\FrontController;
 
 
 use App\Models\ChannelUnitModel;
+use App\Services\AdvClickService;
 use App\Services\ChannelUnitService;
 use App\Services\Ks\KsUnitService;
 use App\Services\Ks\KsCampaignService;
@@ -39,8 +40,12 @@ class TestController extends FrontController
 //        (new KsAdUnitService())->sync($option);
 //        (new KsCreativeService())->sync($option);
 //        (new KsProgramCreativeService())->sync($option);
-        (new ChannelUnitService())->sync($option);
+//        (new ChannelUnitService())->sync($option);
+
+        ( new AdvClickService())->pull();
     }
+
+
 
 
 

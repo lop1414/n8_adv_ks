@@ -46,6 +46,13 @@ class KsCampaignController extends KsController
         $this->curdService->getQueryBefore(function(){
             $this->filter();
         });
+
+        $this->curdService->getQueryAfter(function(){
+
+            foreach ($this->curdService->responseData as $item){
+                $item->ks_account;
+            }
+        });
     }
 
     /**

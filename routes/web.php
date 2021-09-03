@@ -44,6 +44,13 @@ $router->group([
     });
 
     // 快手
+    $router->group(['prefix' => 'app'], function () use ($router) {
+        $router->post('select', 'Admin\AppController@select');
+        $router->post('create', 'Admin\AppController@create');
+        $router->post('update', 'Admin\AppController@update');
+        $router->post('enable', 'Admin\AppController@enable');
+        $router->post('disable', 'Admin\AppController@disable');
+    });
     $router->group(['prefix' => 'ks'], function () use ($router) {
         // 账户
         $router->group(['prefix' => 'account'], function () use ($router) {

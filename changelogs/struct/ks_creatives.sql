@@ -11,7 +11,7 @@
  Target Server Version : 50731
  File Encoding         : 65001
 
- Date: 31/08/2021 16:32:20
+ Date: 03/09/2021 17:18:22
 */
 
 SET NAMES utf8mb4;
@@ -23,7 +23,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `ks_creatives`;
 CREATE TABLE `ks_creatives` (
   `id` bigint(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '创意id',
-  `account_id` bigint(11) NOT NULL COMMENT '账户ID',
+  `account_id` varchar(50) NOT NULL COMMENT '账户ID',
   `unit_id` bigint(11) NOT NULL COMMENT '广告组ID',
   `name` varchar(255) NOT NULL DEFAULT '' COMMENT '名称',
   `creative_material_type` tinyint(4) NOT NULL COMMENT '素材类型',

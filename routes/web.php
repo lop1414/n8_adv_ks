@@ -69,6 +69,12 @@ $router->group([
         $router->group(['prefix' => 'video'], function () use ($router) {
             $router->post('batch_upload', 'Admin\Ks\VideoController@batchUpload');
         });
+
+        // 广告计划
+        $router->group(['prefix' => 'campaign'], function () use ($router) {
+            $router->post('select', 'Admin\Ks\KsCampaignController@select');
+            $router->post('get', 'Admin\Ks\KsCampaignController@get');
+        });
     });
 });
 

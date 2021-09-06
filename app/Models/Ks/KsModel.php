@@ -23,4 +23,12 @@ class KsModel extends BaseModel
             ");
         }
     }
+
+
+    /**
+     * 关联账户
+     */
+    public function ks_account(){
+        return $this->hasOne('App\Models\Ks\KsAccountModel', 'account_id', 'account_id');
+    }
 }

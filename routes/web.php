@@ -75,6 +75,12 @@ $router->group([
             $router->post('select', 'Admin\Ks\KsCampaignController@select');
             $router->post('get', 'Admin\Ks\KsCampaignController@get');
         });
+
+        // 广告组
+        $router->group(['prefix' => 'unit'], function () use ($router) {
+            $router->post('select', 'Admin\Ks\KsUnitController@select');
+            $router->post('get', 'Admin\Ks\KsUnitController@get');
+        });
     });
 });
 

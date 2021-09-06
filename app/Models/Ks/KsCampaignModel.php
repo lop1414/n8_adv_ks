@@ -52,14 +52,4 @@ class KsCampaignModel extends KsModel
     {
         $this->attributes['day_budget_schedule'] = json_encode($value);
     }
-
-
-
-
-    /**
-     * 关联角色模型   一对多
-     */
-    public function ks_account(){
-        return $this->hasOne('App\Models\Ks\KsAccountModel', 'account_id', 'account_id');
-    }
 }

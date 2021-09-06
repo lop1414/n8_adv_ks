@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\Ks;
 
 
+use App\Common\Models\ConvertCallbackStrategyModel;
 use App\Models\Ks\KsUnitModel;
 
 class KsUnitController extends KsController
@@ -32,6 +33,11 @@ class KsUnitController extends KsController
 
             foreach ($this->curdService->responseData['list'] as $item){
                 $item->ks_account;
+                if(!empty($item->ks_unit_extends)){
+                    $item->convert_callback_strategy = ConvertCallbackStrategyModel::find($item->ks_unit_extends->convert_callback_strategy_id);
+                }else{
+                    $item->convert_callback_strategy = null;
+                }
             }
         });
     }

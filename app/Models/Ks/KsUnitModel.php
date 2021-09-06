@@ -114,4 +114,23 @@ class KsUnitModel extends KsModel
     {
         $this->attributes['extends'] = json_encode($value);
     }
+
+
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * 关联推广组扩展模型 一对一
+     */
+    public function ks_unit_extends(){
+        return $this->hasOne('App\Models\Ks\KsUnitExtendModel', 'unit_id', 'id');
+    }
+
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * 关联渠道模型 一对一
+     */
+    public function channel_adgroup(){
+        return $this->hasOne('App\Models\ChannelUnitModel', 'unit_id', 'id');
+    }
 }

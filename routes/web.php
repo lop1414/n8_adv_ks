@@ -81,16 +81,16 @@ $router->group([
             $router->post('select', 'Admin\Ks\KsUnitController@select');
             $router->post('get', 'Admin\Ks\KsUnitController@get');
         });
+    });
 
 
-        // 回传策略
-        $router->group(['prefix' => 'convert_callback_strategy'], function () use ($router) {
-            $router->post('create', '\\App\Common\Controllers\Admin\ConvertCallbackStrategyController@create');
-            $router->post('update', '\\App\Common\Controllers\Admin\ConvertCallbackStrategyController@update');
-            $router->post('select', '\\App\Common\Controllers\Admin\ConvertCallbackStrategyController@select');
-            $router->post('get', '\\App\Common\Controllers\Admin\ConvertCallbackStrategyController@get');
-            $router->post('read', '\\App\Common\Controllers\Admin\ConvertCallbackStrategyController@read');
-        });
+    // 回传策略
+    $router->group(['prefix' => 'convert_callback_strategy'], function () use ($router) {
+        $router->post('create', '\\App\Common\Controllers\Admin\ConvertCallbackStrategyController@create');
+        $router->post('update', '\\App\Common\Controllers\Admin\ConvertCallbackStrategyController@update');
+        $router->post('select', '\\App\Common\Controllers\Admin\ConvertCallbackStrategyController@select');
+        $router->post('get', '\\App\Common\Controllers\Admin\ConvertCallbackStrategyController@get');
+        $router->post('read', '\\App\Common\Controllers\Admin\ConvertCallbackStrategyController@read');
     });
     // 点击
     $router->group(['prefix' => 'click'], function () use ($router) {

@@ -33,6 +33,7 @@ class KsCampaignController extends KsController
 
             foreach ($this->curdService->responseData['list'] as $item){
                 $item->ks_account;
+                $item->admin_name = $this->adminMap[$item->ks_account->admin_id]['name'];
             }
         });
     }

@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use App\Common\Console\Queue\QueueClickCommand;
+use App\Console\Commands\Ks\KsSyncCommand;
 use App\Console\Commands\Ks\KsSyncVideoCommand;
 use App\Console\Commands\Ks\Report\KsSyncAccountReportCommand;
 use App\Console\Commands\Ks\Report\KsSyncCreativeReportCommand;
@@ -29,6 +30,7 @@ class Kernel extends ConsoleKernel
 
         // 同步
         KsSyncVideoCommand::class,
+        KsSyncCommand::class,
 
         // 任务
         TaskKsSyncCommand::class,

@@ -20,16 +20,6 @@ class KsAccountModel extends KsModel
 
 
     /**
-     * 隐藏字段
-     *
-     * @var array
-     */
-    protected $hidden = [
-        'access_token',
-        'refresh_token'
-    ];
-
-    /**
      * 属性访问器
      * @param $value
      * @return mixed

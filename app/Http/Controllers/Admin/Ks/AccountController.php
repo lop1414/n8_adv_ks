@@ -30,6 +30,12 @@ class AccountController extends KsController
                 $this->filter();
             });
         });
+
+        $this->curdService->selectQueryAfter(function(){
+            foreach ($this->curdService->responseData['list'] as $item){
+                $item->admin_name = $this->adminMap[$item->admin_id]['name'];
+            }
+        });
     }
 
     /**

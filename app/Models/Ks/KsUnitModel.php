@@ -126,6 +126,11 @@ class KsUnitModel extends KsModel
     }
 
 
+    public function campaign(){
+        return $this->hasOne('App\Models\Ks\KsCampaignModel', 'id', 'campaign_id');
+    }
+
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      * 关联渠道模型 一对一

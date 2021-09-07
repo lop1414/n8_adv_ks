@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\Ks;
 
 use App\Common\Controllers\Admin\AdminController;
 use App\Common\Helpers\Functions;
+use App\Common\Services\SystemApi\CenterApiService;
 use App\Common\Tools\CustomException;
 use App\Enums\Ks\KsSyncTypeEnum;
 use App\Models\Ks\KsAccountModel;
@@ -12,12 +13,15 @@ use Illuminate\Http\Request;
 
 class KsController extends AdminController
 {
+    protected $adminMap;
+
     /**
      * constructor.
      */
     public function __construct()
     {
         parent::__construct();
+        $this->adminMap = $this->getAdminUserMap();
     }
 
     /**
@@ -169,5 +173,13 @@ class KsController extends AdminController
         }
 
         return $ksAccount;
+    }
+
+    public function getAdminUserMap($filter = []){
+        $adminUsers = (new CenterApiService())->apiGetAdminUsers($filter);
+        $tmp = array_column($adminUsers,null,'id');
+        // 兼容没有admin_id
+        $tmp[0] = ['name' => ''];
+        return $tmp;
     }
 }

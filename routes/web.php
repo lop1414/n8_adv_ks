@@ -99,6 +99,30 @@ $router->group([
     });
 });
 
+
+// 前台接口
+
+$router->group([
+    'prefix' => 'front',
+    'middleware' => ['api_sign_valid', 'access_control_allow_origin']
+], function () use ($router) {
+    // 转化
+    $router->group(['prefix' => 'convert'], function () use ($router) {
+        $router->post('match', '\\App\Common\Controllers\Front\ConvertController@match');
+    });
+
+    // 转化回传
+    $router->group(['prefix' => 'convert_callback'], function () use ($router) {
+        $router->post('get', '\\App\Common\Controllers\Front\ConvertCallbackController@get');
+    });
+
+    // 渠道-广告组
+    $router->group(['prefix' => 'channel_unit'], function () use ($router) {
+        $router->post('select', 'Front\ChannelUnitController@select');
+        $router->post('batch_update', 'Front\ChannelUnitController@batchUpdate');
+    });
+});
+
 $router->group(['middleware' => ['access_control_allow_origin']], function () use ($router) {
     // 点击
     $router->get('front/click', 'Front\AdvClickController@index');

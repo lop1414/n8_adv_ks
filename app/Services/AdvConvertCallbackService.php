@@ -58,7 +58,6 @@ class AdvConvertCallbackService extends ConvertCallbackService
 
 
     public function runCallback($click,$eventType,$eventTime,$payAmount = 0){
-        $url = 'http://ad.partner.gifshow.com/track/activate/';
         $param = [
             'event_type' => $eventType,
             'event_time' => $eventTime
@@ -72,8 +71,9 @@ class AdvConvertCallbackService extends ConvertCallbackService
         if(!empty($payAmount)){
             $param['purchase_amount'] = $payAmount;
         }
+        $url = 'http://ad.partner.gifshow.com/track/activate/'.'?'. http_build_query($param);
 
-        $ret = file_get_contents($url .'?'. http_build_query($param));
+        $ret = file_get_contents($url);
         $result = json_decode($ret, true);
 
         if(!isset($result['code']) || $result['code'] != 0){

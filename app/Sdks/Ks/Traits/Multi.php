@@ -20,6 +20,7 @@ trait Multi
                 'advertiser_id' => $account['account_id'],
                 'page' => $page,
                 'page_size' => $pageSize,
+                'time_filter_type' => 1
             ], $param);
 
             $curlOptions[] = [

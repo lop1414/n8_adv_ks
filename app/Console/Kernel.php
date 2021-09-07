@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Common\Console\ConvertCallbackCommand;
 use App\Common\Console\Queue\QueueClickCommand;
 use App\Console\Commands\Ks\KsSyncCommand;
 use App\Console\Commands\Ks\KsSyncVideoCommand;
@@ -28,6 +29,10 @@ class Kernel extends ConsoleKernel
         // 队列
         QueueClickCommand::class,
 
+
+        // 转化回传
+        ConvertCallbackCommand::class,
+
         // 同步
         KsSyncVideoCommand::class,
         KsSyncCommand::class,
@@ -53,9 +58,18 @@ class Kernel extends ConsoleKernel
         // 队列
         $schedule->command('queue:click')->cron('* * * * *');
 
+        // 转化上报
+        $schedule->command('convert_callback')->cron('* * * * *');
+
         // 二版
         $schedule->command('second_version:sync_ks_account')->cron('5 * * * *');
         $schedule->command('second_version:reload_ks_account')->cron('* * * * *');
+
+        // 同步任务
+        $schedule->command('ks:sync --type=campaign --date=today')->cron('*/20 * * * *');
+        $schedule->command('ks:sync --type=unit --date=today')->cron('*/20 * * * *');
+        $schedule->command('ks:sync --type=creative --date=today')->cron('*/20 * * * *');
+        $schedule->command('ks:sync --type=program_creative --date=today')->cron('*/20 * * * *');
 
         // 任务
         $schedule->command('task:ks_video_upload')->cron('* * * * *');

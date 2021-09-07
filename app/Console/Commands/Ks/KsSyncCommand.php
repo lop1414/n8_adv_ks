@@ -6,6 +6,7 @@ use App\Common\Console\BaseCommand;
 use App\Common\Tools\CustomException;
 use App\Services\Ks\KsCampaignService;
 use App\Services\Ks\KsCreativeService;
+use App\Services\Ks\KsProgramCreativeService;
 use App\Services\Ks\KsUnitService;
 
 class KsSyncCommand extends BaseCommand
@@ -78,6 +79,10 @@ class KsSyncCommand extends BaseCommand
             case 'creative':
                 echo "同步创意\n";
                 $service = new KsCreativeService();
+                break;
+            case 'program_creative':
+                echo "同步程序化创意\n";
+                $service = new KsProgramCreativeService();
                 break;
             default:
                 throw new CustomException([

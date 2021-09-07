@@ -11,7 +11,7 @@
  Target Server Version : 50731
  File Encoding         : 65001
 
- Date: 03/09/2021 15:54:58
+ Date: 07/09/2021 15:44:20
 */
 
 SET NAMES utf8mb4;
@@ -32,6 +32,7 @@ CREATE TABLE `clicks` (
   `muid` varchar(100) NOT NULL DEFAULT '' COMMENT '安卓为IMEI, IOS为IDFA',
   `android_id` varchar(100) NOT NULL DEFAULT '' COMMENT '安卓id',
   `oaid` varchar(100) NOT NULL DEFAULT '' COMMENT 'Android Q及更高版本的设备号',
+  `oaid_md5` varchar(64) DEFAULT NULL COMMENT 'Android Q及更高版本的设备号的md5摘要',
   `os` varchar(50) NOT NULL DEFAULT '' COMMENT '操作系统平台',
   `ip` varchar(50) NOT NULL DEFAULT '' COMMENT 'IP地址',
   `ua` varchar(1024) NOT NULL DEFAULT '' COMMENT 'user agent',
@@ -48,7 +49,8 @@ CREATE TABLE `clicks` (
   KEY `click_at` (`click_at`) USING BTREE,
   KEY `channel_id` (`channel_id`) USING BTREE,
   KEY `request_id` (`request_id`) USING BTREE,
-  KEY `unit_id` (`unit_id`) USING BTREE
+  KEY `unit_id` (`unit_id`) USING BTREE,
+  KEY `oaid_md5` (`oaid_md5`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='快手点击表';
 
 SET FOREIGN_KEY_CHECKS = 1;

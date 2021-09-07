@@ -136,7 +136,7 @@ class AdvClickService extends ClickService
         $clickModel->ip = $data['ip'] ?? '';
         $clickModel->ua = $data['ua'] ?? '';
         $clickModel->click_at = $data['click_at'] ?? null;
-        $clickModel->callback_url = $data['callback_url'] ?? '';
+        $clickModel->callback = $data['callback'] ?? '';
         $clickModel->link = $data['link'] ?? '';
         $clickModel->extends = $data['extends'] ?? [];
         $ret = $clickModel->save();

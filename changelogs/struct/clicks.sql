@@ -11,7 +11,7 @@
  Target Server Version : 50731
  File Encoding         : 65001
 
- Date: 07/09/2021 15:44:20
+ Date: 07/09/2021 17:10:51
 */
 
 SET NAMES utf8mb4;
@@ -37,7 +37,7 @@ CREATE TABLE `clicks` (
   `ip` varchar(50) NOT NULL DEFAULT '' COMMENT 'IP地址',
   `ua` varchar(1024) NOT NULL DEFAULT '' COMMENT 'user agent',
   `click_at` timestamp NULL DEFAULT NULL COMMENT '点击时间',
-  `callback_url` text NOT NULL COMMENT '效果数据回传URL',
+  `callback` text NOT NULL COMMENT '效果数据回传URL',
   `link` text COMMENT '落地页原始url',
   `extends` text NOT NULL COMMENT '扩展字段',
   `created_at` timestamp NULL DEFAULT NULL COMMENT '创建时间',

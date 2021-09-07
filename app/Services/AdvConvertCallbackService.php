@@ -65,7 +65,7 @@ class AdvConvertCallbackService extends ConvertCallbackService
         if(!empty($click->link)){
             $param['link'] = $click->link;
         }else{
-            $param['callback'] = $click->callback_param;
+            $param['callback'] = $click->callback;
         }
 
         if(!empty($payAmount)){

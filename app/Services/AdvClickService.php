@@ -124,9 +124,9 @@ class AdvClickService extends ClickService
     protected function create($data){
         $clickModel = new ClickModel();
         $clickModel->click_source = $data['click_source'] ?? '';
-        $clickModel->campaign_id = $data['campaign_id'] ?? '';
-        $clickModel->unit_id = $data['unit_id'] ?? '';
-        $clickModel->creative_id = $data['creative_id'] ?? '';
+        $clickModel->campaign_id = empty($data['campaign_id']) ? 0: $data['campaign_id'];
+        $clickModel->unit_id = empty($data['unit_id']) ? 0: $data['unit_id'];
+        $clickModel->creative_id = empty($data['creative_id']) ? 0: $data['creative_id'];
         $clickModel->request_id = $data['request_id'] ?? '';
         $clickModel->channel_id = $data['channel_id'] ?? 0;
         $clickModel->muid = $data['muid'] ?? '';

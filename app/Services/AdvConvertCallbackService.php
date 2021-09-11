@@ -119,7 +119,7 @@ class AdvConvertCallbackService extends ConvertCallbackService
         return [
             'id' => $click['id'],
             'campaign_id' => $click['campaign_id'],
-            'ad_id' => $click['adgroup_id'],
+            'ad_id' => $click['unit_id'],
             'creative_id' => $click['creative_id'],
             'click_at' => $click['click_at'],
         ];

@@ -3,9 +3,11 @@
 namespace App\Services;
 
 use App\Common\Enums\AdvClickSourceEnum;
+use App\Common\Enums\ExceptionTypeEnum;
 use App\Common\Helpers\Functions;
 use App\Common\Models\ClickModel;
 use App\Common\Services\ClickService;
+use App\Common\Services\ErrorLogService;
 use App\Common\Tools\CustomException;
 use App\Enums\QueueEnums;
 use Jenssegers\Agent\Agent;
@@ -112,7 +114,7 @@ class AdvClickService extends ClickService
         }
 
         $data['click_at'] = $clickAt;
-
+        (new ErrorLogService())->create('debug','测试',$data,ExceptionTypeEnum::CUSTOM);
         return $data;
     }
 

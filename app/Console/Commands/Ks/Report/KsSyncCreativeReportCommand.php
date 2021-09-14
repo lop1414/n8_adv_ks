@@ -3,7 +3,6 @@
 namespace App\Console\Commands\Ks\Report;
 
 use App\Common\Console\BaseCommand;
-use App\Services\Ks\KsVideoService;
 use App\Services\Ks\Report\KsCreativeReportService;
 use App\Services\Ks\Report\KsProgramCreativeReportService;
 

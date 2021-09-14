@@ -87,8 +87,8 @@ class KsReportService extends KsService
 
         foreach($dateList as $date){
             $param = [
-                'start_date' => $date,
-                'end_date' => $date,
+                'start_date_min' => $date. ' 00:00:00',
+                'end_date_min' => $date. ' 23:59:59',
                 'temporal_granularity' => 'HOURLY',
             ];
 

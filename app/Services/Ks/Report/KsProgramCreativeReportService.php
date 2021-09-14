@@ -2,10 +2,8 @@
 
 namespace App\Services\Ks\Report;
 
-use App\Common\Helpers\Functions;
 use App\Common\Tools\CustomException;
-use App\Models\Ks\Report\KsCreativeReportModel;
-use Illuminate\Support\Facades\DB;
+use App\Models\Ks\Report\KsProgramCreativeReportModel;
 
 class KsProgramCreativeReportService extends KsReportService
 {
@@ -16,7 +14,7 @@ class KsProgramCreativeReportService extends KsReportService
     public function __construct($appId = ''){
         parent::__construct($appId);
 
-        $this->modelClass = KsCreativeReportModel::class;
+        $this->modelClass = KsProgramCreativeReportModel::class;
     }
 
     /**

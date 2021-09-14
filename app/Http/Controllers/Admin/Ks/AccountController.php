@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Admin\Ks;
 use App\Common\Enums\StatusEnum;
 use App\Common\Services\SystemApi\CenterApiService;
 use App\Common\Tools\CustomException;
+use App\Models\BaiDu\BaiDuAccountModel;
 use App\Models\Ks\KsAccountModel;
+use Illuminate\Http\Request;
 
 class AccountController extends KsController
 {
@@ -92,5 +94,31 @@ class AccountController extends KsController
                 }
             }
         });
+    }
+
+
+    /**
+     * @param Request $request
+     * @return mixed
+     * @throws CustomException
+     * 批量更新管理员
+     */
+    public function batchUpdateAdmin(Request $request){
+        $req = $request->all();
+        $this->validRule($req,[
+            'admin_id'    =>  'required',
+            'account_ids' =>  'required'
+        ]);
+
+        foreach ($req['account_ids'] as $accountId){
+            $account = (new KsAccountModel)
+                ->where('account_id',$accountId)
+                ->first();
+            if(empty($account)) continue;
+            $account->admin_id = $req['admin_id'];
+            $account->save();
+        }
+
+        return $this->success();
     }
 }

@@ -61,8 +61,7 @@ $router->group([
             $router->post('enable', 'Admin\Ks\AccountController@enable');
             $router->post('disable', 'Admin\Ks\AccountController@disable');
             $router->post('delete', 'Admin\Ks\AccountController@delete');
-            $router->post('batch_enable', 'Admin\Ks\AccountController@batchEnable');
-            $router->post('batch_disable', 'Admin\Ks\AccountController@batchDisable');
+            $router->post('batch_update_admin', 'Admin\Ks\AccountController@batchUpdateAdmin');
         });
 
         // 视频

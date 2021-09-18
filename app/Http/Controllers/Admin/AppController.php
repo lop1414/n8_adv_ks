@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Common\Controllers\Admin\AdminController;
 use App\Common\Enums\StatusEnum;
+use App\Common\Enums\SystemAliasEnum;
 use App\Common\Tools\CustomException;
 use App\Models\AppModel;
+use App\Models\Ks\KsUserModel;
 
 class AppController extends AdminController
 {
@@ -17,6 +19,36 @@ class AppController extends AdminController
         $this->model = new AppModel();
 
         parent::__construct();
+    }
+
+    public function getAuthUrl($appId,$userId){
+        $redirectUri = config('common.system_api.'.SystemAliasEnum::ADV_KS.'url').'/front/ks/grant';
+
+        $url = 'https://developers.e.kuaishou.com/tools/authorize?';
+        $url .= http_build_query([
+            'app_id' => $appId,
+            'scope' => '["report_service","account_service","ad_query","ad_manage","report_service"]',
+            'state' => $userId,
+            'redirect_uri' => $redirectUri
+        ]);
+        return $url;
+    }
+
+
+    /**
+     * 分页列表预处理
+     */
+    public function selectPrepare(){
+        parent::selectPrepare();
+
+        $this->curdService->selectQueryAfter(function(){
+            foreach ($this->curdService->responseData['list'] as $item){
+                $user = (new KsUserModel())->where('app_id',$item->app_id)->first();
+                if(empty($user)) continue;
+
+                $item->auth_url = $this->getAuthUrl($item['app_id'],$user->id);
+            }
+        });
     }
 
 

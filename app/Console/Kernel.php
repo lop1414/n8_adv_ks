@@ -4,6 +4,8 @@ namespace App\Console;
 
 use App\Common\Console\ConvertCallbackCommand;
 use App\Common\Console\Queue\QueueClickCommand;
+use App\Common\Helpers\Functions;
+use App\Console\Commands\Ks\KsRefreshAccessTokenCommand;
 use App\Console\Commands\Ks\KsSyncCommand;
 use App\Console\Commands\Ks\KsSyncVideoCommand;
 use App\Console\Commands\Ks\Report\KsSyncAccountReportCommand;
@@ -45,6 +47,7 @@ class Kernel extends ConsoleKernel
         SyncKsAccountCommand::class,
         KsSyncAccountReportCommand::class,
         KsSyncCreativeReportCommand::class,
+        KsRefreshAccessTokenCommand::class,
     ];
 
     /**
@@ -82,5 +85,11 @@ class Kernel extends ConsoleKernel
         // 快手创意报表同步
         $schedule->command('ks:sync_creative_report --date=today --run_by_account_charge=1 --multi_chunk_size=3')->cron('*/2 * * * *');
         $schedule->command('ks:sync_creative_report --date=yesterday --key_suffix=yesterday')->cron('10-15 10,15 * * *');
+
+        // 正式
+        if(Functions::isProduction()){
+            // 刷新 access_token
+            $schedule->command('ks:refresh_access_token')->cron('0 */8 * * *');
+        }
     }
 }

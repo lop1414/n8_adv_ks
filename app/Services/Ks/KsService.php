@@ -8,6 +8,7 @@ use App\Common\Helpers\Functions;
 use App\Common\Services\BaseService;
 use App\Common\Tools\CustomException;
 use App\Models\Ks\KsAccountModel;
+use App\Models\Ks\KsUserModel;
 use App\Sdks\Ks\Ks;
 use App\Services\SecondVersionService;
 
@@ -244,5 +245,30 @@ class KsService extends BaseService
      */
     public function multiGetPageListAfter($res){
         return $res;
+    }
+
+
+    /**
+     * @param $userId
+     * @return mixed
+     * @throws CustomException
+     * 获取快手用户
+     */
+    public function getKsUser($userId){
+        $ksUserModel = new KsUserModel();
+        $user = $ksUserModel
+            ->where('id', $userId)
+            ->first();
+
+        if(empty($user)){
+            throw new CustomException([
+                'code' => 'NOT_FOUND_USER',
+                'message' => '找不到对应用户,请确认用户是否正确',
+                'data' => [
+                    'user_id' => $userId,
+                ],
+            ]);
+        }
+        return $user;
     }
 }

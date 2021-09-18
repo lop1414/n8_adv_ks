@@ -5,6 +5,7 @@ namespace App\Enums\Ks;
 class KsSyncTypeEnum
 {
     const VIDEO = 'VIDEO';
+    const ACCOUNT = 'ACCOUNT';
 
     /**
      * @var string
@@ -18,5 +19,6 @@ class KsSyncTypeEnum
      */
     static public $list = [
         ['id' => self::VIDEO, 'name' => '视频'],
+        ['id' => self::ACCOUNT, 'name' => '账户'],
     ];
 }

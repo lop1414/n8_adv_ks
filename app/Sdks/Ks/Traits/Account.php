@@ -38,7 +38,7 @@ trait Account
     }
 
     /**
-     * @param array $accountId
+     * @param $accountId
      * @return mixed
      * 获取账户信息
      */
@@ -50,5 +50,17 @@ trait Account
         ];
 
         return $this->authRequest($url, $param, 'GET');
+    }
+
+
+    public function getAccountList($userId,$token){
+        $url = $this->getUrl('/gw/uc/v1/advertisers');
+
+        $this->setAccessToken($token);
+        $param = [
+            'advertiser_id' => $userId
+        ];
+
+        return $this->authRequest($url, $param, 'POST');
     }
 }

@@ -37,4 +37,31 @@ trait AccessToken
         }
         return $this->accessToken;
     }
+
+
+    public function getOauthAccessToken($secret,$authCode){
+        $url = $this->getUrl('/oauth2/authorize/access_token');
+
+        $param = [
+            'app_id'    => $this->getAppId(),
+            'secret'    => $secret,
+            'auth_code' => $authCode,
+        ];
+
+        return $this->authRequest($url, $param, 'POST');
+    }
+
+
+    public function refreshAccessToken($appId,$secret,$refresh_token){
+        $url = $this->getUrl('/oauth2/authorize/refresh_token');
+
+        $this->setAccessToken('');
+        $param = [
+            'app_id'    => $appId,
+            'secret'    => $secret,
+            'refresh_token' => $refresh_token,
+        ];
+
+        return $this->authRequest($url, $param, 'POST');
+    }
 }

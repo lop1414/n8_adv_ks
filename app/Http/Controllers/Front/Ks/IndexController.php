@@ -41,6 +41,8 @@ class IndexController extends FrontController
 
         $ret = (new KsAccountService($appId))->grant($authCode,$userId);
 
+        (new KsAccountService())->refreshAccessToken();
+
         return $this->ret($ret);
     }
 

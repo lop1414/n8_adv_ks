@@ -22,7 +22,7 @@ class AppController extends AdminController
     }
 
     public function getAuthUrl($appId,$userId){
-        $redirectUri = config('common.system_api.'.SystemAliasEnum::ADV_KS.'url').'/front/ks/grant';
+        $redirectUri = config('common.system_api.'.SystemAliasEnum::ADV_KS.'.url').'/front/ks/grant';
 
         $url = 'https://developers.e.kuaishou.com/tools/authorize?';
         $url .= http_build_query([

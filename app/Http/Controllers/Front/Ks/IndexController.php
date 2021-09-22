@@ -29,7 +29,6 @@ class IndexController extends FrontController
     public function grant(Request $request){
         $data = $request->all();
         $this->validRule($data, [
-            'app_id' => 'required',
             'auth_code' => 'required',
             'state'  => 'required'
         ]);
@@ -37,9 +36,8 @@ class IndexController extends FrontController
         $errorLogService = new ErrorLogService();
         $errorLogService->create('KS_OAUTH_GRANT_LOG', '快手Oauth授权日志', $data, ExceptionTypeEnum::CUSTOM);
 
-        $appId = $data['app_id'];
+        list($appId,$userId) = explode('|',$data['state']);
         $authCode = $data['auth_code'];
-        $userId = $data['state'];
 
         $ret = (new KsAccountService($appId))->grant($authCode,$userId);
 

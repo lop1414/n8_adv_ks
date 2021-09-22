@@ -28,7 +28,7 @@ class AppController extends AdminController
         $url .= http_build_query([
             'app_id' => $appId,
             'scope' => '["report_service","account_service","ad_query","ad_manage","report_service"]',
-            'state' => $userId,
+            'state' => $appId.'|'.$userId,
             'redirect_uri' => $redirectUri
         ]);
         return $url;

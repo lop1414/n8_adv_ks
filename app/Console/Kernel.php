@@ -40,7 +40,6 @@ class Kernel extends ConsoleKernel
         TaskKsVideoUploadCommand::class,
 
         // 快手
-        SyncKsAccountCommand::class,
         KsSyncAccountReportCommand::class,
         KsSyncCreativeReportCommand::class,
         KsRefreshAccessTokenCommand::class,

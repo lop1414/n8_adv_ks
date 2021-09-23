@@ -78,7 +78,7 @@ class AdvConvertCallbackService extends ConvertCallbackService
         $ret = file_get_contents($url);
         $result = json_decode($ret, true);
 
-        if(!isset($result['code']) || $result['code'] != 0){
+        if(!isset($result['result']) || $result['result'] != 1){
             throw new CustomException([
                 'code' => 'KS_CONVERT_CALLBACK_ERROR',
                 'message' => '快手转化回传失败',

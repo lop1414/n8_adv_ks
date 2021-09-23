@@ -80,6 +80,10 @@ $router->group([
             $router->post('select', 'Admin\Ks\KsUnitController@select');
             $router->post('get', 'Admin\Ks\KsUnitController@get');
         });
+        // 广告组扩展
+        $router->group(['prefix' => 'unit_extend'], function () use ($router) {
+            $router->post('batch_update', 'Admin\ks\UnitExtendController@batchUpdate');
+        });
     });
 
 

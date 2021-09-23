@@ -10,8 +10,6 @@ use App\Console\Commands\Ks\KsSyncCommand;
 use App\Console\Commands\Ks\KsSyncVideoCommand;
 use App\Console\Commands\Ks\Report\KsSyncAccountReportCommand;
 use App\Console\Commands\Ks\Report\KsSyncCreativeReportCommand;
-use App\Console\Commands\SecondVersion\ReloadKsAccountCommand;
-use App\Console\Commands\SecondVersion\SyncKsAccountCommand;
 use App\Console\Commands\Task\TaskKsSyncCommand;
 use App\Console\Commands\Task\TaskKsVideoUploadCommand;
 use Illuminate\Console\Scheduling\Schedule;
@@ -25,8 +23,6 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        // 二版
-        ReloadKsAccountCommand::class,
 
         // 队列
         QueueClickCommand::class,

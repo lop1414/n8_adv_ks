@@ -88,8 +88,6 @@ class KsService extends BaseService
             ]);
         }
 
-        // 重载失效 access_token
-        $skAccount = $this->reloadFailAccessToken($skAccount);
 
         // 设置token
         $this->sdk->setAccessToken($skAccount->access_token);
@@ -103,29 +101,6 @@ class KsService extends BaseService
     public function isFailAccessToken($ksAccount){
         $datetime = date('Y-m-d H:i:s', time());
         return $datetime > $ksAccount->fail_at;
-    }
-
-    /**
-     * @param $ksAccount
-     * @return mixed
-     * @throws CustomException
-     * 重载失效 access_token
-     */
-    public function reloadFailAccessToken($ksAccount){
-        if($this->isFailAccessToken($ksAccount)){
-            Functions::consoleDump('reload fail access token');
-            if($ksAccount->belong_platform == AdvAccountBelongTypeEnum::SECOND_VERSION){
-                $secondVersionService = new SecondVersionService();
-                $secondVersionAccount = $secondVersionService->getKsAdvAccount($ksAccount->app_id, $ksAccount->account_id);
-
-                if(!empty($secondVersionAccount)){
-                    $ksAccount->access_token = $secondVersionAccount['token'];
-                    $ksAccount->fail_at = $secondVersionAccount['fail_at'];
-                    $ksAccount->save();
-                }
-            }
-        }
-        return $ksAccount;
     }
 
     /**

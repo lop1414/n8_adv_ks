@@ -64,9 +64,6 @@ class Kernel extends ConsoleKernel
         // 转化上报
         $schedule->command('convert_callback')->cron('* * * * *');
 
-        // 二版
-        $schedule->command('second_version:sync_ks_account')->cron('5 * * * *');
-        $schedule->command('second_version:reload_ks_account')->cron('* * * * *');
 
         // 同步任务
         $schedule->command('ks:sync --type=campaign --date=today')->cron('*/20 * * * *');

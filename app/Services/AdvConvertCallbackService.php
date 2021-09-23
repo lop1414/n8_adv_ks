@@ -62,16 +62,18 @@ class AdvConvertCallbackService extends ConvertCallbackService
             'event_type' => $eventType,
             'event_time' => $eventTime
         ];
-        if(!empty($click->link)){
-            $param['link'] = $click->link;
-        }else{
-            $param['callback'] = $click->callback;
-        }
-
         if(!empty($payAmount)){
             $param['purchase_amount'] = $payAmount;
         }
-        $url = 'http://ad.partner.gifshow.com/track/activate/'.'?'. http_build_query($param);
+
+        if(!empty($click->link)){
+            $param['link'] = $click->link;
+            $url = 'http://ad.partner.gifshow.com/track/activate/'.'?'. http_build_query($param);
+
+        }else{
+            $url = $click->callback. '&' . http_build_query($param);
+        }
+
 
         $ret = file_get_contents($url);
         $result = json_decode($ret, true);

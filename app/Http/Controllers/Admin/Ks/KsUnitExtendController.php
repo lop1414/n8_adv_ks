@@ -56,7 +56,7 @@ class KsUnitExtendController extends KsController
         $units = [];
         foreach($unitIds as $unitId){
             $unit = KsUnitModel::find($unitId);
-            if(empty($adgroup)){
+            if(empty($unit)){
                 throw new CustomException([
                     'code' => 'NOT_FOUND_AD',
                     'message' => "找不到该广告组{{$unitId}}",

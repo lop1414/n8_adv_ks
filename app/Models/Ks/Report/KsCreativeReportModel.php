@@ -2,9 +2,8 @@
 
 namespace App\Models\Ks\Report;
 
-use App\Models\Ks\KsModel;
 
-class KsCreativeReportModel extends KsModel
+class KsCreativeReportModel extends KsReportModel
 {
     /**
      * 关联到模型的数据表

@@ -3,7 +3,7 @@
 namespace App\Console\Commands\Ks;
 
 use App\Common\Console\BaseCommand;
-use App\Services\Ks\ksAccountService;
+use App\Services\Ks\KsAccountService;
 
 class KsRefreshAccessTokenCommand extends BaseCommand
 {

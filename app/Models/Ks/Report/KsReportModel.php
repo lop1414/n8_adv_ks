@@ -47,4 +47,24 @@ class KsReportModel extends KsModel
     {
         $this->attributes['cost'] = $value * 100000;
     }
+
+
+    /**
+     * @param $value
+     * @return float|int
+     * 属性访问器
+     */
+    public function getChargeAttribute($value)
+    {
+        return $value / 100000;
+    }
+
+    /**
+     * @param $value
+     * 属性修饰器
+     */
+    public function setChargeAttribute($value)
+    {
+        $this->attributes['charge'] = $value * 100000;
+    }
 }

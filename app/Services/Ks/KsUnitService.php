@@ -104,7 +104,7 @@ class KsUnitService extends KsService
         $ksAdUnit->deep_conversion_type = $adUnit['deep_conversion_type'];
         $ksAdUnit->deep_conversion_bid = $adUnit['deep_conversion_bid'];
         $ksAdUnit->day_budget = $adUnit['day_budget'];
-        $ksAdUnit->day_budget_schedule = $adUnit['day_budget_schedule'];
+        $ksAdUnit->day_budget_schedule = $adUnit['day_budget_schedule'] ?? [];
         $ksAdUnit->scene_id = $adUnit['scene_id'];
         $ksAdUnit->roi_ratio = $adUnit['roi_ratio'];
         $ksAdUnit->speed = $adUnit['speed'];

@@ -9,7 +9,7 @@ use App\Models\Ks\KsUnitExtendModel;
 use App\Models\Ks\KsUnitModel;
 use Illuminate\Http\Request;
 
-class UnitExtendController extends KsController
+class KsUnitExtendController extends KsController
 {
     /**
      * constructor.

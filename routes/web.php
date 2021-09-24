@@ -82,7 +82,7 @@ $router->group([
         });
         // 广告组扩展
         $router->group(['prefix' => 'unit_extend'], function () use ($router) {
-            $router->post('batch_update', 'Admin\ks\UnitExtendController@batchUpdate');
+            $router->post('batch_update', 'Admin\ks\KsUnitExtendController@batchUpdate');
         });
     });
 

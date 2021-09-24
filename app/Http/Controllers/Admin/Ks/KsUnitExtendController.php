@@ -59,7 +59,7 @@ class KsUnitExtendController extends KsController
             if(empty($adgroup)){
                 throw new CustomException([
                     'code' => 'NOT_FOUND_AD',
-                    'message' => "找不到该广告组{{$unit}}",
+                    'message' => "找不到该广告组{{$unitId}}",
                 ]);
             }
             $units[] = $unit;

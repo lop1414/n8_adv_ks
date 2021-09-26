@@ -43,7 +43,7 @@ class KsProgramCreativeReportService extends KsReportService
 
         $creativeAccountIds = ['xx'];
         foreach($accountReportMap as $accountId => $charge){
-            if(isset($creativeReportMap[$accountId]) && bcsub($creativeReportMap[$accountId] * 100000, $charge * 100000) >= 0){
+            if(isset($creativeReportMap[$accountId]) && bcsub($creativeReportMap[$accountId] * 1000, $charge * 1000) >= 0){
                 continue;
             }
             $creativeAccountIds[] = $accountId;

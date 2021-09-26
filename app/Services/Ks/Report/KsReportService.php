@@ -111,8 +111,8 @@ class KsReportService extends KsService
 
                     $item['stat_datetime'] = "{$item['stat_date']} {$item['stat_hour']}:00:00";
 
-                    $item['charge'] = bcmul($item['charge'],1000);
                     $item['extends'] = json_encode($item);
+                    $item['charge'] = bcmul($item['charge'],1000);
                     $data[] = $item;
                 }
 

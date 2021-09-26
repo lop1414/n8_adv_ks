@@ -29,24 +29,6 @@ class KsReportModel extends KsModel
         $this->attributes['extends'] = json_encode($value);
     }
 
-    /**
-     * @param $value
-     * @return float|int
-     * 属性访问器
-     */
-    public function getCostAttribute($value)
-    {
-        return $value / 100000;
-    }
-
-    /**
-     * @param $value
-     * 属性修饰器
-     */
-    public function setCostAttribute($value)
-    {
-        $this->attributes['cost'] = $value * 100000;
-    }
 
 
     /**
@@ -56,7 +38,7 @@ class KsReportModel extends KsModel
      */
     public function getChargeAttribute($value)
     {
-        return $value / 100000;
+        return $value / 1000;
     }
 
     /**
@@ -65,6 +47,6 @@ class KsReportModel extends KsModel
      */
     public function setChargeAttribute($value)
     {
-        $this->attributes['charge'] = $value * 100000;
+        $this->attributes['charge'] = $value * 1000;
     }
 }

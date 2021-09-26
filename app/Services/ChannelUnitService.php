@@ -88,7 +88,7 @@ class ChannelUnitService extends BaseService
         if($ret && !empty($channelUnit->unit_id) && $flag != $this->buildFlag($channelUnit)){
             $this->createChannelAdLog([
                 'channel_unit_id' => $channelUnit->id,
-                'adgroup_id' => $data['adgroup_id'],
+                'unit_id'    => $data['unit_id'],
                 'channel_id' => $data['channel_id'],
                 'platform'   => $data['platform'],
                 'extends'    => $data['extends']

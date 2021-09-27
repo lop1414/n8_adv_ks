@@ -134,8 +134,6 @@ $router->group(['middleware' => ['access_control_allow_origin']], function () us
 
 $router->get('front/ks/grant', 'Front\Ks\IndexController@grant');
 
-$router->get('front/ks/unit', 'Front\Ks\IndexController@unit');
-$router->get('front/ks/creative_report', 'Front\Ks\IndexController@creativeReport');
 
 // 测试
 $router->post('test', 'TestController@test');

@@ -228,7 +228,7 @@ class ChannelUnitService extends BaseService
 
                 $clickUrl = $ksCreative->extends->click_url ?? '';
 
-                $this->updateChannelUnit($ksCreative->unit_id,$clickUrl);
+                $this->updateChannelUnit($ksCreative->id,$clickUrl);
             }
         }while(!$ksCreatives->isEmpty());
     }

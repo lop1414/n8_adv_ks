@@ -101,6 +101,11 @@ $router->group([
         $router->post('select', 'Admin\ClickController@select');
         $router->post('callback', 'Admin\ClickController@callback');
     });
+
+    // 转化回传
+    $router->group(['prefix' => 'convert_callback'], function () use ($router) {
+        $router->post('callback', '\\App\Common\Controllers\Admin\ConvertCallbackController@callback');
+    });
 });
 
 

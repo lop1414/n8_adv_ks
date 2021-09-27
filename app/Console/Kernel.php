@@ -10,6 +10,7 @@ use App\Console\Commands\Ks\KsSyncCommand;
 use App\Console\Commands\Ks\KsSyncVideoCommand;
 use App\Console\Commands\Ks\Report\KsSyncAccountReportCommand;
 use App\Console\Commands\Ks\Report\KsSyncCreativeReportCommand;
+use App\Console\Commands\SyncChannelUnitCommand;
 use App\Console\Commands\Task\TaskKsSyncCommand;
 use App\Console\Commands\Task\TaskKsVideoUploadCommand;
 use Illuminate\Console\Scheduling\Schedule;
@@ -28,6 +29,7 @@ class Kernel extends ConsoleKernel
         QueueClickCommand::class,
 
 
+
         // 转化回传
         ConvertCallbackCommand::class,
 
@@ -43,6 +45,9 @@ class Kernel extends ConsoleKernel
         KsSyncAccountReportCommand::class,
         KsSyncCreativeReportCommand::class,
         KsRefreshAccessTokenCommand::class,
+
+        // 同步渠道-广告组关联
+        SyncChannelUnitCommand::class,
     ];
 
     /**
@@ -59,6 +64,8 @@ class Kernel extends ConsoleKernel
         // 转化上报
         $schedule->command('convert_callback')->cron('* * * * *');
 
+        // 同步渠道-广告组
+        $schedule->command('sync_channel_unit --date=today')->cron('*/2 * * * *');
 
         // 同步任务
         $schedule->command('ks:sync --type=campaign --date=today')->cron('*/20 * * * *');

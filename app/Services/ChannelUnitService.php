@@ -72,6 +72,7 @@ class ChannelUnitService extends BaseService
     public function update($data){
         $channelUnitModel = new ChannelUnitModel();
         $channelUnit = $channelUnitModel->where('unit_id', $data['unit_id'])
+            ->where('channel_id',$data['channel_id'])
             ->where('platform', $data['platform'])
             ->first();
 
@@ -81,7 +82,6 @@ class ChannelUnitService extends BaseService
         }
 
         $channelUnit->unit_id = $data['unit_id'];
-        $channelUnit->channel_id = $data['channel_id'];
         $channelUnit->platform = $data['platform'];
         $channelUnit->extends = $data['extends'];
         $ret = $channelUnit->save();

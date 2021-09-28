@@ -76,10 +76,12 @@ class ChannelUnitService extends BaseService
             ->where('platform', $data['platform'])
             ->first();
 
-        if(empty($channelUnit)){
+        if(empty($channelAdgroup)){
             $channelUnit = new ChannelUnitModel();
         }
+
         $channelUnit->unit_id = $data['unit_id'];
+        $channelUnit->channel_id = $data['channel_id'];
         $channelUnit->platform = $data['platform'];
         $channelUnit->extends = $data['extends'];
         $ret = $channelUnit->save();

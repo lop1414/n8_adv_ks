@@ -76,15 +76,15 @@ class ChannelUnitService extends BaseService
             ->where('platform', $data['platform'])
             ->first();
 
-        $flag = $this->buildFlag($channelUnit);
         if(empty($channelUnit)){
             $channelUnit = new ChannelUnitModel();
         }
-
         $channelUnit->unit_id = $data['unit_id'];
         $channelUnit->platform = $data['platform'];
         $channelUnit->extends = $data['extends'];
         $ret = $channelUnit->save();
+
+        $flag = $this->buildFlag($channelUnit);
         if($ret && !empty($channelUnit->unit_id) && $flag != $this->buildFlag($channelUnit)){
             $this->createChannelAdLog([
                 'channel_unit_id' => $channelUnit->id,

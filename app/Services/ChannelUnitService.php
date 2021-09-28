@@ -77,7 +77,7 @@ class ChannelUnitService extends BaseService
             ->first();
 
         $flag = $this->buildFlag($channelUnit);
-        if(empty($channelAdgroup)){
+        if(empty($channelUnit)){
             $channelUnit = new ChannelUnitModel();
         }
 

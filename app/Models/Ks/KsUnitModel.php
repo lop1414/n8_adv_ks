@@ -135,7 +135,7 @@ class KsUnitModel extends KsModel
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      * 关联渠道模型 一对一
      */
-    public function channel_adgroup(){
+    public function channel_unit(){
         return $this->hasOne('App\Models\ChannelUnitModel', 'unit_id', 'id');
     }
 }

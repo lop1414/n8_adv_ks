@@ -34,6 +34,7 @@ class KsUnitController extends KsController
             foreach ($this->curdService->responseData['list'] as $item){
                 $item->ks_account;
                 $item->campaign;
+                $item->channel_unit;
                 if(!empty($item->ks_unit_extends)){
                     $item->convert_callback_strategy = ConvertCallbackStrategyModel::find($item->ks_unit_extends->convert_callback_strategy_id);
                 }else{
@@ -70,6 +71,15 @@ class KsUnitController extends KsController
             $keyword = $this->curdService->requestData['keyword'] ?? '';
             if(!empty($keyword)){
                 $builder->whereRaw("(id LIKE '%{$keyword}%' OR name LIKE '%{$keyword}%')");
+            }
+
+            // 筛选渠道
+            $channelId = $this->curdService->requestData['channel_id'] ?? '';
+            if($channelId){
+                $builder->whereRaw("id IN (
+                SELECT unit_id FROM channel_units
+                    WHERE channel_id = {$channelId}
+                )");
             }
 
             //$builder->where('parent_id', '<>', 0);

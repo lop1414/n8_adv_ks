@@ -74,8 +74,8 @@ class KsUnitController extends KsController
             }
 
             // 筛选渠道
-            $channelId = $this->curdService->requestData['channel_id'] ?? '';
-            if($channelId){
+            if(isset($this->curdService->requestData['channel_id'])){
+                $channelId = $this->curdService->requestData['channel_id'];
                 $builder->whereRaw("id IN (
                 SELECT unit_id FROM channel_units
                     WHERE channel_id = {$channelId}

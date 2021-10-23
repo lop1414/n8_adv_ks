@@ -135,6 +135,9 @@ $router->group([
 $router->group(['middleware' => ['access_control_allow_origin']], function () use ($router) {
     // 点击
     $router->get('front/click', 'Front\AdvClickController@index');
+
+    // gdt 临时点击
+    $router->get('front/gdt_click', 'Front\AdvClickController@gdt');
 });
 
 $router->get('front/ks/grant', 'Front\Ks\IndexController@grant');

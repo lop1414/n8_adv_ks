@@ -131,6 +131,7 @@ class AdvClickService extends ClickService
         $clickModel->muid = $data['muid'] ?? '';
         $clickModel->android_id = $data['android_id'] ?? '';
         $clickModel->oaid = $data['oaid'] ?? '';
+        $clickModel->oaid_md5 = $data['oaid_md5'] ?? '';
         $clickModel->os = $data['os'] ?? '';
         $clickModel->ip = $data['ip'] ?? '';
         $clickModel->ua = $data['ua'] ?? '';

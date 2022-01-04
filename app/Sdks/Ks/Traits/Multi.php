@@ -26,7 +26,7 @@ trait Multi
             $curlOptions[] = [
                 'url' => $url,
                 'param' => $p,
-                'method' => 'GET',
+                'method' => 'POST',
                 'header' => [
                     'Access-Token:'. $account['access_token'],
                     'Content-Type: application/json; charset=utf-8',

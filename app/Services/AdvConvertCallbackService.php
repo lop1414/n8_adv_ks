@@ -105,8 +105,8 @@ class AdvConvertCallbackService extends ConvertCallbackService
         return [
             ConvertTypeEnum::ACTIVATION => 1,
             ConvertTypeEnum::REGISTER => 1,
-            ConvertTypeEnum::FOLLOW => 2,
-            ConvertTypeEnum::ADD_DESKTOP => 2,
+            ConvertTypeEnum::FOLLOW => 1,
+            ConvertTypeEnum::ADD_DESKTOP => 1,
             ConvertTypeEnum::PAY => 3,
         ];
     }

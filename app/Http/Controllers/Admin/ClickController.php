@@ -66,10 +66,13 @@ class ClickController extends AdminController
         }
 
 
+        // 24小时内
+        $datetime = date('Y-m-d H:i:s', strtotime("-6 hours"));
         $click = (new ClickModel())
             ->leftJoin('ks_campaigns AS c','clicks.campaign_id','=','c.id')
             ->select(DB::raw('clicks.*'))
             ->where('c.account_id',$request->post('account_id'))
+            ->where('clicks.click_at', '>', $datetime)
             ->orderBy('click_at')
             ->first();
         if(empty($click)){

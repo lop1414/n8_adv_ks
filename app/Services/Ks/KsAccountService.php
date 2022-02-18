@@ -83,7 +83,6 @@ class KsAccountService extends KsService
             ];
         }
 
-        $user->belong_platform = AdvAccountBelongTypeEnum::LOCAL;
         $user->access_token = $info['access_token'];
         $user->refresh_token = $info['refresh_token'];
         $user->fail_at = date('Y-m-d H:i:s', time() + $info['access_token_expires_in'] - 2000);
@@ -168,6 +167,8 @@ class KsAccountService extends KsService
                     $ksAccount->admin_id = 0;
                     $ksAccount->user_id = $accountInfo['user_id'];
                     $ksAccount->status = StatusEnum::ENABLE;
+                    $ksAccount->belong_platform = AdvAccountBelongTypeEnum::LOCAL;
+
                 }elseif($ksAccount->user_id != $accountInfo['user_id']){
                     continue;
                 }

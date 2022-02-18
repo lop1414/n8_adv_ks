@@ -175,7 +175,6 @@ class KsAccountService extends KsService
 
                 $ksAccount->name = $account['advertiser_name'];
                 $ksAccount->company = $accountInfo['corporation_name'];
-                $ksAccount->belong_platform = AdvAccountBelongTypeEnum::LOCAL;
                 $ksAccount->extend = [];
                 $ksAccount->access_token = $KsUser->access_token;
                 $ksAccount->refresh_token = '';

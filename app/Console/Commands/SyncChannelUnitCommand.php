@@ -38,7 +38,7 @@ class SyncChannelUnitCommand extends BaseCommand
      */
     public function handle(){
         $param = $this->option();
-$this->demo();
+
         $lockKey = 'sync_channel_unit_'. $param['date'];
 
         $option = ['log' => true];
@@ -73,18 +73,5 @@ $this->demo();
     }
 
 
-    public function demo(){
-        $model = new KsCreativeModel();
-        $i = 1;
-        do{
-            echo $i."  ";
-            $list = $model->where('description','')->limit(1000)->get();
-            foreach ($list as $item){
-                $item->description = $item->extends->display_info->description;
-                $item->save();
-            }
-            $i++;
-        }while(!$list->isEmpty());
-    }
 
 }

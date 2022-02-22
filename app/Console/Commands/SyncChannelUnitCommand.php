@@ -5,7 +5,6 @@ namespace App\Console\Commands;
 use App\Common\Console\BaseCommand;
 use App\Common\Helpers\Functions;
 use App\Common\Tools\CustomException;
-use App\Models\Ks\KsCreativeModel;
 use App\Services\ChannelUnitService;
 
 class SyncChannelUnitCommand extends BaseCommand

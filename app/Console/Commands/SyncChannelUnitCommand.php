@@ -38,7 +38,6 @@ class SyncChannelUnitCommand extends BaseCommand
      */
     public function handle(){
         $param = $this->option();
-        $this->demo();die;
 
         $lockKey = 'sync_channel_unit_'. $param['date'];
 
@@ -73,19 +72,4 @@ class SyncChannelUnitCommand extends BaseCommand
         return true;
     }
 
-
-    public function demo(){
-        $model = new KsProgramCreativeReportModel();
-        $i = 1;
-        do{
-            echo $i."  ";
-            $list = $model->where('photo_id',0)->limit(1000)->get();
-            foreach ($list as $item){
-                $item->photo_id = $item->extends->photo_id;
-                $item->description = $item->extends->description;
-                $item->save();
-            }
-            $i++;
-        }while(!$list->isEmpty());
-    }
 }

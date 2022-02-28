@@ -45,8 +45,8 @@ class AdvConvertCallbackService extends ConvertCallbackService
 
         //付费金额
         $payAmount = 0;
-        if(!empty($payAmount)){
-            $payAmount =  $item->extends->amount;
+        if(!empty($item->extends->convert->amount)){
+            $payAmount =  $item->extends->convert->amount;
         }
 
         $eventTime = strtotime($item->convert_at);

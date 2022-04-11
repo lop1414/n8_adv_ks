@@ -67,13 +67,20 @@ class ClickController extends AdminController
         }
 
 
-        // 24小时内
+        // 6小时内
         $datetime = date('Y-m-d H:i:s', strtotime("-6 hours"));
+        $channelId = $request->post('channel_id');
+        $productId = $request->post('account_id');
         $click = (new ClickModel())
             ->leftJoin('ks_campaigns AS c','clicks.campaign_id','=','c.id')
             ->select(DB::raw('clicks.*'))
-            ->where('c.account_id',$request->post('account_id'))
-            ->where('clicks.channel_id',$request->post('channel_id'))
+            ->when(!$channelId,function ($query) use ($productId){
+                // 有渠道 不过滤账户
+                return $query->where('c.account_id',$productId);
+            })
+            ->when($channelId,function ($query,$channelId) {
+                return $query->where('clicks.channel_id',$channelId);
+            })
             ->where('clicks.click_at', '>', $datetime)
             ->orderBy('click_at')
             ->first();

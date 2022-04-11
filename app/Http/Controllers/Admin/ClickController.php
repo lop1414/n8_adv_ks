@@ -82,7 +82,7 @@ class ClickController extends AdminController
                 return $query->where('clicks.channel_id',$channelId);
             })
             ->where('clicks.click_at', '>', $datetime)
-            ->orderBy('click_at')
+            ->orderBy('click_at','DESC')
             ->first();
         if(empty($click)){
             throw new CustomException([

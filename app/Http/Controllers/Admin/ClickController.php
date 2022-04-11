@@ -50,6 +50,7 @@ class ClickController extends AdminController
 
         $this->validRule($request->post(), [
             'event_type' => 'required',
+            'channel_id' => 'required',
             'account_id' => 'required'
         ]);
 
@@ -72,6 +73,7 @@ class ClickController extends AdminController
             ->leftJoin('ks_campaigns AS c','clicks.campaign_id','=','c.id')
             ->select(DB::raw('clicks.*'))
             ->where('c.account_id',$request->post('account_id'))
+            ->where('clicks.channel_id',$request->post('channel_id'))
             ->where('clicks.click_at', '>', $datetime)
             ->orderBy('click_at')
             ->first();

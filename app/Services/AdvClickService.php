@@ -50,6 +50,15 @@ class AdvClickService extends ClickService
 
         $clickAt = null;
         if(!empty($data['click_at'])){
+            if($data['click_at'] == '__TS__'){
+                throw new CustomException([
+                    'code' => 'CLICK_AT_IS_ERROR',
+                    'message' => '点击时间格式错误-未替换宏参数',
+                    'log' => false,
+                    'data' => $data,
+                ]);
+            }
+
             if(!is_numeric($data['click_at'])){
                 throw new CustomException([
                     'code' => 'CLICK_AT_IS_ERROR',

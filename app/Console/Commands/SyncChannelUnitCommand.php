@@ -5,6 +5,8 @@ namespace App\Console\Commands;
 use App\Common\Console\BaseCommand;
 use App\Common\Helpers\Functions;
 use App\Common\Tools\CustomException;
+use App\Models\Ks\KsCreativeModel;
+use App\Models\Ks\Report\KsCreativeReportModel;
 use App\Services\ChannelUnitService;
 
 class SyncChannelUnitCommand extends BaseCommand
@@ -36,6 +38,18 @@ class SyncChannelUnitCommand extends BaseCommand
      * 处理
      */
     public function handle(){
+        do{
+            $list = (new KsCreativeReportModel())->where('photo_id','')->limit(1000)->get();
+            foreach ($list as $item){
+                $item->photo_id = $item->extends->photo_id;
+                $item->save();
+            }
+
+        }while(!$list->isEmpty());
+
+
+
+die;
         $param = $this->option();
 
         $lockKey = 'sync_channel_unit_'. $param['date'];

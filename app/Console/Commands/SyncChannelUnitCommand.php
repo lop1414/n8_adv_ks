@@ -38,18 +38,6 @@ class SyncChannelUnitCommand extends BaseCommand
      * 处理
      */
     public function handle(){
-        do{
-            $list = (new KsCreativeReportModel())->where('photo_id','')->limit(1000)->get();
-            foreach ($list as $item){
-                $item->photo_id = $item->extends->photo_id;
-                $item->save();
-            }
-
-        }while(!$list->isEmpty());
-
-
-
-die;
         $param = $this->option();
 
         $lockKey = 'sync_channel_unit_'. $param['date'];

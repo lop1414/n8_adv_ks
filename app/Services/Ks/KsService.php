@@ -10,7 +10,6 @@ use App\Common\Tools\CustomException;
 use App\Models\Ks\KsAccountModel;
 use App\Models\Ks\KsUserModel;
 use App\Sdks\Ks\Ks;
-use App\Services\SecondVersionService;
 
 class KsService extends BaseService
 {

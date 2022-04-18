@@ -236,6 +236,14 @@ trait Request
             }
 
             $result = json_decode($v['result'], true);
+            if(isset($result['details'])){
+                $tmp =  [
+                    'code' => 0,
+                    'data' => $result
+                ];
+                $result = $tmp;
+            }
+
             if(!isset($result['code']) || $result['code'] != 0){
                 // 错误提示
                 $errorMessage = $result['msg'] ?? '并发请求错误';

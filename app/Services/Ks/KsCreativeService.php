@@ -2,9 +2,13 @@
 
 namespace App\Services\Ks;
 
+use App\Common\Enums\MaterialTypeEnums;
 use App\Common\Helpers\Functions;
 use App\Common\Tools\CustomException;
+use App\Datas\KsMaterialData;
 use App\Models\Ks\KsCreativeModel;
+use App\Models\Ks\KsMaterialCreativeModel;
+use App\Models\Ks\KsVideoModel;
 
 class KsCreativeService extends KsService
 {
@@ -105,5 +109,53 @@ class KsCreativeService extends KsService
         }
 
         return $ret;
+    }
+
+
+    // 创意素材分析
+    public function creativeMaterial($date){
+        $model = new KsCreativeModel();
+        $ksMaterialData = new KsMaterialData();
+        $ksVideoModel = new KsVideoModel();
+        $lastId = 0;
+        do{
+            $list = $model
+                ->where('id','>',$lastId)
+                ->whereBetween('create_time', ["{$date} 00:00:00", "{$date} 23:59:59"])
+                ->skip(0)
+                ->take(1000)
+                ->orderBy('id')
+                ->get();
+
+            foreach ($list as $item){
+                $lastId = $item->id;
+                $ksMaterial = $ksMaterialData->save([
+                    'material_type'    => MaterialTypeEnums::VIDEO,
+                    'file_id'          => $item->photo_id
+                ]);
+                $ksVideo = $ksVideoModel->where('id',$item->photo_id)->first();
+                if(empty($ksVideo)){
+                    var_dump("找不到视频信息：{$item->photo_id}");
+                    continue;
+                }
+
+                $videoModel = new \App\Models\Material\VideoModel();
+                $video = $videoModel->whereRaw("
+                    (signature = '{$ksVideo->signature}' OR source_signature = '{$ksVideo->signature}')
+                ")->first();
+
+                $n8MaterialId =!empty($video) ? $video->id : 0;
+
+                $materialCreative = new KsMaterialCreativeModel();
+                $materialCreative->material_id = $ksMaterial->id;
+                $materialCreative->creative_id = $item->id;
+                $materialCreative->material_type = $ksMaterial->material_type;
+                $materialCreative->n8_material_id = $n8MaterialId;
+                $materialCreative->signature = $ksVideo->signature;
+                $materialCreative->save();
+            }
+
+
+        }while(!$list->isEmpty());
     }
 }

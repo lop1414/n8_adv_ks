@@ -3,6 +3,7 @@
 namespace App\Console\Commands\Ks;
 
 use App\Common\Console\BaseCommand;
+use App\Common\Helpers\Functions;
 use App\Common\Tools\CustomException;
 use App\Services\Ks\KsCampaignService;
 use App\Services\Ks\KsCreativeService;
@@ -62,6 +63,11 @@ class KsSyncCommand extends BaseCommand
             $option,
             $param
         );
+
+        // 同步创意后 分析创意素材
+        if($param['type'] == 'creative'){
+            $service->creativeMaterial(Functions::getDate($param['date']));
+        }
     }
 
 

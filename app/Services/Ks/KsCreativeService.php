@@ -133,6 +133,17 @@ class KsCreativeService extends KsService
                     'material_type'    => MaterialTypeEnums::VIDEO,
                     'file_id'          => $item->photo_id
                 ]);
+
+
+                $tmpModel = new KsMaterialCreativeModel();
+                $materialCreative = $tmpModel
+                    ->where('material_id',$ksMaterial->id)
+                    ->where('creative_id',$item->id)
+                    ->first();
+                if(!empty($materialCreative)){
+                    continue;
+                }
+
                 $ksVideo = $ksVideoModel->where('id',$item->photo_id)->first();
                 if(empty($ksVideo)){
                     var_dump("找不到视频信息：{$item->photo_id}");
@@ -143,10 +154,10 @@ class KsCreativeService extends KsService
                 $video = $videoModel->whereRaw("
                     (signature = '{$ksVideo->signature}' OR source_signature = '{$ksVideo->signature}')
                 ")->first();
-
                 $n8MaterialId =!empty($video) ? $video->id : 0;
 
-                $materialCreative = new KsMaterialCreativeModel();
+
+                $materialCreative = $tmpModel;
                 $materialCreative->material_id = $ksMaterial->id;
                 $materialCreative->creative_id = $item->id;
                 $materialCreative->material_type = $ksMaterial->material_type;

@@ -78,6 +78,16 @@ class KsProgramCreativeReportService extends KsReportService
                     'material_type'    => MaterialTypeEnums::VIDEO,
                     'file_id'          => $item->photo_id
                 ]);
+
+                $tmpModel = new KsMaterialProgramCreativeModel();
+                $materialProgramCreative = $tmpModel
+                    ->where('material_id',$ksMaterial->id)
+                    ->where('creative_id',$item->creative_id)
+                    ->first();
+                if(!empty($materialProgramCreative)){
+                    continue;
+                }
+
                 $ksVideo = $ksVideoModel->where('id',$item->photo_id)->first();
                 if(empty($ksVideo)){
                     var_dump("找不到视频信息：{$item->photo_id}");
@@ -88,10 +98,9 @@ class KsProgramCreativeReportService extends KsReportService
                 $video = $videoModel->whereRaw("
                     (signature = '{$ksVideo->signature}' OR source_signature = '{$ksVideo->signature}')
                 ")->first();
+                $n8MaterialId = !empty($video) ? $video->id : 0;
 
-                $n8MaterialId =!empty($video) ? $video->id : 0;
-
-                $materialProgramCreative = new KsMaterialProgramCreativeModel();
+                $materialProgramCreative = $tmpModel;
                 $materialProgramCreative->material_id = $ksMaterial->id;
                 $materialProgramCreative->creative_id = $item->creative_id;
                 $materialProgramCreative->unit_id = $item->unit_id;

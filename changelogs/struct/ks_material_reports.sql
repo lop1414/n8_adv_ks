@@ -33,7 +33,7 @@ CREATE TABLE `ks_material_reports` (
   `bclick` int(11) NOT NULL DEFAULT '0' COMMENT '行为数',
   `extends` text COMMENT '扩展字段',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `uni` (`stat_datetime`,`material_id`) USING BTREE,
+  UNIQUE KEY `uni` (`stat_datetime`,`account_id`,`material_id`) USING BTREE,
   KEY `account_id` (`account_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='快手素材报表';
 

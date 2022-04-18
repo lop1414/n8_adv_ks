@@ -90,7 +90,7 @@ class KsProgramCreativeReportService extends KsReportService
 
                 $ksVideo = $ksVideoModel->where('id',$item->photo_id)->first();
                 if(empty($ksVideo)){
-                    var_dump("找不到视频信息：{$item->photo_id}");
+                    var_dump("找不到视频信息：{$item->account_id} - {$item->photo_id}");
                     continue;
                 }
 

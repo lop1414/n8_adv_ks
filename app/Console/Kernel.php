@@ -74,6 +74,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('ks:sync --type=unit --date=today')->cron('*/20 * * * *');
         $schedule->command('ks:sync --type=creative --date=today')->cron('*/20 * * * *');
         $schedule->command('ks:sync --type=program_creative --date=today')->cron('*/20 * * * *');
+        $schedule->command('ks:sync_video --date=today')->cron('*/30 * * * *');
 
         // 任务
         $schedule->command('task:ks_video_upload')->cron('* * * * *');

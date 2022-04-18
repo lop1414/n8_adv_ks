@@ -3,6 +3,7 @@
 namespace App\Console\Commands\Ks\Report;
 
 use App\Common\Console\BaseCommand;
+use App\Common\Helpers\Functions;
 use App\Services\Ks\Report\KsCreativeReportService;
 use App\Services\Ks\Report\KsProgramCreativeReportService;
 
@@ -79,6 +80,13 @@ class KsSyncCreativeReportCommand extends BaseCommand
 
         $ksProgramCreativeReportService = new KsProgramCreativeReportService();
         $ksProgramCreativeReportService->sync($param);
+
+        // 程序化创意 分析素材
+        $dateRange = Functions::getDateRange($param['date']);
+        $dateList = Functions::getDateListByRange($dateRange);
+        foreach ($dateList as $date){
+            $ksProgramCreativeReportService->creativeMaterial($date);
+        }
 
         return true;
     }

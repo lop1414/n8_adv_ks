@@ -89,6 +89,7 @@ class Kernel extends ConsoleKernel
 
         // 快手素材报表
         $schedule->command('ks:sync_material_report --date=today --run_by_account_charge=1 --multi_chunk_size=3')->cron('*/10 * * * *');
+        $schedule->command('ks:sync_material_report --date=yesterday')->cron('10 9,15 * * *');
 
 
         // 正式

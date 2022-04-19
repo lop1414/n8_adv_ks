@@ -141,7 +141,7 @@ class TaskKsSyncService extends TaskKsService
         $ksAccountService = new KsAccountService($subTask->app_id);
 
         $option = [
-            'user_id' => [$subTask->extends->user_id],
+            'user_id' => $subTask->extends->user_id,
         ];
         $ksAccountService->sync($option);
         return true;

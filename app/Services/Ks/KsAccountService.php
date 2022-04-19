@@ -154,33 +154,32 @@ class KsAccountService extends KsService
         foreach($accounts['details'] as $account){
             $accountInfo = $this->sdk->getAccountInfo($account['advertiser_id']);
 
-            $ksAccounts = (new KsAccountModel())
+            $ksAccount = (new KsAccountModel())
                 ->where('app_id',$KsUser['app_id'])
                 ->where('account_id',$account['advertiser_id'])
                 ->get();
-            foreach ($ksAccounts as $ksAccount){
-                if(empty($ksAccount)){
-                    $ksAccount = new KsAccountModel();
-                    $ksAccount->app_id = $KsUser['app_id'];
-                    $ksAccount->account_id = $account['advertiser_id'];
-                    $ksAccount->parent_id = 0;
-                    $ksAccount->admin_id = 0;
-                    $ksAccount->user_id = $accountInfo['user_id'];
-                    $ksAccount->status = StatusEnum::ENABLE;
-                    $ksAccount->belong_platform = AdvAccountBelongTypeEnum::LOCAL;
 
-                }elseif($ksAccount->user_id != $accountInfo['user_id']){
-                    continue;
-                }
+            if(empty($ksAccount)){
+                $ksAccount = new KsAccountModel();
+                $ksAccount->app_id = $KsUser['app_id'];
+                $ksAccount->account_id = $account['advertiser_id'];
+                $ksAccount->parent_id = 0;
+                $ksAccount->admin_id = 0;
+                $ksAccount->user_id = $accountInfo['user_id'];
+                $ksAccount->status = StatusEnum::ENABLE;
+                $ksAccount->belong_platform = AdvAccountBelongTypeEnum::LOCAL;
 
-                $ksAccount->name = $account['advertiser_name'];
-                $ksAccount->company = $accountInfo['corporation_name'];
-                $ksAccount->extend = [];
-                $ksAccount->access_token = $KsUser->access_token;
-                $ksAccount->refresh_token = '';
-                $ksAccount->fail_at = $KsUser->fail_at;
-                $ksAccount->save();
+            }elseif($ksAccount->user_id != $accountInfo['user_id']){
+                continue;
             }
+
+            $ksAccount->name = $account['advertiser_name'];
+            $ksAccount->company = $accountInfo['corporation_name'];
+            $ksAccount->extend = [];
+            $ksAccount->access_token = $KsUser->access_token;
+            $ksAccount->refresh_token = '';
+            $ksAccount->fail_at = $KsUser->fail_at;
+            $ksAccount->save();
 
         }
         return true;

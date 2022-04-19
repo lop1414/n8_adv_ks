@@ -36,21 +36,21 @@ class KsVideoService extends KsService
 
         // 同步
         if(!empty($ret['photo_id'])){
-            $taskKsSyncService = new TaskKsSyncService(KsSyncTypeEnum::VIDEO);
-            $task = [
-                'name' => '同步快手视频',
-                'admin_id' => 0,
-            ];
-            $subs = [];
-            $subs[] = [
-                'app_id' => $this->sdk->getAppId(),
-                'account_id' => $accountId,
-                'admin_id' => 0,
-                'extends' => [
-                    'video_id' => $ret['photo_id']
-                ],
-            ];
-            $taskKsSyncService->create($task, $subs);
+//            $taskKsSyncService = new TaskKsSyncService(KsSyncTypeEnum::VIDEO);
+//            $task = [
+//                'name' => '同步快手视频',
+//                'admin_id' => 0,
+//            ];
+//            $subs = [];
+//            $subs[] = [
+//                'app_id' => $this->sdk->getAppId(),
+//                'account_id' => $accountId,
+//                'admin_id' => 0,
+//                'extends' => [
+//                    'video_id' => $ret['photo_id']
+//                ],
+//            ];
+//            $taskKsSyncService->create($task, $subs);
         }
 
         return $ret;

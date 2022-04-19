@@ -157,7 +157,7 @@ class KsAccountService extends KsService
             $ksAccount = (new KsAccountModel())
                 ->where('app_id',$KsUser['app_id'])
                 ->where('account_id',$account['advertiser_id'])
-                ->get();
+                ->first();
 
             if(empty($ksAccount)){
                 $ksAccount = new KsAccountModel();

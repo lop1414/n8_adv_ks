@@ -78,7 +78,7 @@ class Kernel extends ConsoleKernel
 
         // 任务
         $schedule->command('task:ks_video_upload')->cron('* * * * *');
-        $schedule->command('task:ks_sync --type=video')->cron('* * * * *');
+//        $schedule->command('task:ks_sync --type=video')->cron('* * * * *');
 
         // 快手账户报表同步
         $schedule->command('ks:sync_account_report --date=today')->cron('*/2 * * * *');

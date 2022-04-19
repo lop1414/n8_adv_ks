@@ -27,7 +27,7 @@ class AppController extends AdminController
         $url = 'https://developers.e.kuaishou.com/tools/authorize?';
         $url .= http_build_query([
             'app_id' => $appId,
-            'scope' => '["report_service","account_service","ad_query","ad_manage","report_service"]',
+            'scope' => '["report_service","account_service","ad_query","ad_manage","report_service","public_dmp_service","public_agent_service"]',
             'state' => $appId.'|'.$userId,
             'redirect_uri' => $redirectUri
         ]);

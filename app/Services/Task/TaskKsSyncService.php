@@ -7,6 +7,7 @@ use App\Enums\Ks\KsSyncTypeEnum;
 use App\Enums\TaskTypeEnum;
 use App\Common\Helpers\Functions;
 use App\Common\Tools\CustomException;
+use App\Services\Ks\KsAccountService;
 use App\Services\Ks\KsVideoService;
 
 class TaskKsSyncService extends TaskKsService
@@ -93,6 +94,9 @@ class TaskKsSyncService extends TaskKsService
     public function runSub($subTask){
         if($this->syncType == KsSyncTypeEnum::VIDEO){
             $this->syncVideo($subTask);
+        }elseif ($this->syncType == KsSyncTypeEnum::ACCOUNT){
+            $this->syncAccount($subTask);
+
         }else{
             throw new CustomException([
                 'code' => 'NOT_HANDLE_FOR_SYNC_TYPE',
@@ -123,6 +127,23 @@ class TaskKsSyncService extends TaskKsService
 
         $ksVideoService->sync($option);
 
+        return true;
+    }
+
+
+    /**
+     * @param $subTask
+     * @return bool
+     * @throws CustomException
+     * 同步账户
+     */
+    private function syncAccount($subTask){
+        $ksAccountService = new KsAccountService($subTask->app_id);
+
+        $option = [
+            'user_id' => [$subTask->extends->user_id],
+        ];
+        $ksAccountService->sync($option);
         return true;
     }
 }

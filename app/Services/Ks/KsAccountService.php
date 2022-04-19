@@ -169,7 +169,8 @@ class KsAccountService extends KsService
                 $ksAccount->status = StatusEnum::ENABLE;
                 $ksAccount->belong_platform = AdvAccountBelongTypeEnum::LOCAL;
 
-            }elseif($ksAccount->user_id != $accountInfo['user_id']){
+            }
+            if($ksAccount->user_id != $accountInfo['user_id']){
                 continue;
             }
 

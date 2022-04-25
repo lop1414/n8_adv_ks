@@ -69,6 +69,30 @@ trait Request
      * @param string $method
      * @param array $header
      * @param array $option
+     * @return bool|string
+     * @throws CustomException
+     * 文件下载
+     */
+    public function fileDownload($url, $param = [], $method = 'POST', $header = [], $option = []){
+        // header 添加 Access-Token
+        $header = array_merge([
+            'Access-Token:'. $this->getAccessToken()
+        ], $header);
+
+        $option['timeout'] = $option['timeout'] ?? 60;
+
+        $ret = $this->curlRequest($url, $param, $method, $header, $option);
+
+        return $ret;
+    }
+
+
+    /**
+     * @param $url
+     * @param array $param
+     * @param string $method
+     * @param array $header
+     * @param array $option
      * @return mixed
      * @throws CustomException
      * 公共请求

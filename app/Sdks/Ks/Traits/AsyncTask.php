@@ -15,9 +15,9 @@ trait AsyncTask
 
         return $this->authRequest($url, [
             'advertiser_id' => $accountId,
-            'task_name'     => $accountId."-".uniqid(),
+            'task_name'     => $accountId."|".$params['start_date'],
             'task_params'   => $params
-        ], 'GET');
+        ], 'POST');
     }
 
 
@@ -26,7 +26,7 @@ trait AsyncTask
      * @param int $page
      * @param int $pageSize
      * @return mixed
-     * 互殴去任务列表
+     * 获取任务列表
      */
     public function getAsyncTask($accountId, int $page = 1, int $pageSize = 20){
         $url = $this->getUrl('/v1/async_task/list');
@@ -46,9 +46,9 @@ trait AsyncTask
      * 下载异步任务数据csv文件
      */
     public function downloadAsyncTaskCsv($accountId,$taskId){
-        $url = $this->getUrl('/v1/async_task/download');
+        $url = $this->getUrl('/v1/async_task/download?advertiser_id='.$accountId.'&task_id='.$taskId);
 
-        return $this->authRequest($url, [
+        return $this->fileDownload($url, [
             'advertiser_id' => $accountId,
             'task_id'  => $taskId
         ], 'GET');

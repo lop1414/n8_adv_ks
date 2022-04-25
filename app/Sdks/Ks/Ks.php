@@ -6,6 +6,7 @@ use App\Sdks\Ks\Traits\AccessToken;
 use App\Sdks\Ks\Traits\Account;
 use App\Sdks\Ks\Traits\AdUnit;
 use App\Sdks\Ks\Traits\App;
+use App\Sdks\Ks\Traits\AsyncTask;
 use App\Sdks\Ks\Traits\Campaign;
 use App\Sdks\Ks\Traits\Creative;
 use App\Sdks\Ks\Traits\Error;
@@ -27,6 +28,7 @@ class Ks
     use Creative;
     use Campaign;
     use AdUnit;
+    use AsyncTask;
 
     /**
      * 公共接口地址

@@ -3,6 +3,7 @@
 namespace App\Console\Commands\Ks\Report;
 
 use App\Common\Console\BaseCommand;
+use App\Services\Ks\Report\KsAsyncMaterialReportService;
 use App\Services\Ks\Report\KsMaterialReportService;
 
 class KsSyncMaterialReportCommand extends BaseCommand
@@ -73,9 +74,23 @@ class KsSyncMaterialReportCommand extends BaseCommand
      * 执行
      */
     protected function exec($param){
+        // 时间超过7天前 则采用异步任务获取
+        if($param['date'] <= date('Y-m-d',strtotime('-7 days'))){
+            $this->asyncReport($param);
+            return true;
+        }
+
         $ksMaterialReportService = new KsMaterialReportService();
         $ksMaterialReportService->sync($param);
 
         return true;
+    }
+
+
+    protected function asyncReport($param){
+        echo "asyncReport\n";
+        $ksMaterialReportService = new KsAsyncMaterialReportService();
+        $ksMaterialReportService->createTask($param['account_ids'],$param['date']);
+        $ksMaterialReportService->syncTaskData($param['account_ids']);
     }
 }

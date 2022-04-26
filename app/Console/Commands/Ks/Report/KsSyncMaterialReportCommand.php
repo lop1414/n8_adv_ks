@@ -89,8 +89,9 @@ class KsSyncMaterialReportCommand extends BaseCommand
 
     protected function asyncReport($param){
         echo "asyncReport\n";
+        $accountIds = $param['account_ids'] ?? [];
         $ksMaterialReportService = new KsAsyncMaterialReportService();
-        $ksMaterialReportService->createTask($param['account_ids'],$param['date']);
-        $ksMaterialReportService->syncTaskData($param['account_ids']);
+        $ksMaterialReportService->createTask($accountIds,$param['date']);
+        $ksMaterialReportService->syncTaskData($accountIds);
     }
 }

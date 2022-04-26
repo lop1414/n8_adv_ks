@@ -36,8 +36,10 @@ class KsAsyncMaterialReportService extends KsReportService
                     $this->sdk->createAsyncTask($account['account_id'], $params);
                 }catch(CustomException $e){
                     $errInfo = $e->getErrorInfo();
-                    if($errInfo->data->result->code == 401000){
+                    if(isset($errInfo->data->result->code) && $errInfo->data->result->code == 401000){
                         echo $errInfo->data->result->message."\n";
+                    }else{
+                        var_dump($errInfo);
                     }
                 }
             }

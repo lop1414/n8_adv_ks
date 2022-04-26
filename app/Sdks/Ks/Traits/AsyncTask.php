@@ -15,7 +15,7 @@ trait AsyncTask
 
         return $this->authRequest($url, [
             'advertiser_id' => $accountId,
-            'task_name'     => "material|{$accountId}|{$params['start_date']}",
+            'task_name'     => "material_report:{$accountId}:{$params['start_date']}",
             'task_params'   => $params
         ], 'POST');
     }

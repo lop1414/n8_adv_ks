@@ -131,22 +131,13 @@ class VideoController extends KsController
         $subs = [];
         foreach($accounts as $account){
             foreach($videos as $video){
-                if(!empty($video['source_path'])){
-                    // 源视频
-                    $videoPath = $video['source_path'];
-                    $videoSignature = $video['source_signature'];
-                }else{
-                    $videoPath = $video['path'];
-                    $videoSignature = $video['signature'];
-                }
-
                 $subs[] = [
                     'app_id' => $account->app_id,
                     'account_id' => $account->account_id,
                     'n8_material_video_id' => $video['id'],
-                    'n8_material_video_path' => $videoPath,
+                    'n8_material_video_path' => $video['path'],
                     'n8_material_video_name' => $video['name'],
-                    'n8_material_video_signature' => $videoSignature,
+                    'n8_material_video_signature' => $video['signature'],
                     'admin_id' => $adminUserInfo['admin_user']['id'],
                 ];
             }

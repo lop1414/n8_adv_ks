@@ -4,6 +4,7 @@ namespace App\Sdks\KuaiShou\Kernel;
 use App\Sdks\KuaiShou\Container\AdUnitApiContainer;
 use App\Sdks\KuaiShou\Container\AdvertiserApiContainer;
 use App\Sdks\KuaiShou\Container\CampaignApiContainer;
+use App\Sdks\KuaiShou\Container\MultipleAdUnitApiContainer;
 use App\Sdks\KuaiShou\Container\MultipleCampaignApiContainer;
 use GuzzleHttp\Client;
 
@@ -25,6 +26,9 @@ class App
 
     /** @var AdUnitApiContainer */
     public $adUnitApiContainer;
+
+    /** @var MultipleAdUnitApiContainer */
+    public $multipleAdUnitApiContainer;
 
 
 
@@ -78,6 +82,19 @@ class App
             $this->adUnitApiContainer = $container;
         }
         return $this->adUnitApiContainer;
+    }
+
+    /**
+     * @return MultipleAdUnitApiContainer
+     */
+    public function multipleAdUnit(): MultipleAdUnitApiContainer
+    {
+        if (empty($this->multipleAdUnitApiContainer)) {
+            $container = new MultipleAdUnitApiContainer();
+            $container->init($this, $this->getClient());
+            $this->multipleAdUnitApiContainer = $container;
+        }
+        return $this->multipleAdUnitApiContainer;
     }
 
 

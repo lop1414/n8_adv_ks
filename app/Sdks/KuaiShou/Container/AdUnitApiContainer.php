@@ -45,4 +45,22 @@ class AdUnitApiContainer extends ApiContainer
         });
     }
 
+    /**
+     * @param array $advertiserIds
+     * @param array $param
+     * @return mixed
+     */
+    public function multipleGet(array $advertiserIds, array $param)
+    {
+        $params = [];
+        foreach ($advertiserIds as $advertiserId){
+            $params[] = array_merge($param,['advertiser_id' => $advertiserId]);
+        }
+
+        return $this->handleMiddleware('get', $params, function(MiddlewareRequest $request) {
+
+            $params = $request->getApiMethodParams();
+            return $this->apiInstance->multipleGet($params);
+        });
+    }
 }

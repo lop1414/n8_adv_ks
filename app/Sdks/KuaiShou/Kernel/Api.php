@@ -43,13 +43,25 @@ class Api
 
     /**
      * @param $response
+     * @return mixed
      * @throws Exception
      */
     public function handleResponse($response){
         $statusCode = $response->getStatusCode();
 
         if ($statusCode != 200 ) {
-            throw new Exception('API 请求异常',$statusCode);
+            throw new Exception('HTTP 请求异常',$statusCode);
         }
+
+        $responseData = json_decode($response->getBody()->getContents(),true);
+        if (!isset($responseData['code'])) {
+            throw new Exception("api response has not code field.");
+        }
+
+        if ($responseData['code'] != 0) {
+            throw new Exception('api error message : '.$responseData['message'],$responseData['code']);
+        }
+
+        return $responseData;
     }
 }

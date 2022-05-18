@@ -2,7 +2,6 @@
 
 namespace App\Sdks\KuaiShou\Kernel;
 
-
 use GuzzleHttp\Pool;
 use GuzzleHttp\Psr7\Request;
 
@@ -13,7 +12,8 @@ class MultipleApi extends Api
      * 响应数据
      * @var array
      */
-    private $responseData = [];
+    private $multipleResponseData = [];
+
 
     /**
      * 请求参数
@@ -30,7 +30,14 @@ class MultipleApi extends Api
 
 
 
-    public function multipleRequest($uri, $params, $method, $headers = []): array
+    /**
+     * @param string $uri
+     * @param array $params
+     * @param string $method
+     * @param array $headers
+     * @return array
+     */
+    public function multipleRequest(string $uri,array $params,string $method,array $headers = []): array
     {
         $this->clearResponseData();
         $this->requestParams = $params;
@@ -42,7 +49,7 @@ class MultipleApi extends Api
             'fulfilled' => function ($response, $index) {
                 // 请求成功
                 $content = $response->getBody()->getContents();
-                $this->setResponseData($index,json_decode($content,true));
+                $this->setMultipleResponseData($index,json_decode($content,true));
             },
             'rejected' => function ($reason, $index) {
                 // 失败
@@ -50,17 +57,25 @@ class MultipleApi extends Api
                     'code'    => $reason->getCode(),
                     'message' => $reason->getMessage()
                 ];
-                $this->setResponseData($index,$err);
+                $this->setMultipleResponseData($index,$err);
             },
         ]);
         $promise = $pool->promise();
         $promise->wait();
-        return $this->responseData;
+        return $this->multipleResponseData;
     }
 
 
 
-    protected function getMultipleRequest($uri, $params, $method, $headers = []): \Generator
+    /**
+     * 获取请求对象
+     * @param string $uri
+     * @param array $params
+     * @param string $method
+     * @param array $headers
+     * @return \Generator
+     */
+    protected function getMultipleRequest(string $uri, array $params, string $method, array $headers = []): \Generator
     {
         foreach ($params as $param) {
             $httpBody = json_encode($param);
@@ -69,18 +84,16 @@ class MultipleApi extends Api
     }
 
 
-
-
     /**
      * 设置响应成功数据
      * @param $key
      * @param $data
      * @return bool
      */
-    protected function setResponseData($key,$data): bool
+    protected function setMultipleResponseData($key,$data): bool
     {
-        $this->responseData[$key] = $data;
-        $this->responseData[$key]['request_params'] = $this->requestParams[$key];
+        $this->multipleResponseData[$key] = $data;
+        $this->multipleResponseData[$key]['request_params'] = $this->requestParams[$key];
         return true;
     }
 
@@ -91,7 +104,7 @@ class MultipleApi extends Api
      */
     protected function clearResponseData(): bool
     {
-        $this->responseData = [];
+        $this->multipleResponseData = [];
         return true;
     }
 }

@@ -30,10 +30,9 @@ class AdvertiserApiContainer extends ApiContainer
 
     /**
      * @param int $advertiserId
-     * @param array $params
      * @return mixed
      */
-    public function get(int $advertiserId,array $params = [])
+    public function get(int $advertiserId)
     {
         $params['advertiser_id'] = $advertiserId;
 
@@ -42,7 +41,7 @@ class AdvertiserApiContainer extends ApiContainer
             $params = $request->getApiMethodParams();
             $advertiserId = $params['advertiser_id'];
 
-            return $this->apiInstance->get($advertiserId,$params);
+            return $this->apiInstance->get($advertiserId);
         });
     }
 }

@@ -6,7 +6,7 @@ use App\Sdks\KuaiShou\Kernel\MultipleApi;
 use GuzzleHttp\Psr7\Request;
 
 
-class AdUnitApi extends MultipleApi
+class ProgramCreativeApi extends MultipleApi
 {
 
     public function get($advertiserId,$param): array
@@ -17,14 +17,14 @@ class AdUnitApi extends MultipleApi
     }
 
     /**
-     * 广告计划列表请求
+     * 获取程序化创意请求
      * @param int $advertiserId
      * @param array $param
      * @return Request
      */
     protected function getRequest(int $advertiserId, array $param = []): Request
     {
-        $resourcePath = '/v1/ad_unit/list';
+        $resourcePath = '/v2/creative/advanced/program/list';
         $queryParam = array_merge($param,['advertiser_id' => $advertiserId]);
 
         $uri = $this->config->getHost() . $resourcePath;
@@ -40,9 +40,11 @@ class AdUnitApi extends MultipleApi
      */
     public function multipleGet(array $params = []): array
     {
-        $resourcePath = '/v1/ad_unit/list';
+        $resourcePath = '/v2/creative/advanced/program/list';
         $uri = $this->config->getHost() . $resourcePath;
 
         return $this->multipleRequest($uri, $params, 'POST');
     }
+
+
 }

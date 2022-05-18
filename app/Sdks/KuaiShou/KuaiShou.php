@@ -4,7 +4,6 @@ namespace App\Sdks\KuaiShou;
 
 
 use App\Sdks\KuaiShou\Kernel\App;
-use App\Sdks\KuaiShou\Middleware\HandleResponseMiddleware;
 use Exception;
 use GuzzleHttp\Client;
 
@@ -43,9 +42,7 @@ class KuaiShou extends App
     /**
      * @var array middleware list
      */
-    protected $middleware = [
-        HandleResponseMiddleware::class,
-    ];
+    protected $middleware = [];
 
     /**
      * @var array

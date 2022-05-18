@@ -2,20 +2,19 @@
 
 namespace App\Sdks\KuaiShou\Api;
 
-use App\Sdks\KuaiShou\Kernel\Api;
+use App\Sdks\KuaiShou\Kernel\MultipleApi;
 use GuzzleHttp\Psr7\Request;
 
 
-class AdvertiserApi extends Api
+class AdvertiserApi extends MultipleApi
 {
 
 
-    public function get($advertiserId): string
+    public function get($advertiserId): array
     {
         $request = $this->getRequest($advertiserId);
         $response = $this->client->send($request);
-        $this->handleResponse($response);
-        return $response->getBody()->getContents();
+        return $this->handleResponse($response);
     }
 
     /**

@@ -1,29 +1,29 @@
 <?php
 namespace App\Sdks\KuaiShou\Container;
 
-use App\Sdks\KuaiShou\Api\CampaignApi;
+use App\Sdks\KuaiShou\Api\ProgramCreativeApi;
 use App\Sdks\KuaiShou\Kernel\ApiContainer;
 use App\Sdks\KuaiShou\KuaiShou;
 use App\Sdks\KuaiShou\Middleware\Model\MiddlewareRequest;
 use GuzzleHttp\Client;
 
 
-class CampaignApiContainer extends ApiContainer
+class ProgramCreativeApiContainer extends ApiContainer
 {
 
-    /** @var CampaignApi */
+    /** @var ProgramCreativeApi */
     public $apiInstance;
 
 
     /**
      * @param KuaiShou $app
      * @param Client $client
-     * @return CampaignApiContainer
+     * @return ProgramCreativeApiContainer
      */
-    public function init(KuaiShou $app, Client $client): CampaignApiContainer
+    public function init(KuaiShou $app, Client $client): ProgramCreativeApiContainer
     {
         parent::init($app, $client);
-        $this->apiInstance = new CampaignApi($client, $app->getConfig());
+        $this->apiInstance = new ProgramCreativeApi($client, $app->getConfig());
         return $this;
     }
 
@@ -45,9 +45,7 @@ class CampaignApiContainer extends ApiContainer
         });
     }
 
-
     /**
-     * 批量获取
      * @param array $advertiserIds
      * @param array $param
      * @return mixed

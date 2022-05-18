@@ -4,8 +4,9 @@ namespace App\Sdks\KuaiShou\Kernel;
 use App\Sdks\KuaiShou\Container\AdUnitApiContainer;
 use App\Sdks\KuaiShou\Container\AdvertiserApiContainer;
 use App\Sdks\KuaiShou\Container\CampaignApiContainer;
-use App\Sdks\KuaiShou\Container\MultipleAdUnitApiContainer;
-use App\Sdks\KuaiShou\Container\MultipleCampaignApiContainer;
+use App\Sdks\KuaiShou\Container\CreativeApiContainer;
+use App\Sdks\KuaiShou\Container\OauthApiContainer;
+use App\Sdks\KuaiShou\Container\ProgramCreativeApiContainer;
 use GuzzleHttp\Client;
 
 
@@ -14,6 +15,8 @@ class App
     /** @var Client 实例 */
     public $client;
 
+    /** @var OauthApiContainer */
+    public $oauthApiContainer;
 
     /** @var AdvertiserApiContainer */
     public $advertiserApiContainer;
@@ -21,16 +24,29 @@ class App
     /** @var CampaignApiContainer */
     public $campaignApiContainer;
 
-    /** @var MultipleCampaignApiContainer */
-    public $multipleCampaignApiContainer;
-
     /** @var AdUnitApiContainer */
     public $adUnitApiContainer;
 
-    /** @var MultipleAdUnitApiContainer */
-    public $multipleAdUnitApiContainer;
+    /** @var CreativeApiContainer */
+    public $creativeApiContainer;
+
+    /** @var ProgramCreativeApiContainer */
+    public $programCreativeApiContainer;
 
 
+
+    /**
+     * @return OauthApiContainer
+     */
+    public function oauth(): OauthApiContainer
+    {
+        if (empty($this->oauthApiContainer)) {
+            $container = new OauthApiContainer();
+            $container->init($this, $this->getClient());
+            $this->oauthApiContainer = $container;
+        }
+        return $this->oauthApiContainer;
+    }
 
     /**
      * @return AdvertiserApiContainer
@@ -58,18 +74,6 @@ class App
         return $this->campaignApiContainer;
     }
 
-    /**
-     * @return MultipleCampaignApiContainer
-     */
-    public function multipleCampaign(): MultipleCampaignApiContainer
-    {
-        if (empty($this->multipleCampaignApiContainer)) {
-            $container = new MultipleCampaignApiContainer();
-            $container->init($this, $this->getClient());
-            $this->multipleCampaignApiContainer = $container;
-        }
-        return $this->multipleCampaignApiContainer;
-    }
 
     /**
      * @return AdUnitApiContainer
@@ -85,17 +89,32 @@ class App
     }
 
     /**
-     * @return MultipleAdUnitApiContainer
+     * @return CreativeApiContainer
      */
-    public function multipleAdUnit(): MultipleAdUnitApiContainer
+    public function creative(): CreativeApiContainer
     {
-        if (empty($this->multipleAdUnitApiContainer)) {
-            $container = new MultipleAdUnitApiContainer();
+        if (empty($this->creativeApiContainer)) {
+            $container = new CreativeApiContainer();
             $container->init($this, $this->getClient());
-            $this->multipleAdUnitApiContainer = $container;
+            $this->creativeApiContainer = $container;
         }
-        return $this->multipleAdUnitApiContainer;
+        return $this->creativeApiContainer;
     }
+
+    /**
+     * @return ProgramCreativeApiContainer
+     */
+    public function programCreative(): ProgramCreativeApiContainer
+    {
+        if (empty($this->programCreativeApiContainer)) {
+            $container = new ProgramCreativeApiContainer();
+            $container->init($this, $this->getClient());
+            $this->programCreativeApiContainer = $container;
+        }
+        return $this->programCreativeApiContainer;
+    }
+
+
 
 
 }

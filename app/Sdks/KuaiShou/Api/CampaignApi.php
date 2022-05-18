@@ -2,19 +2,18 @@
 
 namespace App\Sdks\KuaiShou\Api;
 
-use App\Sdks\KuaiShou\Kernel\Api;
+use App\Sdks\KuaiShou\Kernel\MultipleApi;
 use GuzzleHttp\Psr7\Request;
 
 
-class CampaignApi extends Api
+class CampaignApi extends MultipleApi
 {
 
-    public function get($advertiserId,$param): string
+    public function get($advertiserId,$param): array
     {
         $request = $this->getRequest($advertiserId,$param);
         $response = $this->client->send($request);
-        $this->handleResponse($response);
-        return $response->getBody()->getContents();
+        return $this->handleResponse($response);
     }
 
 
@@ -35,5 +34,17 @@ class CampaignApi extends Api
         return new Request('POST', $uri,$headers,$httpBody);
     }
 
+    /**
+     * 批量获取
+     * @param array $params
+     * @return array
+     */
+    public function multipleGet(array $params = []): array
+    {
+        $resourcePath = '/v1/campaign/list';
+        $uri = $this->config->getHost() . $resourcePath;
+
+        return $this->multipleRequest($uri, $params, 'POST');
+    }
 
 }

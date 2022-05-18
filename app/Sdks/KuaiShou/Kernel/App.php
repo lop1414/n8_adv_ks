@@ -1,6 +1,7 @@
 <?php
 namespace App\Sdks\KuaiShou\Kernel;
 
+use App\Sdks\KuaiShou\Container\AccountReportApiContainer;
 use App\Sdks\KuaiShou\Container\AdUnitApiContainer;
 use App\Sdks\KuaiShou\Container\AdvertiserApiContainer;
 use App\Sdks\KuaiShou\Container\CampaignApiContainer;
@@ -32,6 +33,10 @@ class App
 
     /** @var ProgramCreativeApiContainer */
     public $programCreativeApiContainer;
+
+    /** @var AccountReportApiContainer */
+    public $accountReportApiContainer;
+
 
 
 
@@ -112,6 +117,19 @@ class App
             $this->programCreativeApiContainer = $container;
         }
         return $this->programCreativeApiContainer;
+    }
+
+    /**
+     * @return AccountReportApiContainer
+     */
+    public function accountReport(): AccountReportApiContainer
+    {
+        if (empty($this->accountReportApiContainer)) {
+            $container = new AccountReportApiContainer();
+            $container->init($this, $this->getClient());
+            $this->accountReportApiContainer = $container;
+        }
+        return $this->accountReportApiContainer;
     }
 
 

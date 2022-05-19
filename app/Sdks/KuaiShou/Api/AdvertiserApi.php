@@ -25,7 +25,7 @@ class AdvertiserApi extends MultipleApi
     {
         $resourcePath = '/gw/uc/v1/advertisers';
         $queryParams = [];
-        $advertiserId !== null && $queryParams['advertiser_id'] = $advertiserId;
+        $queryParams['advertiser_id'] = $advertiserId;
 
         $uri = $this->config->getHost() . $resourcePath;
         $headers = [];

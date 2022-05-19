@@ -25,7 +25,8 @@ class ProgramCreativeApi extends MultipleApi
     protected function getRequest(int $advertiserId, array $param = []): Request
     {
         $resourcePath = '/v2/creative/advanced/program/list';
-        $queryParam = array_merge($param,['advertiser_id' => $advertiserId]);
+        $queryParam = $param;
+        $queryParam['advertiser_id'] = $advertiserId;
 
         $uri = $this->config->getHost() . $resourcePath;
         $headers = [];

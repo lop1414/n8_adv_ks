@@ -34,10 +34,11 @@ class OauthApi extends Api
     protected function tokenRequest(int $appId,string $secret,string $authCode): Request
     {
         $resourcePath = '/oauth2/authorize/access_token';
-        $queryParams = [];
-        $appId !== null && $queryParams['app_id'] = $appId;
-        $secret !== null && $queryParams['secret'] = $secret;
-        $authCode !== null && $queryParams['auth_code'] = $authCode;
+        $queryParams = [
+            'app_id' => $appId,
+            'secret' => $secret,
+            'auth_code' => $authCode
+        ];
 
         $uri = $this->config->getHost() . $resourcePath;
         $headers = [];
@@ -56,10 +57,11 @@ class OauthApi extends Api
     protected function refreshTokenRequest(int $appId,string $secret,string $refreshToken): Request
     {
         $resourcePath = '/oauth2/authorize/refresh_token';
-        $queryParams = [];
-        $appId !== null && $queryParams['app_id'] = $appId;
-        $secret !== null && $queryParams['secret'] = $secret;
-        $refreshToken !== null && $queryParams['refresh_token'] = $refreshToken;
+        $queryParams = [
+            'app_id'    => $appId,
+            'secret'    => $secret,
+            'refresh_token'    => $refreshToken,
+        ];
 
         $uri = $this->config->getHost() . $resourcePath;
         $headers = [];

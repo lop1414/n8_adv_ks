@@ -26,7 +26,8 @@ class CampaignApi extends MultipleApi
     protected function getRequest(int $advertiserId, array $param = []): Request
     {
         $resourcePath = '/v1/campaign/list';
-        $queryParam = array_merge($param,['advertiser_id' => $advertiserId]);
+        $queryParam = $param;
+        $queryParam['advertiser_id'] = $advertiserId;
 
         $uri = $this->config->getHost() . $resourcePath;
         $headers = [];

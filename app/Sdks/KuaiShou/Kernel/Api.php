@@ -20,15 +20,9 @@ class Api
     protected $client;
 
 
-    /**
-     * AdvertiserApi constructor.
-     * @param ClientInterface|null $client
-     * @param Config|null $config
-     */
-    public function __construct(
-        ClientInterface $client = null,
-        Config $config = null
-    ) {
+
+    public function __construct(ClientInterface $client = null, Config $config = null)
+    {
         $this->client = $client ?: new Client();
         $this->config = $config ?: new Config();
     }

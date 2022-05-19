@@ -15,11 +15,6 @@ class OauthApiContainer extends ApiContainer
     public $apiInstance;
 
 
-    /**
-     * @param KuaiShou $app
-     * @param Client $client
-     * @return OauthApiContainer
-     */
     public function init(KuaiShou $app, Client $client): OauthApiContainer
     {
         parent::init($app, $client);
@@ -45,11 +40,7 @@ class OauthApiContainer extends ApiContainer
         });
     }
 
-    /**
-     * 获取token
-     * @param array $params
-     * @return mixed
-     */
+
     public function token(array $params = [])
     {
 
@@ -65,11 +56,7 @@ class OauthApiContainer extends ApiContainer
     }
 
 
-    /**
-     * 刷新token
-     * @param array $params
-     * @return mixed
-     */
+
     public function refreshToken(array $params = [])
     {
 

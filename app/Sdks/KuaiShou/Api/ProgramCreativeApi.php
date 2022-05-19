@@ -5,23 +5,23 @@ namespace App\Sdks\KuaiShou\Api;
 use App\Sdks\KuaiShou\Kernel\MultipleApi;
 use GuzzleHttp\Psr7\Request;
 
-
+/**
+ * 程序化创意
+ * Class ProgramCreativeApi
+ * @package App\Sdks\KuaiShou\Api
+ */
 class ProgramCreativeApi extends MultipleApi
 {
 
-    public function get($advertiserId,$param): array
+    public function get(int $advertiserId,array $param): array
     {
         $request = $this->getRequest($advertiserId,$param);
         $response = $this->client->send($request);
         return $this->handleResponse($response);
     }
 
-    /**
-     * 获取程序化创意请求
-     * @param int $advertiserId
-     * @param array $param
-     * @return Request
-     */
+
+
     protected function getRequest(int $advertiserId, array $param = []): Request
     {
         $resourcePath = '/v2/creative/advanced/program/list';
@@ -34,11 +34,8 @@ class ProgramCreativeApi extends MultipleApi
         return new Request('POST', $uri,$headers,$httpBody);
     }
 
-    /**
-     * 批量获取
-     * @param array $params
-     * @return array
-     */
+
+
     public function multipleGet(array $params = []): array
     {
         $resourcePath = '/v2/creative/advanced/program/list';

@@ -5,7 +5,10 @@ namespace App\Sdks\KuaiShou\Api;
 use App\Sdks\KuaiShou\Kernel\Api;
 use GuzzleHttp\Psr7\Request;
 
-
+/**
+ * Class OauthApi
+ * @package App\Sdks\KuaiShou\Api
+ */
 class OauthApi extends Api
 {
 
@@ -21,6 +24,7 @@ class OauthApi extends Api
 
         return $uri;
     }
+
 
 
     public function token(int $appId,string $secret,string $authCode){
@@ -45,6 +49,7 @@ class OauthApi extends Api
         $httpBody = json_encode($queryParams);
         return new Request('POST', $uri,$headers,$httpBody);
     }
+
 
 
     public function refreshToken(int $appId,string $secret,string $refreshToken){

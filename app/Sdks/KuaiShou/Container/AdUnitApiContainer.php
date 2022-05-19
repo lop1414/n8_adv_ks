@@ -15,11 +15,6 @@ class AdUnitApiContainer extends ApiContainer
     public $apiInstance;
 
 
-    /**
-     * @param KuaiShou $app
-     * @param Client $client
-     * @return AdUnitApiContainer
-     */
     public function init(KuaiShou $app, Client $client): AdUnitApiContainer
     {
         parent::init($app, $client);
@@ -27,11 +22,8 @@ class AdUnitApiContainer extends ApiContainer
         return $this;
     }
 
-    /**
-     * @param int $advertiserId
-     * @param array $params
-     * @return mixed
-     */
+
+
     public function get(int $advertiserId,array $params = [])
     {
         $params['advertiser_id'] = $advertiserId;
@@ -45,11 +37,8 @@ class AdUnitApiContainer extends ApiContainer
         });
     }
 
-    /**
-     * @param array $advertiserIds
-     * @param array $param
-     * @return mixed
-     */
+
+
     public function multipleGet(array $advertiserIds, array $param)
     {
         $params = [];

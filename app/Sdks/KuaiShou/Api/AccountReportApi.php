@@ -5,22 +5,23 @@ namespace App\Sdks\KuaiShou\Api;
 use App\Sdks\KuaiShou\Kernel\MultipleApi;
 use GuzzleHttp\Psr7\Request;
 
-
+/**
+ * 账户报表
+ * Class AccountReportApi
+ * @package App\Sdks\KuaiShou\Api
+ */
 class AccountReportApi extends MultipleApi
 {
 
-    public function get($advertiserId,$param): array
+    public function get(int $advertiserId,array $param): array
     {
         $request = $this->getRequest($advertiserId,$param);
         $response = $this->client->send($request);
         return $this->handleResponse($response);
     }
 
-    /**
-     * @param int $advertiserId
-     * @param array $param
-     * @return Request
-     */
+
+
     protected function getRequest(int $advertiserId, array $param = []): Request
     {
         $resourcePath = '/v1/report/account_report';
@@ -33,11 +34,8 @@ class AccountReportApi extends MultipleApi
         return new Request('POST', $uri,$headers,$httpBody);
     }
 
-    /**
-     * 批量获取
-     * @param array $params
-     * @return array
-     */
+
+
     public function multipleGet(array $params = []): array
     {
         $resourcePath = '/v1/report/account_report';

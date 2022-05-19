@@ -6,6 +6,7 @@ use App\Sdks\KuaiShou\Container\AdUnitApiContainer;
 use App\Sdks\KuaiShou\Container\AdvertiserApiContainer;
 use App\Sdks\KuaiShou\Container\CampaignApiContainer;
 use App\Sdks\KuaiShou\Container\CreativeApiContainer;
+use App\Sdks\KuaiShou\Container\CreativeReportApiContainer;
 use App\Sdks\KuaiShou\Container\OauthApiContainer;
 use App\Sdks\KuaiShou\Container\ProgramCreativeApiContainer;
 use GuzzleHttp\Client;
@@ -36,6 +37,9 @@ class App
 
     /** @var AccountReportApiContainer */
     public $accountReportApiContainer;
+
+    /** @var CreativeReportApiContainer */
+    public $creativeReportApiContainer;
 
 
 
@@ -130,6 +134,19 @@ class App
             $this->accountReportApiContainer = $container;
         }
         return $this->accountReportApiContainer;
+    }
+
+    /**
+     * @return CreativeReportApiContainer
+     */
+    public function creativeReport(): CreativeReportApiContainer
+    {
+        if (empty($this->creativeReportApiContainer)) {
+            $container = new CreativeReportApiContainer();
+            $container->init($this, $this->getClient());
+            $this->creativeReportApiContainer = $container;
+        }
+        return $this->creativeReportApiContainer;
     }
 
 

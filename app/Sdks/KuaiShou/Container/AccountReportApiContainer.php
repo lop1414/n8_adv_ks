@@ -15,11 +15,6 @@ class AccountReportApiContainer extends ApiContainer
     public $apiInstance;
 
 
-    /**
-     * @param KuaiShou $app
-     * @param Client $client
-     * @return AccountReportApiContainer
-     */
     public function init(KuaiShou $app, Client $client): AccountReportApiContainer
     {
         parent::init($app, $client);
@@ -27,11 +22,7 @@ class AccountReportApiContainer extends ApiContainer
         return $this;
     }
 
-    /**
-     * @param int $advertiserId
-     * @param array $params
-     * @return mixed
-     */
+
     public function get(int $advertiserId,array $params = [])
     {
         $params['advertiser_id'] = $advertiserId;
@@ -45,11 +36,8 @@ class AccountReportApiContainer extends ApiContainer
         });
     }
 
-    /**
-     * @param array $advertiserIds
-     * @param array $param
-     * @return mixed
-     */
+
+
     public function multipleGet(array $advertiserIds, array $param)
     {
         $params = [];

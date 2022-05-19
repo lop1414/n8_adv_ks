@@ -1,25 +1,25 @@
 <?php
 namespace App\Sdks\KuaiShou\Container;
 
-use App\Sdks\KuaiShou\Api\CreativeApi;
+
+use App\Sdks\KuaiShou\Api\CreativeReportApi;
 use App\Sdks\KuaiShou\Kernel\ApiContainer;
 use App\Sdks\KuaiShou\KuaiShou;
 use App\Sdks\KuaiShou\Middleware\Model\MiddlewareRequest;
 use GuzzleHttp\Client;
 
 
-class CreativeApiContainer extends ApiContainer
+class CreativeReportApiContainer extends ApiContainer
 {
 
-    /** @var CreativeApi */
+    /** @var CreativeReportApi */
     public $apiInstance;
 
 
-
-    public function init(KuaiShou $app, Client $client): CreativeApiContainer
+    public function init(KuaiShou $app, Client $client): CreativeReportApiContainer
     {
         parent::init($app, $client);
-        $this->apiInstance = new CreativeApi($client, $app->getConfig());
+        $this->apiInstance = new CreativeReportApi($client, $app->getConfig());
         return $this;
     }
 
@@ -51,5 +51,4 @@ class CreativeApiContainer extends ApiContainer
             return $this->apiInstance->multipleGet($params);
         });
     }
-
 }

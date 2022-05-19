@@ -11,10 +11,7 @@ class BaseObject
      */
     public static $instances = [];
 
-    /**
-     * Get instance
-     * @return static
-     */
+
     public static function getInstance(): BaseObject
     {
         if (empty(static::$instances[static::class])) {

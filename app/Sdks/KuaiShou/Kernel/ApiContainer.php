@@ -31,12 +31,8 @@ class ApiContainer
      */
     protected $skipMiddleware = [];
 
-    /**
-     * @param KuaiShou     $app
-     * @param Client     $client
-     * @return $this
-     */
-    public function init(KuaiShou $app, Client $client)
+
+    public function init(KuaiShou $app, Client $client): ApiContainer
     {
         $this->app = $app;
         $this->client = $client;
@@ -76,12 +72,6 @@ class ApiContainer
 
 
 
-    /**
-     * Has skip middleware
-     * @param $middlewareName
-     * @param $method
-     * @return bool
-     */
     public function hasSkipMiddleware($middlewareName,$method): bool
     {
 

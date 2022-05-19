@@ -15,11 +15,6 @@ class AdvertiserApiContainer extends ApiContainer
     public $apiInstance;
 
 
-    /**
-     * @param KuaiShou $app
-     * @param Client $client
-     * @return AdvertiserApiContainer
-     */
     public function init(KuaiShou $app, Client $client): AdvertiserApiContainer
     {
         parent::init($app, $client);
@@ -28,10 +23,7 @@ class AdvertiserApiContainer extends ApiContainer
     }
 
 
-    /**
-     * @param int $advertiserId
-     * @return mixed
-     */
+
     public function get(int $advertiserId)
     {
         $params['advertiser_id'] = $advertiserId;

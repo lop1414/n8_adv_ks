@@ -15,11 +15,6 @@ class CampaignApiContainer extends ApiContainer
     public $apiInstance;
 
 
-    /**
-     * @param KuaiShou $app
-     * @param Client $client
-     * @return CampaignApiContainer
-     */
     public function init(KuaiShou $app, Client $client): CampaignApiContainer
     {
         parent::init($app, $client);
@@ -27,11 +22,8 @@ class CampaignApiContainer extends ApiContainer
         return $this;
     }
 
-    /**
-     * @param int $advertiserId
-     * @param array $params
-     * @return mixed
-     */
+
+
     public function get(int $advertiserId,array $params = [])
     {
         $params['advertiser_id'] = $advertiserId;
@@ -46,12 +38,7 @@ class CampaignApiContainer extends ApiContainer
     }
 
 
-    /**
-     * 批量获取
-     * @param array $advertiserIds
-     * @param array $param
-     * @return mixed
-     */
+
     public function multipleGet(array $advertiserIds, array $param)
     {
         $params = [];

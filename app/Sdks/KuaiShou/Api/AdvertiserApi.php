@@ -5,22 +5,23 @@ namespace App\Sdks\KuaiShou\Api;
 use App\Sdks\KuaiShou\Kernel\MultipleApi;
 use GuzzleHttp\Psr7\Request;
 
-
+/**
+ * 广告主
+ * Class AdvertiserApi
+ * @package App\Sdks\KuaiShou\Api
+ */
 class AdvertiserApi extends MultipleApi
 {
 
 
-    public function get($advertiserId): array
+    public function get(int $advertiserId): array
     {
         $request = $this->getRequest($advertiserId);
         $response = $this->client->send($request);
         return $this->handleResponse($response);
     }
 
-    /**
-     * @param int|null $advertiserId
-     * @return Request
-     */
+
     protected function getRequest(int $advertiserId): Request
     {
         $resourcePath = '/gw/uc/v1/advertisers';

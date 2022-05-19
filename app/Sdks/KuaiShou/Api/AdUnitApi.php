@@ -5,23 +5,23 @@ namespace App\Sdks\KuaiShou\Api;
 use App\Sdks\KuaiShou\Kernel\MultipleApi;
 use GuzzleHttp\Psr7\Request;
 
-
+/**
+ * 广告组
+ * Class AdUnitApi
+ * @package App\Sdks\KuaiShou\Api
+ */
 class AdUnitApi extends MultipleApi
 {
 
-    public function get($advertiserId,$param): array
+    public function get(int $advertiserId,array $param): array
     {
         $request = $this->getRequest($advertiserId,$param);
         $response = $this->client->send($request);
         return $this->handleResponse($response);
     }
 
-    /**
-     * 广告计划列表请求
-     * @param int $advertiserId
-     * @param array $param
-     * @return Request
-     */
+
+
     protected function getRequest(int $advertiserId, array $param = []): Request
     {
         $resourcePath = '/v1/ad_unit/list';
@@ -34,11 +34,8 @@ class AdUnitApi extends MultipleApi
         return new Request('POST', $uri,$headers,$httpBody);
     }
 
-    /**
-     * 批量获取
-     * @param array $params
-     * @return array
-     */
+
+
     public function multipleGet(array $params = []): array
     {
         $resourcePath = '/v1/ad_unit/list';

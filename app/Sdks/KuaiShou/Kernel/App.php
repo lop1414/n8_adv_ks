@@ -4,6 +4,7 @@ namespace App\Sdks\KuaiShou\Kernel;
 use App\Sdks\KuaiShou\Container\AccountReportApiContainer;
 use App\Sdks\KuaiShou\Container\AdUnitApiContainer;
 use App\Sdks\KuaiShou\Container\AdvertiserApiContainer;
+use App\Sdks\KuaiShou\Container\AsyncTackApiContainer;
 use App\Sdks\KuaiShou\Container\CampaignApiContainer;
 use App\Sdks\KuaiShou\Container\CreativeApiContainer;
 use App\Sdks\KuaiShou\Container\CreativeReportApiContainer;
@@ -41,12 +42,11 @@ class App
     /** @var CreativeReportApiContainer */
     public $creativeReportApiContainer;
 
+    /*** @var AsyncTackApiContainer */
+    public $asyncTackApiContainer;
 
 
 
-    /**
-     * @return OauthApiContainer
-     */
     public function oauth(): OauthApiContainer
     {
         if (empty($this->oauthApiContainer)) {
@@ -57,9 +57,8 @@ class App
         return $this->oauthApiContainer;
     }
 
-    /**
-     * @return AdvertiserApiContainer
-     */
+
+
     public function advertiser(): AdvertiserApiContainer
     {
         if (empty($this->advertiserApiContainer)) {
@@ -70,9 +69,8 @@ class App
         return $this->advertiserApiContainer;
     }
 
-    /**
-     * @return CampaignApiContainer
-     */
+
+
     public function campaign(): CampaignApiContainer
     {
         if (empty($this->campaignApiContainer)) {
@@ -84,9 +82,7 @@ class App
     }
 
 
-    /**
-     * @return AdUnitApiContainer
-     */
+
     public function adUnit(): AdUnitApiContainer
     {
         if (empty($this->adUnitApiContainer)) {
@@ -97,9 +93,8 @@ class App
         return $this->adUnitApiContainer;
     }
 
-    /**
-     * @return CreativeApiContainer
-     */
+
+
     public function creative(): CreativeApiContainer
     {
         if (empty($this->creativeApiContainer)) {
@@ -110,9 +105,8 @@ class App
         return $this->creativeApiContainer;
     }
 
-    /**
-     * @return ProgramCreativeApiContainer
-     */
+
+
     public function programCreative(): ProgramCreativeApiContainer
     {
         if (empty($this->programCreativeApiContainer)) {
@@ -123,9 +117,8 @@ class App
         return $this->programCreativeApiContainer;
     }
 
-    /**
-     * @return AccountReportApiContainer
-     */
+
+
     public function accountReport(): AccountReportApiContainer
     {
         if (empty($this->accountReportApiContainer)) {
@@ -136,9 +129,8 @@ class App
         return $this->accountReportApiContainer;
     }
 
-    /**
-     * @return CreativeReportApiContainer
-     */
+
+
     public function creativeReport(): CreativeReportApiContainer
     {
         if (empty($this->creativeReportApiContainer)) {
@@ -150,9 +142,6 @@ class App
     }
 
 
-    /**
-     * @return ProgramCreativeApiContainer
-     */
     public function programCreativeReport(): ProgramCreativeApiContainer
     {
         if (empty($this->programCreativeReportApiContainer)) {
@@ -161,6 +150,17 @@ class App
             $this->programCreativeReportApiContainer = $container;
         }
         return $this->programCreativeReportApiContainer;
+    }
+
+
+    public function asyncTack(): AsyncTackApiContainer
+    {
+        if (empty($this->asyncTackApiContainer)) {
+            $container = new AsyncTackApiContainer();
+            $container->init($this, $this->getClient());
+            $this->asyncTackApiContainer = $container;
+        }
+        return $this->asyncTackApiContainer;
     }
 
 

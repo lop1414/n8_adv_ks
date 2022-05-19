@@ -35,14 +35,14 @@ class CreativeReportApiContainer extends ApiContainer
     }
 
 
-    public function multipleGet(array $advertiserIds, array $param)
+    public function multipleGet(array $advertiserIds, array $params = [])
     {
-        $params = [];
+        $tmpParams = [];
         foreach ($advertiserIds as $advertiserId){
-            $params[] = array_merge($param,['advertiser_id' => $advertiserId]);
+            $tmpParams[] = array_merge($params,['advertiser_id' => $advertiserId]);
         }
 
-        return $this->handleMiddleware('get', $params, function(MiddlewareRequest $request) {
+        return $this->handleMiddleware('get', $tmpParams, function(MiddlewareRequest $request) {
 
             $params = $request->getApiMethodParams();
             return $this->apiInstance->multipleGet($params);

@@ -15,7 +15,18 @@ class CampaignApi extends MultipleApi
 
     public function get(array $param): array
     {
-        $request = $this->getRequest($param);
+        // 验证参数
+        $requiredParam = ['advertiser_id'];
+        $this->checkRequiredParam($requiredParam,$param);
+
+        // 构建Request对象
+        $resourcePath = '/v1/campaign/list';
+        $uri = $this->config->getHost() . $resourcePath;
+        $headers = [];
+        $httpBody = json_encode($param);
+        $request = new Request('POST', $uri,$headers,$httpBody);
+
+        // 请求
         $response = $this->client->send($request);
         return $this->handleResponse($response);
     }

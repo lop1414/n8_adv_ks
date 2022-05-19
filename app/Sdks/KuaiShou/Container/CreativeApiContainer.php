@@ -24,16 +24,13 @@ class CreativeApiContainer extends ApiContainer
     }
 
 
-    public function get(int $advertiserId,array $params = [])
+    public function get(array $params = [])
     {
-        $params['advertiser_id'] = $advertiserId;
 
         return $this->handleMiddleware('get', $params, function(MiddlewareRequest $request) {
 
             $params = $request->getApiMethodParams();
-            $advertiserId = $params['advertiser_id'];
-
-            return $this->apiInstance->get($advertiserId,$params);
+            return $this->apiInstance->get($params);
         });
     }
 

@@ -28,15 +28,7 @@ class OauthApi extends Api
 
 
     public function token(int $appId,string $secret,string $authCode){
-        $request = $this->tokenRequest($appId,$secret,$authCode);
-        $response = $this->client->send($request);
-        return $this->handleResponse($response);
-    }
 
-
-
-    protected function tokenRequest(int $appId,string $secret,string $authCode): Request
-    {
         $resourcePath = '/oauth2/authorize/access_token';
         $queryParams = [
             'app_id' => $appId,
@@ -47,20 +39,15 @@ class OauthApi extends Api
         $uri = $this->config->getHost() . $resourcePath;
         $headers = [];
         $httpBody = json_encode($queryParams);
-        return new Request('POST', $uri,$headers,$httpBody);
-    }
+        $request =  new Request('POST', $uri,$headers,$httpBody);
 
-
-
-    public function refreshToken(int $appId,string $secret,string $refreshToken){
-        $request = $this->refreshTokenRequest($appId,$secret,$refreshToken);
         $response = $this->client->send($request);
         return $this->handleResponse($response);
     }
 
 
-    protected function refreshTokenRequest(int $appId,string $secret,string $refreshToken): Request
-    {
+
+    public function refreshToken(int $appId,string $secret,string $refreshToken){
         $resourcePath = '/oauth2/authorize/refresh_token';
         $queryParams = [
             'app_id'    => $appId,
@@ -71,8 +58,12 @@ class OauthApi extends Api
         $uri = $this->config->getHost() . $resourcePath;
         $headers = [];
         $httpBody = json_encode($queryParams);
-        return new Request('POST', $uri,$headers,$httpBody);
+        $request = new Request('POST', $uri,$headers,$httpBody);
+
+        $response = $this->client->send($request);
+        return $this->handleResponse($response);
     }
+
 
 
 }

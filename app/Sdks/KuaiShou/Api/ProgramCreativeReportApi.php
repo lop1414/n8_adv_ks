@@ -15,23 +15,19 @@ class ProgramCreativeReportApi extends MultipleApi
 
     public function get(array $param): array
     {
-        $request = $this->getRequest($param);
-        $response = $this->client->send($request);
-        return $this->handleResponse($response);
-    }
-
-
-
-    protected function getRequest(array $param = []): Request
-    {
+        // 验证参数
         $requiredParam = ['advertiser_id','start_date_min','end_date_min'];
         $this->checkRequiredParam($requiredParam,$param);
 
+        // 构建Request对象
         $resourcePath = '/v1/report/program_creative_report';
         $uri = $this->config->getHost() . $resourcePath;
         $headers = [];
         $httpBody = json_encode($param);
-        return new Request('POST', $uri,$headers,$httpBody);
+        $request = new Request('POST', $uri,$headers,$httpBody);
+
+        $response = $this->client->send($request);
+        return $this->handleResponse($response);
     }
 
 

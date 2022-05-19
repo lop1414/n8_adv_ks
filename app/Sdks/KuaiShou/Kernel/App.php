@@ -150,6 +150,20 @@ class App
     }
 
 
+    /**
+     * @return ProgramCreativeApiContainer
+     */
+    public function programCreativeReport(): ProgramCreativeApiContainer
+    {
+        if (empty($this->programCreativeReportApiContainer)) {
+            $container = new ProgramCreativeApiContainer();
+            $container->init($this, $this->getClient());
+            $this->programCreativeReportApiContainer = $container;
+        }
+        return $this->programCreativeReportApiContainer;
+    }
+
+
 
 
 }

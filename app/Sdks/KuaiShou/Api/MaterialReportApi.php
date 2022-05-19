@@ -5,12 +5,13 @@ namespace App\Sdks\KuaiShou\Api;
 use App\Sdks\KuaiShou\Kernel\MultipleApi;
 use GuzzleHttp\Psr7\Request;
 
+
 /**
- * 广告创意
- * Class CreativeApi
+ * 素材报表
+ * Class MaterialReportApi
  * @package App\Sdks\KuaiShou\Api
  */
-class CreativeApi extends MultipleApi
+class MaterialReportApi extends MultipleApi
 {
 
     public function get(array $param): array
@@ -22,12 +23,12 @@ class CreativeApi extends MultipleApi
 
 
 
-    protected function getRequest(array $param = []): Request
+    protected function getRequest( array $param = []): Request
     {
-        $requiredParam = ['advertiser_id'];
+        $requiredParam = ['advertiser_id','start_date','end_date','view_type'];
         $this->checkRequiredParam($requiredParam,$param);
-        $resourcePath = '/v1/creative/list';
 
+        $resourcePath = '/v1/report/material_report';
         $uri = $this->config->getHost() . $resourcePath;
         $headers = [];
         $httpBody = json_encode($param);
@@ -38,11 +39,9 @@ class CreativeApi extends MultipleApi
 
     public function multipleGet(array $params = []): array
     {
-        $resourcePath = '/v1/creative/list';
+        $resourcePath = '/v1/report/material_report';
         $uri = $this->config->getHost() . $resourcePath;
 
         return $this->multipleRequest($uri, $params, 'POST');
     }
-
-
 }

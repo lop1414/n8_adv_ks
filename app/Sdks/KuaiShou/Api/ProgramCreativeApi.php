@@ -13,24 +13,24 @@ use GuzzleHttp\Psr7\Request;
 class ProgramCreativeApi extends MultipleApi
 {
 
-    public function get(int $advertiserId,array $param): array
+    public function get(array $param): array
     {
-        $request = $this->getRequest($advertiserId,$param);
+        $request = $this->getRequest($param);
         $response = $this->client->send($request);
         return $this->handleResponse($response);
     }
 
 
 
-    protected function getRequest(int $advertiserId, array $param = []): Request
+    protected function getRequest(array $param = []): Request
     {
-        $resourcePath = '/v2/creative/advanced/program/list';
-        $queryParam = $param;
-        $queryParam['advertiser_id'] = $advertiserId;
+        $requiredParam = ['advertiser_id'];
+        $this->checkRequiredParam($requiredParam,$param);
 
+        $resourcePath = '/v2/creative/advanced/program/list';
         $uri = $this->config->getHost() . $resourcePath;
         $headers = [];
-        $httpBody = json_encode($queryParam);
+        $httpBody = json_encode($param);
         return new Request('POST', $uri,$headers,$httpBody);
     }
 

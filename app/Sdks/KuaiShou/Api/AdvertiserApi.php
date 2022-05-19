@@ -14,23 +14,23 @@ class AdvertiserApi extends MultipleApi
 {
 
 
-    public function get(int $advertiserId): array
+    public function get(array $param): array
     {
-        $request = $this->getRequest($advertiserId);
+        $request = $this->getRequest($param);
         $response = $this->client->send($request);
         return $this->handleResponse($response);
     }
 
 
-    protected function getRequest(int $advertiserId): Request
+    protected function getRequest(array $param): Request
     {
-        $resourcePath = '/gw/uc/v1/advertisers';
-        $queryParams = [];
-        $queryParams['advertiser_id'] = $advertiserId;
+        $requiredParam = ['advertiser_id'];
+        $this->checkRequiredParam($requiredParam,$param);
 
+        $resourcePath = '/gw/uc/v1/advertisers';
         $uri = $this->config->getHost() . $resourcePath;
         $headers = [];
-        $httpBody = json_encode($queryParams);
+        $httpBody = json_encode($param);
         return new Request('POST', $uri,$headers,$httpBody);
     }
 }

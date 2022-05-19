@@ -13,24 +13,25 @@ use GuzzleHttp\Psr7\Request;
 class CreativeReportApi extends MultipleApi
 {
 
-    public function get(int $advertiserId,array $param): array
+    public function get(array $param): array
     {
-        $request = $this->getRequest($advertiserId,$param);
+        $request = $this->getRequest($param);
         $response = $this->client->send($request);
         return $this->handleResponse($response);
     }
 
 
 
-    protected function getRequest(int $advertiserId, array $param = []): Request
+    protected function getRequest(array $param = []): Request
     {
+        $requiredParam = ['advertiser_id'];
+        $this->checkRequiredParam($requiredParam,$param);
+
         $resourcePath = '/v1/report/creative_report';
-        $queryParam = $param;
-        $queryParam['advertiser_id'] = $advertiserId;
 
         $uri = $this->config->getHost() . $resourcePath;
         $headers = [];
-        $httpBody = json_encode($queryParam);
+        $httpBody = json_encode($param);
         return new Request('POST', $uri,$headers,$httpBody);
     }
 

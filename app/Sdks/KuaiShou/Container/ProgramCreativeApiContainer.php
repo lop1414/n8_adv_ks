@@ -1,7 +1,8 @@
 <?php
 namespace App\Sdks\KuaiShou\Container;
 
-use App\Sdks\KuaiShou\Api\ProgramCreativeApi;
+
+use App\Sdks\KuaiShou\Api\ProgramCreativeReportApi;
 use App\Sdks\KuaiShou\Kernel\ApiContainer;
 use App\Sdks\KuaiShou\KuaiShou;
 use App\Sdks\KuaiShou\Middleware\Model\MiddlewareRequest;
@@ -11,29 +12,25 @@ use GuzzleHttp\Client;
 class ProgramCreativeApiContainer extends ApiContainer
 {
 
-    /** @var ProgramCreativeApi */
+    /** @var ProgramCreativeReportApi */
     public $apiInstance;
 
 
     public function init(KuaiShou $app, Client $client): ProgramCreativeApiContainer
     {
         parent::init($app, $client);
-        $this->apiInstance = new ProgramCreativeApi($client, $app->getConfig());
+        $this->apiInstance = new ProgramCreativeReportApi($client, $app->getConfig());
         return $this;
     }
 
 
 
-    public function get(int $advertiserId,array $params = [])
+    public function get(array $params = [])
     {
-        $params['advertiser_id'] = $advertiserId;
-
         return $this->handleMiddleware('get', $params, function(MiddlewareRequest $request) {
 
             $params = $request->getApiMethodParams();
-            $advertiserId = $params['advertiser_id'];
-
-            return $this->apiInstance->get($advertiserId,$params);
+            return $this->apiInstance->get($params);
         });
     }
 

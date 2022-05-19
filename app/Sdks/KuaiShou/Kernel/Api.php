@@ -33,6 +33,20 @@ class Api
         return $this->config;
     }
 
+    /**
+     * 检查必填参数
+     * @param $requiredParams
+     * @param $params
+     * @throws Exception
+     */
+    public function checkRequiredParam($requiredParams,$params){
+        foreach ($requiredParams as  $requiredParam){
+            if(!isset($params[$requiredParam])){
+                throw new Exception('缺少必填参数: '.$requiredParam,1);
+            }
+        }
+    }
+
 
 
     /**

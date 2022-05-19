@@ -32,7 +32,7 @@ class ApiContainer
     protected $skipMiddleware = [];
 
 
-    public function init(KuaiShou $app, Client $client): ApiContainer
+    public function init(KuaiShou $app, Client $client)
     {
         $this->app = $app;
         $this->client = $client;

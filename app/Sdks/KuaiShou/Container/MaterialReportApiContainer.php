@@ -1,24 +1,25 @@
 <?php
 namespace App\Sdks\KuaiShou\Container;
 
-use App\Sdks\KuaiShou\Api\AccountReportApi;
+
+use App\Sdks\KuaiShou\Api\MaterialReportApi;
 use App\Sdks\KuaiShou\Kernel\ApiContainer;
 use App\Sdks\KuaiShou\KuaiShou;
 use App\Sdks\KuaiShou\Middleware\Model\MiddlewareRequest;
 use GuzzleHttp\Client;
 
 
-class AccountReportApiContainer extends ApiContainer
+class MaterialReportApiContainer extends ApiContainer
 {
 
-    /** @var AccountReportApi */
+    /** @var MaterialReportApi */
     public $apiInstance;
 
 
-    public function init(KuaiShou $app, Client $client): AccountReportApiContainer
+    public function init(KuaiShou $app, Client $client): MaterialReportApiContainer
     {
         parent::init($app, $client);
-        $this->apiInstance = new AccountReportApi($client, $app->getConfig());
+        $this->apiInstance = new MaterialReportApi($client, $app->getConfig());
         return $this;
     }
 
@@ -29,7 +30,6 @@ class AccountReportApiContainer extends ApiContainer
         return $this->handleMiddleware('get', $params, function(MiddlewareRequest $request) {
 
             $params = $request->getApiMethodParams();
-
             return $this->apiInstance->get($params);
         });
     }

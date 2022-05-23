@@ -10,6 +10,7 @@ use App\Sdks\KuaiShou\Container\CreativeApiContainer;
 use App\Sdks\KuaiShou\Container\CreativeReportApiContainer;
 use App\Sdks\KuaiShou\Container\OauthApiContainer;
 use App\Sdks\KuaiShou\Container\ProgramCreativeApiContainer;
+use App\Sdks\KuaiShou\Container\VideoApiContainer;
 use GuzzleHttp\Client;
 
 
@@ -44,6 +45,9 @@ class App
 
     /*** @var AsyncTackApiContainer */
     public $asyncTackApiContainer;
+
+    /*** @var VideoApiContainer */
+    public $videoApiContainer;
 
 
 
@@ -161,6 +165,18 @@ class App
             $this->asyncTackApiContainer = $container;
         }
         return $this->asyncTackApiContainer;
+    }
+
+
+
+    public function video(): VideoApiContainer
+    {
+        if (empty($this->videoApiContainer)) {
+            $container = new VideoApiContainer();
+            $container->init($this, $this->getClient());
+            $this->videoApiContainer = $container;
+        }
+        return $this->videoApiContainer;
     }
 
 

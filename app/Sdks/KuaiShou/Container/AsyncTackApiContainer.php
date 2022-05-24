@@ -26,7 +26,7 @@ class AsyncTackApiContainer extends ApiContainer
 
 
 
-    public function get(array $params)
+    public function get(array $params): array
     {
         return $this->handleMiddleware('get', $params, function(MiddlewareRequest $request) {
 
@@ -36,7 +36,7 @@ class AsyncTackApiContainer extends ApiContainer
     }
 
 
-    public function multipleGet(array $advertiserIds, array $params = [])
+    public function multipleGet(array $advertiserIds, array $params = []): array
     {
         $tmpParams = [];
         foreach ($advertiserIds as $advertiserId){
@@ -51,7 +51,8 @@ class AsyncTackApiContainer extends ApiContainer
     }
 
 
-    public function create($params){
+    public function create($params): array
+    {
         return $this->handleMiddleware('create', $params, function(MiddlewareRequest $request) {
 
             $params = $request->getApiMethodParams();
@@ -65,7 +66,8 @@ class AsyncTackApiContainer extends ApiContainer
      * @param array $params
      * @return mixed
      */
-    public function getDownloadData(array $params){
+    public function getDownloadData(array $params): array
+    {
         return $this->handleMiddleware('get', $params, function(MiddlewareRequest $request) {
 
             $params = $request->getApiMethodParams();

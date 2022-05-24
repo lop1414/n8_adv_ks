@@ -24,7 +24,7 @@ class CreativeReportApiContainer extends ApiContainer
     }
 
 
-    public function get(array $params = [])
+    public function get(array $params = []): array
     {
 
         return $this->handleMiddleware('get', $params, function(MiddlewareRequest $request) {
@@ -35,7 +35,7 @@ class CreativeReportApiContainer extends ApiContainer
     }
 
 
-    public function multipleGet(array $advertiserIds, array $params = [])
+    public function multipleGet(array $advertiserIds, array $params = []): array
     {
         $tmpParams = [];
         foreach ($advertiserIds as $advertiserId){

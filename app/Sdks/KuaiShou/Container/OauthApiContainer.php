@@ -27,7 +27,7 @@ class OauthApiContainer extends ApiContainer
      * @param array $params
      * @return mixed
      */
-    public function authorize(array $params = [])
+    public function authorize(array $params = []): array
     {
         return $this->handleMiddleware('authorize', $params, function(MiddlewareRequest $request) {
 
@@ -41,7 +41,7 @@ class OauthApiContainer extends ApiContainer
     }
 
 
-    public function token(array $params = [])
+    public function token(array $params = []): array
     {
 
         return $this->handleMiddleware('token', $params, function(MiddlewareRequest $request) {

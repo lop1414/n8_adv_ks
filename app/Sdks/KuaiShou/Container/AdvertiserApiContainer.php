@@ -24,7 +24,7 @@ class AdvertiserApiContainer extends ApiContainer
 
 
 
-    public function get(array $params)
+    public function get(array $params): array
     {
 
         return $this->handleMiddleware('get', $params, function(MiddlewareRequest $request) {

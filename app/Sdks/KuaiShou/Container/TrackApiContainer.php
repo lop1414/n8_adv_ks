@@ -24,7 +24,7 @@ class TrackApiContainer extends ApiContainer
 
 
 
-    public function activate(array $params = [])
+    public function activate(array $params = []): array
     {
 
         return $this->handleMiddleware('activate', $params, function(MiddlewareRequest $request) {

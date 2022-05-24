@@ -8,6 +8,7 @@ use App\Sdks\KuaiShou\Container\AsyncTackApiContainer;
 use App\Sdks\KuaiShou\Container\CampaignApiContainer;
 use App\Sdks\KuaiShou\Container\CreativeApiContainer;
 use App\Sdks\KuaiShou\Container\CreativeReportApiContainer;
+use App\Sdks\KuaiShou\Container\ImageApiContainer;
 use App\Sdks\KuaiShou\Container\OauthApiContainer;
 use App\Sdks\KuaiShou\Container\ProgramCreativeApiContainer;
 use App\Sdks\KuaiShou\Container\VideoApiContainer;
@@ -48,6 +49,9 @@ class App
 
     /*** @var VideoApiContainer */
     public $videoApiContainer;
+
+    /*** @var ImageApiContainer */
+    public $imageApiContainer;
 
 
 
@@ -167,8 +171,6 @@ class App
         return $this->asyncTackApiContainer;
     }
 
-
-
     public function video(): VideoApiContainer
     {
         if (empty($this->videoApiContainer)) {
@@ -177,6 +179,16 @@ class App
             $this->videoApiContainer = $container;
         }
         return $this->videoApiContainer;
+    }
+
+    public function image(): ImageApiContainer
+    {
+        if (empty($this->imageApiContainer)) {
+            $container = new ImageApiContainer();
+            $container->init($this, $this->getClient());
+            $this->imageApiContainer = $container;
+        }
+        return $this->imageApiContainer;
     }
 
 

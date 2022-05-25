@@ -107,6 +107,11 @@ class KsAsyncMaterialReportService extends KsReportService
                     $item[$fields[$k]] = $v;
                 }
 
+                // unit_id为0
+                if(empty($item['unit_id'])){
+                    continue;
+                }
+
                 if(!$this->itemValid($item)){
                     continue;
                 }

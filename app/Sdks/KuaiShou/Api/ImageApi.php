@@ -53,15 +53,8 @@ class ImageApi extends MultipleApi
         $resourcePath = '/v2/file/ad/image/upload';
         $uri = $this->config->getHost() . $resourcePath;
         $headers = [];
-        $multipartContents = [];
-        foreach ($params as $formParamName => $formParamValue) {
-            $multipartContents[] = [
-                'name'      => $formParamName,
-                'contents'  => $formParamValue
-            ];
-        }
 
-        $httpBody = new MultipartStream($multipartContents);
+        $httpBody = new MultipartStream($this->makeMultipartContents($params));
 
         $request = new Request('POST', $uri,$headers,$httpBody);
 

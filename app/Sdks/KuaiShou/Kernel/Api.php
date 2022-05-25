@@ -6,6 +6,7 @@ use App\Sdks\KuaiShou\Config;
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Psr7\Utils;
 
 class Api
 {
@@ -39,12 +40,52 @@ class Api
      * @param $params
      * @throws Exception
      */
-    public function checkRequiredParam($requiredParams,$params){
+    public function checkRequiredParam(array $requiredParams,array $params){
         foreach ($requiredParams as  $requiredParam){
             if(!isset($params[$requiredParam])){
                 throw new Exception('缺少必填参数: '.$requiredParam,1);
             }
         }
+    }
+
+    /**
+     * 检查是否为文件对象
+     * @param $file
+     * @throws Exception
+     */
+    public function checkFileObject($file){
+        if (!($file instanceof \SplFileInfo)) {
+            throw new \Exception('file 必须是SplFileInfo的实例',1);
+        }
+    }
+
+
+    /**
+     * 生成表单请求内容
+     * @param array $params
+     * @return array
+     * @throws Exception
+     */
+    public function makeMultipartContents(array $params): array
+    {
+        $multipartContents = [];
+        foreach ($params as $formParamName => $formParamValue) {
+            if($formParamName == 'file'){
+                $this->checkFileObject($formParamValue);
+                $multipartContents[] = [
+                    'name'      => $formParamName,
+                    'contents'  => Utils::tryFopen($formParamValue->getRealPath(),'rb'),
+                    'filename'  => $formParamValue->getClientOriginalName()
+                ];
+                continue;
+            }
+
+            $multipartContents[] = [
+                'name'      => $formParamName,
+                'contents'  => $formParamValue
+            ];
+        }
+        return $multipartContents;
     }
 
 

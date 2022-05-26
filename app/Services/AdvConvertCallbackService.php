@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Common\Enums\ConvertTypeEnum;
 use App\Common\Tools\CustomException;
 use App\Common\Services\ConvertCallbackService;
+use App\Sdks\KuaiShou\KuaiShou;
 
 class AdvConvertCallbackService extends ConvertCallbackService
 {
@@ -14,7 +15,8 @@ class AdvConvertCallbackService extends ConvertCallbackService
      * @throws CustomException
      * 回传
      */
-    protected function callback($item){
+    protected function callback($item): bool
+    {
         $eventTypeMap = $this->getEventTypeMap();
 
         if(!isset($eventTypeMap[$item->convert_type])){
@@ -55,9 +57,39 @@ class AdvConvertCallbackService extends ConvertCallbackService
         return true;
     }
 
+    public function runCallback($click,$eventType,$eventTime,$payAmount = 0): bool
+    {
+        try{
+            $activateParam = [
+                'event_type'    => $eventType,
+                'event_time'    => $eventTime,
+                'callback'      => $click->callback
+            ];
+            if(!empty($payAmount)){
+                $activateParam['purchase_amount'] = $payAmount;
+            }
+            if(!empty($click->link)){
+                $param['link'] = $click->link;
+                $activateParam['callback'] = 'http://ad.partner.gifshow.com/track/activate/?'. http_build_query($param);
+            }
+
+            KuaiShou::init()->track()->activate($activateParam);
+            return true;
+        }catch (\Exception $e){
+            throw new CustomException([
+                'code' => 'KS_CONVERT_CALLBACK_ERROR',
+                'message' => '快手转化回传失败',
+                'log' => true,
+                'data' => [
+                    'click_info' => $click,
+                    'param' => $activateParam
+                ],
+            ]);
+        }
+    }
 
 
-    public function runCallback($click,$eventType,$eventTime,$payAmount = 0){
+    public function runCallback_old($click,$eventType,$eventTime,$payAmount = 0){
         $param = [
             'event_type' => $eventType,
             'event_time' => $eventTime
@@ -101,7 +133,8 @@ class AdvConvertCallbackService extends ConvertCallbackService
      * @return array
      * 获取事件映射
      */
-    public function getEventTypeMap(){
+    public function getEventTypeMap(): array
+    {
         return [
             ConvertTypeEnum::ACTIVATION => 1,
             ConvertTypeEnum::REGISTER => 1,
@@ -115,9 +148,10 @@ class AdvConvertCallbackService extends ConvertCallbackService
 
     /**
      * @param $click
-     * @return array|void
+     * @return array
      */
-    public function filterClickData($click){
+    public function filterClickData($click): array
+    {
         return [
             'id' => $click['id'],
             'campaign_id' => $click['campaign_id'],

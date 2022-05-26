@@ -29,7 +29,12 @@ class TrackApi extends Api
 
         // 请求
         $response = $this->client->send($request);
-        return $this->handleResponse($response);
+        $responseData = json_decode($response->getBody()->getContents(),true);
+
+        if(!isset($responseData['result']) || $responseData['result'] != 1) {
+            throw new \Exception('track callback api error message : '.$responseData['message'],$responseData['result']);
+        }
+        return $responseData;
     }
 
 

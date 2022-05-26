@@ -25,9 +25,9 @@ class OauthApiContainer extends ApiContainer
     /**
      * 获取授权链接
      * @param array $params
-     * @return mixed
+     * @return string
      */
-    public function authorize(array $params = []): array
+    public function authorize(array $params = []): string
     {
         return $this->handleMiddleware('authorize', $params, function(MiddlewareRequest $request) {
 
@@ -41,7 +41,7 @@ class OauthApiContainer extends ApiContainer
     }
 
 
-    public function token(array $params = []): array
+    public function accessToken(array $params = []): array
     {
 
         return $this->handleMiddleware('token', $params, function(MiddlewareRequest $request) {
@@ -51,7 +51,7 @@ class OauthApiContainer extends ApiContainer
             $secret = $params['secret'] ?? null;
             $authCode = $params['auth_code'] ?? null;
 
-            return $this->apiInstance->token($appId,$secret,$authCode);
+            return $this->apiInstance->accessToken($appId,$secret,$authCode);
         });
     }
 

@@ -3,67 +3,37 @@
 namespace App\Services\Ks;
 
 use App\Common\Helpers\Functions;
-use App\Common\Tools\CustomException;
+use App\Common\Services\BaseService;
 use App\Models\Ks\KsUnitModel;
+use App\Sdks\KuaiShou\KuaiShou;
+use App\Services\KuaiShouService;
 
-class KsUnitService extends KsService
+class KsUnitService extends BaseService
 {
-    /**
-     * constructor.
-     * @param string $appId
-     */
-    public function __construct($appId = ''){
-        parent::__construct($appId);
-    }
 
-
-
-    /**
-     * @param $accounts
-     * @param $page
-     * @param $pageSize
-     * @param array $param
-     * @return mixed
-     * sdk并发获取列表
-     */
-    public function sdkMultiGetList($accounts, $page, $pageSize, $param = []){
-        return $this->sdk->multiGetAdUnitList($accounts, $page, $pageSize, $param);
-    }
-
-    /**
-     * @param array $option
-     * @return bool
-     * @throws CustomException
-     * 同步
-     */
-    public function sync($option = []){
-        $accountIds = [];
-        // 账户id过滤
-        if(!empty($option['account_ids'])){
-            $accountIds = $option['account_ids'];
-        }
-
+    public function sync($option = []): bool
+    {
         $param = [];
         if(!empty($option['date'])){
             $param['start_date'] = Functions::getDate($option['date']);
             $param['end_date'] = Functions::getDate($option['date']);
         }
 
-
-        $accountGroup = $this->getAccountGroup($accountIds);
+        $accountGroup = KuaiShouService::getAccountGroupByToken($option['account_ids'] ?? []);
 
         $t = microtime(1);
 
-        $pageSize = 100;
-        foreach($accountGroup as $g){
-            $adUnits = $this->multiGetPageList($g, $pageSize, $param);
+        foreach($accountGroup as $token => $accountList){
 
-            Functions::consoleDump('count:'. count($adUnits));
+            $ksSdk = KuaiShou::init($token);
 
-
-            // 保存
-            foreach($adUnits as $adUnit) {
-                $this->save($adUnit);
+            $accountChunk = array_chunk($accountList,5);
+            foreach ($accountChunk as $accounts){
+                $accountIds = array_column($accounts,'account_id');
+                $adUnits = KuaiShouService::multiGet($ksSdk->adUnit(),$accountIds,$param);
+                foreach($adUnits as $adUnit) {
+                    $this->save($adUnit);
+                }
             }
         }
 
@@ -79,7 +49,8 @@ class KsUnitService extends KsService
      * @return bool
      * 保存
      */
-    public function save($adUnit){
+    public function save($adUnit): bool
+    {
         $ksAdUnitModel = new KsUnitModel();
         $ksAdUnit = $ksAdUnitModel->where('id', $adUnit['unit_id'])->first();
 

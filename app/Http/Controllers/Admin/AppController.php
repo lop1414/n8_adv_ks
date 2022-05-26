@@ -8,6 +8,7 @@ use App\Common\Enums\SystemAliasEnum;
 use App\Common\Tools\CustomException;
 use App\Models\AppModel;
 use App\Models\Ks\KsUserModel;
+use App\Sdks\KuaiShou\KuaiShou;
 
 class AppController extends AdminController
 {
@@ -21,17 +22,15 @@ class AppController extends AdminController
         parent::__construct();
     }
 
-    public function getAuthUrl($appId,$userId){
-        $redirectUri = config('common.system_api.'.SystemAliasEnum::ADV_KS.'.url').'/front/ks/grant';
+    public function getAuthUrl($appId,$userId): string
+    {
 
-        $url = 'https://developers.e.kuaishou.com/tools/authorize?';
-        $url .= http_build_query([
-            'app_id' => $appId,
-            'scope' => '["ad_query","ad_manage","public_dmp_service","report_service","public_agent_service","public_account_service","account_service"]',
-            'state' => $appId.'|'.$userId,
-            'redirect_uri' => $redirectUri
+        return KuaiShou::init()->oauth()->authorize([
+            'app_id'        => $appId,
+            'scope'         => '["ad_query","ad_manage","public_dmp_service","report_service","public_agent_service","public_account_service","account_service"]',
+            'state'         => $appId.'|'.$userId,
+            'redirect_uri'  => config('common.system_api.'.SystemAliasEnum::ADV_KS.'.url').'/front/ks/grant'
         ]);
-        return $url;
     }
 
 

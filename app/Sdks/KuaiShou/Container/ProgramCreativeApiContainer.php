@@ -2,7 +2,7 @@
 namespace App\Sdks\KuaiShou\Container;
 
 
-use App\Sdks\KuaiShou\Api\ProgramCreativeReportApi;
+use App\Sdks\KuaiShou\Api\ProgramCreativeApi;
 use App\Sdks\KuaiShou\Kernel\ApiContainer;
 use App\Sdks\KuaiShou\KuaiShou;
 use App\Sdks\KuaiShou\Middleware\Model\MiddlewareRequest;
@@ -12,14 +12,14 @@ use GuzzleHttp\Client;
 class ProgramCreativeApiContainer extends ApiContainer
 {
 
-    /** @var ProgramCreativeReportApi */
+    /** @var ProgramCreativeApi */
     public $apiInstance;
 
 
     public function init(KuaiShou $app, Client $client): ProgramCreativeApiContainer
     {
         parent::init($app, $client);
-        $this->apiInstance = new ProgramCreativeReportApi($client, $app->getConfig());
+        $this->apiInstance = new ProgramCreativeApi($client, $app->getConfig());
         return $this;
     }
 

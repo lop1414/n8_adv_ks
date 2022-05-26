@@ -4,48 +4,20 @@ namespace App\Services\Ks;
 
 use App\Common\Enums\MaterialTypeEnums;
 use App\Common\Helpers\Functions;
+use App\Common\Services\BaseService;
 use App\Common\Tools\CustomException;
 use App\Datas\KsMaterialData;
 use App\Models\Ks\KsCreativeModel;
 use App\Models\Ks\KsMaterialCreativeModel;
 use App\Models\Ks\KsVideoModel;
+use App\Sdks\KuaiShou\KuaiShou;
+use App\Services\KuaiShouService;
 
-class KsCreativeService extends KsService
+class KsCreativeService extends BaseService
 {
-    /**
-     * constructor.
-     * @param string $appId
-     */
-    public function __construct($appId = ''){
-        parent::__construct($appId);
-    }
 
-
-
-    /**
-     * @param $accounts
-     * @param $page
-     * @param $pageSize
-     * @param array $param
-     * @return mixed
-     * sdk并发获取列表
-     */
-    public function sdkMultiGetList($accounts, $page, $pageSize, $param = []){
-        return $this->sdk->multiGetCreativeList($accounts, $page, $pageSize, $param);
-    }
-
-    /**
-     * @param array $option
-     * @return bool
-     * @throws CustomException
-     * 同步
-     */
-    public function sync($option = []){
-        $accountIds = [];
-        // 账户id过滤
-        if(!empty($option['account_ids'])){
-            $accountIds = $option['account_ids'];
-        }
+    public function sync(array $option = []): bool
+    {
 
         $param = [];
         if(!empty($option['date'])){
@@ -53,25 +25,24 @@ class KsCreativeService extends KsService
             $param['end_date'] = Functions::getDate($option['date']);
         }
 
-        $accountGroup = $this->getAccountGroup($accountIds);
-
+        $accountGroup = KuaiShouService::getAccountGroupByToken($option['account_ids'] ?? []);
         $t = microtime(1);
 
-        $pageSize = 100;
-        foreach($accountGroup as $g){
-            $creatives = $this->multiGetPageList($g, $pageSize, $param);
-            Functions::consoleDump('count:'. count($creatives));
+        foreach($accountGroup as $token => $accountList){
+            $ksSdk = KuaiShou::init($token);
 
-
-            // 保存
-            foreach($creatives as $creative) {
-                $this->save($creative);
+            $accountChunk = array_chunk($accountList,5);
+            foreach ($accountChunk as $accounts){
+                $accountIds = array_column($accounts,'account_id');
+                $creatives = KuaiShouService::multiGet($ksSdk->creative(),$accountIds,$param);
+                foreach($creatives as $creative) {
+                    $this->save($creative);
+                }
             }
         }
 
         $t = microtime(1) - $t;
         var_dump($t);
-
         return true;
     }
 

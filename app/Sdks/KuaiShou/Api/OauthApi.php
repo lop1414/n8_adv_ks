@@ -27,7 +27,7 @@ class OauthApi extends Api
 
 
 
-    public function token(int $appId,string $secret,string $authCode){
+    public function accessToken(int $appId,string $secret,string $authCode){
 
         $resourcePath = '/oauth2/authorize/access_token';
         $queryParams = [

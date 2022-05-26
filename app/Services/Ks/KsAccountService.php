@@ -5,22 +5,19 @@ namespace App\Services\Ks;
 use App\Common\Enums\AdvAccountBelongTypeEnum;
 use App\Common\Enums\StatusEnum;
 use App\Common\Helpers\Functions;
+use App\Common\Services\BaseService;
 use App\Common\Tools\CustomException;
 use App\Enums\Ks\KsSyncTypeEnum;
 use App\Models\AppModel;
 use App\Models\Ks\KsAccountModel;
 use App\Models\Ks\KsUserModel;
+use App\Sdks\KuaiShou\KuaiShou;
+use App\Services\KuaiShouService;
 use App\Services\Task\TaskKsSyncService;
+use Exception;
 
-class KsAccountService extends KsService
+class KsAccountService extends BaseService
 {
-    /**
-     * OceanVideoService constructor.
-     * @param string $appId
-     */
-    public function __construct($appId = ''){
-        parent::__construct($appId);
-    }
 
 
     /**
@@ -29,7 +26,8 @@ class KsAccountService extends KsService
      * @throws CustomException
      * 验证用户是否为绑定的app
      */
-    public function checkAppBelongToUser($appId,$user){
+    public function checkAppBelongToUser($appId,$user)
+    {
         if($appId != $user->app_id){
             throw new CustomException([
                 'code' => 'APP_NOT_BELONG_TO_USER',
@@ -43,16 +41,16 @@ class KsAccountService extends KsService
     }
 
 
-
     /**
+     * 授权
+     * @param $appId
      * @param $authCode
      * @param $userId
      * @return bool
      * @throws CustomException
-     * 授权
      */
-    public function grant($authCode,$userId){
-        $appId = $this->sdk->getAppId();
+    public function grant($appId,$authCode,$userId): bool
+    {
 
         $appModel = new AppModel();
         $app = $appModel->where('app_id', $appId)->first();
@@ -66,12 +64,15 @@ class KsAccountService extends KsService
             ]);
         }
 
-        $user = $this->getKsUser($userId);
+        $user = KuaiShouService::getKsUser($userId);
         $this->checkAppBelongToUser($appId,$user);
 
         if(!Functions::isLocal()){
-            $this->sdk->setAccessToken('');
-            $info = $this->sdk->getOauthAccessToken($app->secret, $authCode);
+            $info = KuaiShou::init()->oauth()->accessToken([
+                'app_id'    => $appId,
+                'secret'    => $app->secret,
+                'auth_code' => $authCode
+            ]);
             var_dump($info);
         }else{
             $info = [
@@ -114,10 +115,9 @@ class KsAccountService extends KsService
      * @throws CustomException
      * 批量同步
      */
-    public function batchSync(){
-        $ksUserModel = new KsUserModel();
-        $ksUsers = $ksUserModel->get();
-
+    public function batchSync(): bool
+    {
+        $ksUsers = (new KsUserModel())->get();
 
         // 创建任务
         $taskKsSyncService = new TaskKsSyncService(KsSyncTypeEnum::ACCOUNT);
@@ -147,12 +147,16 @@ class KsAccountService extends KsService
      * @throws CustomException
      * 同步
      */
-    public function sync($option){
-        $KsUser = $this->getKsUser($option['user_id']);
-        $accounts = $this->sdk->getAccountList($option['user_id'],$KsUser->access_token);
+    public function sync($option): bool
+    {
+        $KsUser = KuaiShouService::getKsUser($option['user_id']);
 
+        $ksSdk = KuaiShou::init($KsUser->access_token);
+        $accounts = $ksSdk->advertiser()->get([
+            'advertiser_id' => $option['user_id']
+        ]);
         foreach($accounts['details'] as $account){
-            $accountInfo = $this->sdk->getAccountInfo($account['advertiser_id']);
+            $accountInfo = $ksSdk->advertiser()->info(['advertiser_id' => $account['advertiser_id']]);
 
             $ksAccount = (new KsAccountModel())
                 ->where('app_id',$KsUser['app_id'])
@@ -188,18 +192,26 @@ class KsAccountService extends KsService
 
 
 
+
     /**
-     * @return bool
      * 刷新 access token
+     * @return bool
+     * @throws Exception
      */
-    public function refreshAccessToken(){
+    public function refreshAccessToken(): bool
+    {
         $ksUsers = (new KsUserModel())->get();
 
 
         foreach($ksUsers as $user){
+
             $app = (new AppModel())->where('app_id',$user->app_id)->first();
             if(!Functions::isLocal()){
-                $info = $this->sdk->refreshAccessToken($user->app_id, $app->secret, $user->refresh_token);
+                $info = KuaiShou::init('')->oauth()->refreshToken([
+                    'app_id'        => $user->app_id,
+                    'secret'        => $app->secret,
+                    'refresh_token' => $user->refresh_token
+                ]);
                 var_dump($info);
             }else{
                 $info = [

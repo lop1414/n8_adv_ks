@@ -31,4 +31,20 @@ class AdvertiserApi extends MultipleApi
         $response = $this->client->send($request);
         return $this->handleResponse($response);
     }
+
+
+    public function info(array $param){
+        // 验证参数
+        $requiredParam = ['advertiser_id'];
+        $this->checkRequiredParam($requiredParam,$param);
+
+        // 构建Request对象
+        $resourcePath = '/v1/advertiser/info';
+        $uri = $this->config->getHost() . $resourcePath. '?' . http_build_query($param);
+        $request = new Request('GET', $uri);
+
+        // 请求
+        $response = $this->client->send($request);
+        return $this->handleResponse($response);
+    }
 }

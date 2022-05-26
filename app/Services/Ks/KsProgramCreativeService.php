@@ -3,66 +3,40 @@
 namespace App\Services\Ks;
 
 use App\Common\Helpers\Functions;
-use App\Common\Tools\CustomException;
-use App\Models\Ks\KsCreativeModel;
+use App\Common\Services\BaseService;
 use App\Models\Ks\KsProgramCreativeModel;
+use App\Sdks\KuaiShou\KuaiShou;
+use App\Services\KuaiShouService;
 
-class KsProgramCreativeService extends KsService
+class KsProgramCreativeService extends BaseService
 {
-    /**
-     * constructor.
-     * @param string $appId
-     */
-    public function __construct($appId = ''){
-        parent::__construct($appId);
-    }
 
 
-
-    /**
-     * @param $accounts
-     * @param $page
-     * @param $pageSize
-     * @param array $param
-     * @return mixed
-     * sdk并发获取列表
-     */
-    public function sdkMultiGetList($accounts, $page, $pageSize, $param = []){
-        return $this->sdk->multiGetProgramCreativeList($accounts, $page, $pageSize, $param);
-    }
-
-    /**
-     * @param array $option
-     * @return bool
-     * @throws CustomException
-     * 同步
-     */
-    public function sync($option = []){
-        $accountIds = [];
-        // 账户id过滤
-        if(!empty($option['account_ids'])){
-            $accountIds = $option['account_ids'];
-        }
-
+    public function sync(array $option = []): bool
+    {
         $param = [];
         if(!empty($option['date'])){
             $param['start_date'] = Functions::getDate($option['date']);
             $param['end_date'] = Functions::getDate($option['date']);
         }
 
-        $accountGroup = $this->getAccountGroup($accountIds);
+        $accountGroup = KuaiShouService::getAccountGroupByToken($option['account_ids'] ?? []);
 
         $t = microtime(1);
 
         $pageSize = 100;
-        foreach($accountGroup as $g){
-            $creatives = $this->multiGetPageList($g, $pageSize, $param);
-            Functions::consoleDump('count:'. count($creatives));
 
+        foreach($accountGroup as $token => $accountList){
 
-            // 保存
-            foreach($creatives as $creative) {
-                $this->save($creative);
+            $ksSdk = KuaiShou::init($token);
+
+            $accountChunk = array_chunk($accountList,5);
+            foreach ($accountChunk as $accounts){
+                $accountIds = array_column($accounts,'account_id');
+                $creatives = KuaiShouService::multiGet($ksSdk->programCreative(),$accountIds,$param,1,$pageSize);
+                foreach($creatives as $creative) {
+                    $this->save($creative);
+                }
             }
         }
 
@@ -78,7 +52,8 @@ class KsProgramCreativeService extends KsService
      * @return bool
      * 保存
      */
-    public function save($creative){
+    public function save($creative): bool
+    {
         $ksProgramCreativeModel = new KsProgramCreativeModel();
         $ksProgramCreative = $ksProgramCreativeModel->where('id', $creative['unit_id'])->first();
 

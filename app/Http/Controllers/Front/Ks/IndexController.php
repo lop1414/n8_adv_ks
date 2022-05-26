@@ -43,7 +43,7 @@ class IndexController extends FrontController
         list($appId,$userId) = explode('|',$data['state']);
         $authCode = $data['auth_code'];
 
-        $ret = (new KsAccountService($appId))->grant($authCode,$userId);
+        $ret = (new KsAccountService())->grant($appId,$authCode,$userId);
 
         (new KsAccountService())->refreshAccessToken();
 

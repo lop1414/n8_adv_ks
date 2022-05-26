@@ -111,6 +111,6 @@ class Api
             throw new Exception('api error message : '.$responseData['message'],$responseData['code']);
         }
 
-        return $responseData;
+        return $responseData['data'];
     }
 }

@@ -7,6 +7,11 @@ use GuzzleHttp\Psr7\Request;
 
 class MultipleApi extends Api
 {
+    /**
+     * 并发请求个数
+     * @var int
+     */
+    protected $concurrency = 5;
 
     /**
      * 响应数据
@@ -22,11 +27,16 @@ class MultipleApi extends Api
     private $requestParams = [];
 
 
-    /**
-     * 并发请求个数
-     * @var int
-     */
-    private $concurrency = 5;
+    public function setConcurrency(int $i): MultipleApi
+    {
+        $this->concurrency = $i;
+        return $this;
+    }
+
+    public function getConcurrency(): int
+    {
+        return $this->concurrency;
+    }
 
 
 

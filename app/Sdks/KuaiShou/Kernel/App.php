@@ -11,6 +11,7 @@ use App\Sdks\KuaiShou\Container\CreativeReportApiContainer;
 use App\Sdks\KuaiShou\Container\ImageApiContainer;
 use App\Sdks\KuaiShou\Container\OauthApiContainer;
 use App\Sdks\KuaiShou\Container\ProgramCreativeApiContainer;
+use App\Sdks\KuaiShou\Container\TrackApiContainer;
 use App\Sdks\KuaiShou\Container\VideoApiContainer;
 use GuzzleHttp\Client;
 
@@ -22,6 +23,9 @@ class App
 
     /** @var OauthApiContainer */
     public $oauthApiContainer;
+
+    /** @var TrackApiContainer */
+    public $trackApiContainer;
 
     /** @var AdvertiserApiContainer */
     public $advertiserApiContainer;
@@ -63,6 +67,17 @@ class App
             $this->oauthApiContainer = $container;
         }
         return $this->oauthApiContainer;
+    }
+
+
+    public function track(): TrackApiContainer
+    {
+        if (empty($this->trackApiContainer)) {
+            $container = new TrackApiContainer();
+            $container->init($this, $this->getClient());
+            $this->trackApiContainer = $container;
+        }
+        return $this->trackApiContainer;
     }
 
 

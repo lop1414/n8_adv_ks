@@ -89,45 +89,6 @@ class AdvConvertCallbackService extends ConvertCallbackService
     }
 
 
-    public function runCallback_old($click,$eventType,$eventTime,$payAmount = 0){
-        $param = [
-            'event_type' => $eventType,
-            'event_time' => $eventTime
-        ];
-        if(!empty($payAmount)){
-            $param['purchase_amount'] = $payAmount;
-        }
-
-        if(!empty($click->link)){
-            $param['link'] = $click->link;
-            $url = 'http://ad.partner.gifshow.com/track/activate/'.'?'. http_build_query($param);
-
-        }else{
-            $url = $click->callback. '&' . http_build_query($param);
-        }
-
-
-        $ret = file_get_contents($url);
-        $result = json_decode($ret, true);
-
-        if(!isset($result['result']) || $result['result'] != 1){
-            throw new CustomException([
-                'code' => 'KS_CONVERT_CALLBACK_ERROR',
-                'message' => '快手转化回传失败',
-                'log' => true,
-                'data' => [
-                    'url' => $url,
-                    'param' => $param,
-                    'result' => $result,
-                ],
-            ]);
-        }
-
-        return true;
-
-    }
-
-
 
     /**
      * @return array

@@ -8,6 +8,7 @@ use App\Common\Enums\ConvertTypeEnum;
 use App\Common\Models\ClickModel;
 use App\Common\Models\ConvertCallbackModel;
 use App\Common\Services\ConvertMatchService;
+use App\Models\ChannelUnitModel;
 use App\Models\Ks\KsUnitExtendModel;
 
 class AdvConvertMatchService extends ConvertMatchService
@@ -84,13 +85,20 @@ class AdvConvertMatchService extends ConvertMatchService
         $isTransfer = in_array( AdvClickSourceEnum::N8_TRANSFER, $this->clickSource) && count($this->clickSource) == 1;
         if(!$isTransfer){
             $channelId = $data['n8_union_user']['channel_id'] ?? 0;
+
             if(!empty($channelId)){
-                $builder = $builder->whereRaw("
-                unit_id IN (
-                    SELECT unit_id FROM channel_units
-                        WHERE channel_id = {$channelId}
-                )
-            ");
+
+                $unitIds = (new ChannelUnitModel())->where('channel_id',$channelId)->get(['unit_id']);
+                $unitIds = $unitIds->isEmpty() ? [] : array_column($unitIds->toArray(),'unit_id');
+                if(!empty($unitIds)){
+                    $builder = $builder->whereIn('unit_id',$unitIds);
+                }
+//                $builder = $builder->whereRaw("
+//                    unit_id IN (
+//                        SELECT unit_id FROM channel_units
+//                            WHERE channel_id = {$channelId}
+//                    )
+//                ");
             }
         }
 

@@ -66,6 +66,7 @@ $router->group([
 
         // 视频
         $router->group(['prefix' => 'video'], function () use ($router) {
+            $router->post('upload', 'Admin\Ks\VideoController@upload');
             $router->post('batch_upload', 'Admin\Ks\VideoController@batchUpload');
         });
 

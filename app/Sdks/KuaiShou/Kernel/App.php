@@ -11,6 +11,7 @@ use App\Sdks\KuaiShou\Container\CreativeReportApiContainer;
 use App\Sdks\KuaiShou\Container\ImageApiContainer;
 use App\Sdks\KuaiShou\Container\OauthApiContainer;
 use App\Sdks\KuaiShou\Container\ProgramCreativeApiContainer;
+use App\Sdks\KuaiShou\Container\ProgramCreativeReportApiContainer;
 use App\Sdks\KuaiShou\Container\TrackApiContainer;
 use App\Sdks\KuaiShou\Container\VideoApiContainer;
 use GuzzleHttp\Client;
@@ -165,10 +166,10 @@ class App
     }
 
 
-    public function programCreativeReport(): ProgramCreativeApiContainer
+    public function programCreativeReport(): ProgramCreativeReportApiContainer
     {
         if (empty($this->programCreativeReportApiContainer)) {
-            $container = new ProgramCreativeApiContainer();
+            $container = new ProgramCreativeReportApiContainer();
             $container->init($this, $this->getClient());
             $this->programCreativeReportApiContainer = $container;
         }

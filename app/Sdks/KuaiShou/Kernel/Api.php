@@ -75,7 +75,7 @@ class Api
                 $multipartContents[] = [
                     'name'      => $formParamName,
                     'contents'  => Utils::tryFopen($formParamValue->getRealPath(),'rb'),
-                    'filename'  => $formParamValue->getClientOriginalName()
+                    'filename'  => $formParamValue->getFilename()
                 ];
                 continue;
             }

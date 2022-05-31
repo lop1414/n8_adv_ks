@@ -45,27 +45,12 @@ class KsSyncCreativeReportCommand extends BaseCommand
 
         // 锁 key
         $lockKey = 'ks_sync_creative_report';
-        if(!empty($param['running'])){
-            $lockKey .= '_running';
-        }
+        $lockKey .= isset($param['running']) ? '_running' : '';
+        $lockKey .= isset($param['date']) ? '_'.$param['date'] : '';  // key 日期
+        $lockKey .= isset($param['key_suffix']) ? '_'.$param['key_suffix'] : '';  // key 后缀
 
-        // key 日期
-        if(!empty($param['date'])){
-            $lockKey .= '_'. $param['date'];
-        }
 
-        // key 后缀
-        if(!empty($param['key_suffix'])){
-            $lockKey .= '_'. trim($param['key_suffix']);
-        }
-
-        $this->lockRun(
-            [$this, 'exec'],
-            $lockKey,
-            43200,
-            ['log' => true],
-            $param
-        );
+        $this->lockRun([$this, 'exec'], $lockKey, 43200, ['log' => true], $param);
     }
 
     /**

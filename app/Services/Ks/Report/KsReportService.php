@@ -3,11 +3,14 @@
 namespace App\Services\Ks\Report;
 
 use App\Common\Helpers\Functions;
+use App\Common\Services\BaseService;
 use App\Common\Tools\CustomException;
-use App\Services\Ks\KsService;
+use App\Sdks\KuaiShou\Kernel\ApiContainer;
+use App\Sdks\KuaiShou\KuaiShou;
+use App\Services\KuaiShouService;
 use Illuminate\Support\Facades\DB;
 
-class KsReportService extends KsService
+class KsReportService extends BaseService
 {
     /**
      * @var string
@@ -15,66 +18,53 @@ class KsReportService extends KsService
      */
     public $modelClass;
 
-    /**
-     * OceanAccountReportService constructor.
-     * @param string $appId
-     */
-    public function __construct($appId = ''){
-        parent::__construct($appId);
+    public function getContainer(KuaiShou $ksSdk): ApiContainer
+    {
+        var_dump("实现该方法");
     }
 
-    /**
-     * @param array $option
-     * @return bool
-     * @throws CustomException
-     * 同步
-     */
-    public function sync($option = []){
+
+    public function setModelClass(): bool
+    {
+        var_dump("实现该方法");
+    }
+
+
+    public function sync(array $option = []): bool
+    {
         ini_set('memory_limit', '2048M');
+
+        $this->setModelClass();
 
         $t = microtime(1);
 
-        $accountIds = [];
-        // 账户id过滤
-        if(!empty($option['account_ids'])){
-            $accountIds = $option['account_ids'];
-        }
+        $accountIds = $option['account_ids'] ?? [];
 
         // 并发分片大小
-        if(!empty($option['multi_chunk_size'])){
-            $multiChunkSize = min(intval($option['multi_chunk_size']), 8);
-            $this->sdk->setMultiChunkSize($multiChunkSize);
-        }
+        $multiChunkSize = min(intval($option['multi_chunk_size'] ?? 0 ),10);
+
 
         // 在跑账户
-//        if(!empty($option['running'])){
-//            $runningAccountIds = $this->getRunningAccountIds();
-//            if(!empty($accountIds)){
-//                $accountIds = array_intersect($accountIds, $runningAccountIds);
-//            }else{
-//                $accountIds = $runningAccountIds;
-//            }
-//        }
+        /*if(!empty($option['running'])){
+            $runningAccountIds = $this->getRunningAccountIds();
+            if(!empty($accountIds)){
+                $accountIds = array_intersect($accountIds, $runningAccountIds);
+            }else{
+                $accountIds = $runningAccountIds;
+            }
+        }*/
 
-        $dateRange = Functions::getDateRange($option['date']);
-        $dateList = Functions::getDateListByRange($dateRange);
+        list($startDate,$endDate) = Functions::getDateRange($option['date']);
 
         // 删除
         if(!empty($option['delete'])){
-            $between = [
-                $dateRange[0] .' 00:00:00',
-                $dateRange[1] .' 23:59:59',
-            ];
 
-            $model = new $this->modelClass();
-
-            $builder = $model->whereBetween('stat_datetime', $between);
-
-            if(!empty($accountIds)){
-                $builder->whereIn('account_id', $accountIds);
-            }
-
-            $builder->delete();
+             (new $this->modelClass())
+                ->whereBetween('stat_datetime', [$startDate .' 00:00:00', $endDate .' 23:59:59'])
+                ->when($accountIds,function ($builder,$accountIds){
+                    return  $builder->whereIn('account_id', $accountIds);
+                })
+                ->delete();
         }
 
         if(!empty($option['run_by_account_charge'])){
@@ -83,26 +73,25 @@ class KsReportService extends KsService
         }
 
         // 获取子账户组
-        $accountGroup = $this->getAccountGroup($accountIds);
+        $accountGroup = KuaiShouService::getAccountGroupByToken($accountIds);
 
-        foreach($dateList as $date){
-            $param = [
-                'start_date_min' => $date. ' 00:00:00',
-                'end_date_min' => $date. ' 23:59:59',
-                'temporal_granularity' => 'HOURLY',
-            ];
+        $pageSize = 200;
+        $charge = 0;
+        $param = [
+            'start_date'       => $startDate,
+            'end_date'         => $endDate,
+            'temporal_granularity' => 'HOURLY',
+        ];
 
-            $pageSize = 200;
-            foreach($accountGroup as $g){
-                $items = $this->multiGetPageList($g, $pageSize, $param);
+        foreach($accountGroup as $token => $accountList){
+            $ksSdk = KuaiShou::init($token);
 
-                Functions::consoleDump('count:'. count($items));
-
-                $charge = 0;
-
-                // 保存
-                $data = [];
-                foreach($items as $item) {
+            $accountChunk = array_chunk($accountList,5);
+            foreach ($accountChunk as $accounts){
+                $saveData = [];
+                $accountIds = array_column($accounts,'account_id');
+                $data = KuaiShouService::multiGet($this->getContainer($ksSdk),$accountIds,$param,1,$pageSize);
+                foreach($data as $item) {
                     $charge += $item['charge'];
 
                     if(!$this->itemValid($item)){
@@ -110,19 +99,15 @@ class KsReportService extends KsService
                     }
 
                     $item['stat_datetime'] = "{$item['stat_date']} {$item['stat_hour']}:00:00";
-
                     $item['extends'] = json_encode($item);
                     $item['charge'] = bcmul($item['charge'],1000);
-                    $data[] = $item;
+                    $saveData[] = $item;
                 }
-
-                // 批量保存
-                $this->batchSave($data);
-
-                Functions::consoleDump('charge:'. $charge);
+                $this->batchSave($saveData);
             }
         }
 
+        Functions::consoleDump('charge:'. $charge);
         $t = microtime(1) - $t;
         Functions::consoleDump($t);
 
@@ -134,7 +119,8 @@ class KsReportService extends KsService
      * @return bool
      * 校验
      */
-    protected function itemValid($item){
+    protected function itemValid($item): bool
+    {
         $valid = true;
 
         if(
@@ -150,13 +136,29 @@ class KsReportService extends KsService
         return $valid;
     }
 
+
+
     /**
-     * @param $accountIds
-     * @return mixed
      * 按账户消耗执行
+     * @param array $accountIds
+     * @return string[]
+     * @throws CustomException
      */
-    protected function runByAccountCharge($accountIds){
-        return $accountIds;
+    protected function runByAccountCharge(array $accountIds):array
+    {
+        $accountReportMap = (new KsAccountReportService())->getAccountReportByDate()->pluck('charge', 'account_id');
+
+        $creativeReportMap = $this->getAccountReportByDate()->pluck('charge', 'account_id');
+
+        $creativeAccountIds = ['xx'];
+        foreach($accountReportMap as $accountId => $charge){
+            if(isset($creativeReportMap[$accountId]) && bcsub($creativeReportMap[$accountId] * 1000, $charge * 1000) >= 0){
+                continue;
+            }
+            $creativeAccountIds[] = $accountId;
+        }
+
+        return $creativeAccountIds;
     }
 
     /**
@@ -164,19 +166,22 @@ class KsReportService extends KsService
      * @return bool
      * 批量保存
      */
-    public function batchSave($data){
+    public function batchSave($data): bool
+    {
         $model = new $this->modelClass();
         $model->chunkInsertOrUpdate($data);
         return true;
     }
 
+
     /**
+     * 按日期获取有消耗账户
      * @param string $date
-     * @return mixed
+     * @return array
      * @throws CustomException
-     * 按日期获取账户报表
      */
-    public function getAccountReportByDate($date = 'today'){
+    public function getAccountReportByDate(string $date = 'today'): array
+    {
         $date = Functions::getDate($date);
         Functions::dateCheck($date);
 
@@ -186,7 +191,10 @@ class KsReportService extends KsService
             ->orderBy('charge', 'DESC')
             ->select(DB::raw("account_id, SUM(charge) charge"))
             ->get();
+        if($report->isEmpey()){
+            return [];
+        }
 
-        return $report;
+        return $report->toArray();
     }
 }

@@ -4,7 +4,6 @@ namespace App\Services\Ks\Report;
 
 
 use App\Common\Enums\MaterialTypeEnums;
-use App\Common\Tools\CustomException;
 use App\Common\Tools\CustomRedis;
 use App\Datas\KsMaterialData;
 use App\Models\Ks\Report\KsMaterialReportModel;

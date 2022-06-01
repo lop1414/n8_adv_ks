@@ -7,14 +7,10 @@ use App\Common\Enums\TaskStatusEnum;
 use App\Common\Models\TaskModel;
 use App\Common\Services\TaskService;
 use App\Common\Tools\CustomException;
-use App\Services\Ks\KsService;
 
 class TaskKsService extends TaskService
 {
-    /**
-     * @var KsService
-     */
-    public $ksService;
+
 
     /**
      * constructor.
@@ -24,8 +20,6 @@ class TaskKsService extends TaskService
     public function __construct($taskType)
     {
         parent::__construct($taskType);
-
-        $this->ksService = new KsService();
     }
 
     /**
@@ -48,7 +42,7 @@ class TaskKsService extends TaskService
         $subModel = new $this->subModelClass;
         $failSubTasks = $subModel->whereRaw("
                 task_id IN (
-                    SELECT id FROM tasks 
+                    SELECT id FROM tasks
                         WHERE created_at >= '$createdAt'
                         AND task_status = '{$taskStatus}'
                         AND task_type = '{$taskType}'
@@ -61,7 +55,7 @@ class TaskKsService extends TaskService
             }
 
             $failResult = $failSubTask->fail_data['data']['result'] ?? [];
-            if($this->ksService->sdk->isNetworkError($failResult)){
+            if(empty($failResult)){
                 // 网络错误
                 $this->updateReWaitingStatus($failSubTask);
             }

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin\SubTask;
 
 use App\Common\Controllers\Admin\SubTaskController;
-use App\Sdks\Ks\Ks;
 
 class SubTaskKsController extends SubTaskController
 {
@@ -51,17 +50,6 @@ class SubTaskKsController extends SubTaskController
         }
 
         $code = $failData['code'] ?? '';
-        $message = $failData['message'] ?? '';
-
-        $sdk = new Ks();
-        $map = $sdk->getCodeMessageMap();
-
-        if(isset($map[$code])){
-            $failReason = $map[$code];
-        }else{
-            $failReason = $message;
-        }
-
-        return $failReason;
+        return $failData['message'] ?? '';
     }
 }

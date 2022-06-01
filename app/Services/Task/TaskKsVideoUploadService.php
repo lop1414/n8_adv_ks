@@ -4,6 +4,7 @@ namespace App\Services\Task;
 
 use App\Common\Enums\ExecStatusEnum;
 use App\Common\Enums\StatusEnum;
+use App\Common\Services\FileService;
 use App\Enums\TaskTypeEnum;
 use App\Common\Tools\CustomException;
 use App\Models\Ks\KsAccountModel;
@@ -73,23 +74,20 @@ class TaskKsVideoUploadService extends TaskKsService
             // 推送
             $uploadType = 'push';
 
-            $ssVideoService = new KsVideoService($subTask->app_id);
-            $ssVideoService->setAccountId($video->account_id);
-            $ssVideoService->pushVideo($video->account_id, [$subTask->account_id], [$video->id]);
+            $ssVideoService = new KsVideoService();
+            $ssVideoService->pushVideo($ksAccount->access_token,$video->account_id, [$subTask->account_id], [$video->id]);
         }else{
             // 上传
             $uploadType = 'upload';
 
             // 下载
-            $file = $this->download($subTask->n8_material_video_path);
+            $file = (new FileService())->downloadByUrl($subTask->n8_material_video_path);
 
             // 上传
-            $ksVideoService = new KsVideoService($subTask->app_id);
-            $ksVideoService->setAccountId($subTask->account_id);
-            $ksVideoService->uploadVideo($subTask->account_id, $file['signature'], $file['curl_file'], ['photo_name' => $subTask->n8_material_video_name]);
-
-            // 删除临时文件
-            unlink($file['path']);
+            $signature =   md5(file_get_contents($file->getRealPath()));
+            (new KsVideoService())->uploadVideo($ksAccount->access_token,$subTask->account_id,$signature,$file,['photo_name' => $subTask->n8_material_video_name]);
+            // 删除文件
+            unlink($file->getRealPath());
         }
 
         // 上传类型
@@ -126,45 +124,5 @@ class TaskKsVideoUploadService extends TaskKsService
         }
 
         return current($items);
-    }
-
-    /**
-     * @param $fileUrl
-     * @param $storageDir
-     * @return array
-     * 下载
-     */
-    private function download($fileUrl){
-        $content = file_get_contents($fileUrl);
-
-        $fileName = basename($fileUrl);
-        $tmp = explode(".", $fileName);
-        $suffix = end($tmp);
-
-        // 临时文件保存目录
-        $storageDir = storage_path('app/temp');
-        if(!is_dir($storageDir)){
-            mkdir($storageDir, 0755, true);
-        }
-
-        // 文件存放地址
-        $path = $storageDir .'/'. md5(uniqid()) .'.'. $suffix;
-
-        // 保存
-        file_put_contents($path, $content);
-
-        // 获取 mime_type
-        $finfo = finfo_open(FILEINFO_MIME);
-        $mimeType = finfo_file($finfo, $path);
-
-        // 设置 mime_type
-        $curlFile = new \CURLFile($path);
-        $curlFile->setMimeType($mimeType);
-
-        return [
-            'path' => $path,
-            'signature' => md5($content),
-            'curl_file' => $curlFile,
-        ];
     }
 }

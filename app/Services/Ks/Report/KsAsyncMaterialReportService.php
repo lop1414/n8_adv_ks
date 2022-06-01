@@ -8,38 +8,51 @@ use App\Common\Tools\CustomException;
 use App\Common\Tools\CustomRedis;
 use App\Datas\KsMaterialData;
 use App\Models\Ks\Report\KsMaterialReportModel;
+use App\Sdks\KuaiShou\Kernel\ApiContainer;
+use App\Sdks\KuaiShou\KuaiShou;
+use App\Services\KuaiShouService;
 
 
 class KsAsyncMaterialReportService extends KsReportService
 {
-
-    public function __construct($appId = ''){
-        parent::__construct($appId);
-
+    public function setModelClass(): bool
+    {
         $this->modelClass = KsMaterialReportModel::class;
+        return true;
+    }
+
+
+    public function getContainer(KuaiShou $ksSdk): ApiContainer
+    {
+        return $ksSdk->asyncTack();
     }
 
 
     public function createTask($accountIds,$date): bool
     {
-        $accountGroup = $this->getAccountGroup($accountIds);
+        $accountGroup = KuaiShouService::getAccountGroupByToken($accountIds);
 
         $params = [
             'start_date' => $date,
             'end_date'   => $date,
             'view_type'  => 5
         ];
-        foreach ($accountGroup as $accounts) {
+
+        foreach ($accountGroup as $token => $accounts) {
+            $ksSdk = KuaiShou::init($token);
             foreach ($accounts as $account) {
                 try{
-                    $this->sdk->setAccessToken($account['access_token']);
-                    $this->sdk->createAsyncTask($account['account_id'], $params);
-                }catch(CustomException $e){
-                    $errInfo = $e->getErrorInfo();
-                    if(isset($errInfo->data->result->code) && $errInfo->data->result->code == 401000){
-                        echo $errInfo->data->result->message."\n";
+                    $ksSdk->asyncTack()->create([
+                        'advertiser_id' => $account['account_id'],
+                        'task_name'     => "material_report:{$account['account_id']}:{$params['start_date']}",
+                        'task_params' => $params
+                    ]);
+                }catch(\Exception $e){
+
+                    if($e->getCode() == 401000){
+                        echo $e->getMessage()."\n";
                     }else{
-                        var_dump($errInfo);
+                        var_dump($e);
                     }
                 }
             }
@@ -51,18 +64,27 @@ class KsAsyncMaterialReportService extends KsReportService
 
     public function syncTaskData($accountIds)
     {
-        $accountGroup = $this->getAccountGroup($accountIds);
+        $this->setModelClass();
+        $accountGroup = KuaiShouService::getAccountGroupByToken($accountIds);
 
         $pageSize = 20;
         $downloadTasks = [];
         $customRedis = new CustomRedis();
+        $ksMaterialData = new KsMaterialData();
 
-        foreach ($accountGroup as $accounts) {
+        foreach ($accountGroup as $token =>  $accounts) {
+            $ksSdk = KuaiShou::init($token);
+
             foreach ($accounts as $account) {
                 $page = 1;
-                $this->sdk->setAccessToken($account['access_token']);
+
                 do {
-                    $data = $this->sdk->getAsyncTask($account['account_id'], $page, $pageSize);
+                    $data = $ksSdk->asyncTack()->get([
+                        'advertiser_id' => $account['account_id'],
+                        'page'  => $page,
+                        'page_size' => $pageSize
+                    ]);
+
                     foreach ($data['details'] as $item) {
                         if($item['task_status'] != 2) continue;
                         $cacheInfo = $customRedis->get($item['task_name']);
@@ -76,68 +98,44 @@ class KsAsyncMaterialReportService extends KsReportService
                     $page += 1;
                 } while ($page <= $totalPage);
             }
-        }
 
 
-        $ksMaterialData = new KsMaterialData();
-        foreach ($downloadTasks as $task){
-
-            $csv = $this->sdk->downloadAsyncTaskCsv($task['advertiser_id'],$task['task_id']);
-            $csvData = str_getcsv($csv,"\n");
-            $fields = [];
-
-            $data = [];
-            foreach ($csvData as $key => $raw){
-                $raw = str_getcsv($raw,',');
-                if($key == 0){
-                    foreach ($raw as $index => $field){
-                        if($index == 0){
-                            // photo_id 字段前有特殊字符
-                            $fields[$index] = 'photo_id';
-                            continue;
-                        }
-                        $fields[$index] = $field;
-                    }
-                    continue;
-                }
-
-                $item = [];
-
-                foreach ($raw as $k => $v){
-                    $item[$fields[$k]] = $v;
-                }
-
-                // unit_id为0
-                if(empty($item['unit_id'])){
-                    continue;
-                }
-
-                if(!$this->itemValid($item)){
-                    continue;
-                }
-                $item['extends'] = json_encode($item);
-
-                $item['account_id'] = $task['advertiser_id'];
-                if($item['stat_hour'] == 0) $item['stat_hour'] = '00';
-
-                $item['stat_datetime'] = "{$item['stat_date']} {$item['stat_hour']}:00:00";
-                $item['charge'] = bcmul($item['charge'],1000);
-
-                $ksMaterial = $ksMaterialData->save([
-                    'material_type' => MaterialTypeEnums::VIDEO,
-                    'file_id'       => $item['photo_id']
+            foreach ($downloadTasks as $task){
+                $data = $ksSdk->asyncTack()->getDownloadData([
+                    'advertiser_id' => $task['advertiser_id'],
+                    'task_id'       => $task['task_id']
                 ]);
-                $item['material_id'] = $ksMaterial['id'];
 
-                $data[] = $item;
+                $saveData = [];
+                foreach ($data as $item){
+
+                    if(!$this->itemValid($item)){
+                        continue;
+                    }
+
+                    $item['extends'] = json_encode($item);
+
+                    $item['account_id'] = $task['advertiser_id'];
+                    if($item['stat_hour'] == 0) $item['stat_hour'] = '00';
+
+                    $item['stat_datetime'] = "{$item['stat_date']} {$item['stat_hour']}:00:00";
+                    $item['charge'] = bcmul($item['charge'],1000);
+
+                    $ksMaterial = $ksMaterialData->save([
+                        'material_type' => MaterialTypeEnums::VIDEO,
+                        'file_id'       => $item['photo_id']
+                    ]);
+                    $item['material_id'] = $ksMaterial['id'];
+
+                    $saveData[] = $item;
+                }
+
+                $this->batchSave($saveData);
+
+                $customRedis->set($task['task_name'],1);
+                $customRedis->expire($task['task_name'],7200);
             }
-
-            $this->batchSave($data);
-
-            $customRedis->set($task['task_name'],1);
-            $customRedis->expire($task['task_name'],7200);
         }
-
     }
 
 

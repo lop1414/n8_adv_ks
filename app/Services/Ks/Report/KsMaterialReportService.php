@@ -5,48 +5,58 @@ namespace App\Services\Ks\Report;
 use App\Common\Enums\MaterialTypeEnums;
 use App\Datas\KsMaterialData;
 use App\Models\Ks\Report\KsMaterialReportModel;
+use App\Sdks\KuaiShou\Kernel\ApiContainer;
+use App\Sdks\KuaiShou\KuaiShou;
 
 class KsMaterialReportService extends KsReportService
 {
 
-    public function __construct($appId = ''){
-        parent::__construct($appId);
-
+    public function setModelClass(): bool
+    {
         $this->modelClass = KsMaterialReportModel::class;
+        return true;
+    }
+
+
+    public function getContainer(KuaiShou $ksSdk): ApiContainer
+    {
+        return $ksSdk->materialReport();
     }
 
     /**
-     * @param $accounts
-     * @param $page
-     * @param $pageSize
-     * @param array $param
-     * @return mixed|void
-     * sdk批量获取列表
+     * api 请求参数
+     * @return array
      */
-    public function sdkMultiGetList($accounts, $page, $pageSize, $param = []){
-        $param = array_merge($param,[
+    public function getApiReqParams(): array
+    {
+        return [
             'temporal_granularity' => 'HOURLY',
             'view_type' => 5
-        ]);
-        $param['start_date'] = date('Y-m-d',strtotime($param['start_date_min']));
-        $param['end_date'] = date('Y-m-d',strtotime($param['end_date_min']));
-        unset($param['start_date_min'],$param['end_date_min']);
-        $arr =  $this->sdk->multiGetMaterialReportList($accounts, $page, $pageSize, $param);
+        ];
+    }
 
+
+
+    /**
+     * @param $data
+     * @return bool
+     * 批量保存
+     */
+    public function batchSave($data): bool
+    {
         // 映射 material_id
         $ksMaterialData = new KsMaterialData();
-        foreach ($arr as &$item){
-            if(!isset($item['data']['total_count'])){
-                continue;
-            }
-            foreach ($item['data']['details'] as &$v){
-                $ksMaterial = $ksMaterialData->save([
-                    'material_type' => MaterialTypeEnums::VIDEO,
-                    'file_id'       => $v['photo_id']
-                ]);
-                $v['material_id'] = $ksMaterial['id'];
-            }
+        foreach ($data as &$item){
+            $ksMaterial = $ksMaterialData->save([
+                'material_type' => MaterialTypeEnums::VIDEO,
+                'file_id'       => $item['photo_id']
+            ]);
+            $item['material_id'] = $ksMaterial['id'];
         }
-        return $arr;
+
+        $model = new $this->modelClass();
+        $model->chunkInsertOrUpdate($data);
+        return true;
     }
+
 }

@@ -9,6 +9,7 @@ use App\Sdks\KuaiShou\Container\CampaignApiContainer;
 use App\Sdks\KuaiShou\Container\CreativeApiContainer;
 use App\Sdks\KuaiShou\Container\CreativeReportApiContainer;
 use App\Sdks\KuaiShou\Container\ImageApiContainer;
+use App\Sdks\KuaiShou\Container\MaterialReportApiContainer;
 use App\Sdks\KuaiShou\Container\OauthApiContainer;
 use App\Sdks\KuaiShou\Container\ProgramCreativeApiContainer;
 use App\Sdks\KuaiShou\Container\ProgramCreativeReportApiContainer;
@@ -48,6 +49,9 @@ class App
 
     /** @var CreativeReportApiContainer */
     public $creativeReportApiContainer;
+
+    /** @var MaterialReportApiContainer */
+    public $materialReportApiContainer;
 
     /*** @var AsyncTackApiContainer */
     public $asyncTackApiContainer;
@@ -174,6 +178,16 @@ class App
             $this->programCreativeReportApiContainer = $container;
         }
         return $this->programCreativeReportApiContainer;
+    }
+
+    public function materialReport(): MaterialReportApiContainer
+    {
+        if (empty($this->materialReportApiContainer)) {
+            $container = new MaterialReportApiContainer();
+            $container->init($this, $this->getClient());
+            $this->materialReportApiContainer = $container;
+        }
+        return $this->materialReportApiContainer;
     }
 
 

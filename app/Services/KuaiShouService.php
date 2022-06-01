@@ -86,9 +86,16 @@ class KuaiShouService extends BaseService
         $nextPageAccountIds = [];
         $list = [];
         foreach($res as $v){
-            if($v['code'] != 0){
+
+            if(isset($v['code']) && $v['code'] != 0){
                 var_dump("请求失败:".$v['message'],$v['request_params']);
                 continue;
+
+            }
+
+            if(isset($v['total_count'])){
+                // 兼容素材报表坑爹的情况
+                $v['data'] = $v;
             }
 
             if(empty($v['data']['total_count'])){

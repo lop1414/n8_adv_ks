@@ -30,6 +30,16 @@ class KsReportService extends BaseService
     }
 
 
+    /**
+     * api 请求参数
+     * @return array
+     */
+    public function getApiReqParams(): array
+    {
+        return ['temporal_granularity' => 'HOURLY'];
+    }
+
+
     public function sync(array $option = []): bool
     {
         ini_set('memory_limit', '2048M');
@@ -77,11 +87,10 @@ class KsReportService extends BaseService
 
         $pageSize = 200;
         $charge = 0;
-        $param = [
+        $param = array_merge([
             'start_date'       => $startDate,
-            'end_date'         => $endDate,
-            'temporal_granularity' => 'HOURLY',
-        ];
+            'end_date'         => $endDate
+        ],$this->getApiReqParams());
 
         foreach($accountGroup as $token => $accountList){
             $ksSdk = KuaiShou::init($token);

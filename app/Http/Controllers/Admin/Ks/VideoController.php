@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\Ks;
 
 use App\Common\Helpers\Functions;
+use App\Common\Services\FileService;
 use App\Common\Services\SystemApi\MaterialApiService;
 use App\Common\Tools\CustomException;
 use App\Models\Ks\KsAccountModel;
@@ -48,15 +49,15 @@ class VideoController extends KsController
             ]);
         }
 
+        $file  = (new FileService())->download($file,'',false);
+
         // 签名
         $signature = md5(file_get_contents($file->getRealPath()));
-
-        $curlFile = new \CURLFile($file->getRealPath());
-
         $ksAccount = $this->getAccessAccount($accountId);
-        $ksVideoService = new KsVideoService($ksAccount->app_id);
-        $ksVideoService->setAccountId($ksAccount->account_id);
-        $data = $ksVideoService->uploadVideo($ksAccount->account_id, $signature, $curlFile);
+        $data = (new KsVideoService())->uploadVideo($ksAccount->access_token,$ksAccount->account_id, $signature, $file);
+
+        // 删除文件
+        unlink($file->getRealPath());
 
         return $this->success($data);
     }

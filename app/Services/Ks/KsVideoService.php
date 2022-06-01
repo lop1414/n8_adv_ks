@@ -3,99 +3,68 @@
 namespace App\Services\Ks;
 
 use App\Common\Helpers\Functions;
-use App\Common\Tools\CustomException;
-use App\Enums\Ks\KsSyncTypeEnum;
+use App\Common\Services\BaseService;
 use App\Models\Ks\KsAccountVideoModel;
 use App\Models\Ks\KsVideoModel;
-use App\Services\Task\TaskKsSyncService;
+use App\Sdks\KuaiShou\KuaiShou;
+use App\Services\KuaiShouService;
+use Exception;
+use SplFileInfo;
 
-class KsVideoService extends KsService
+
+class KsVideoService extends BaseService
 {
-    /**
-     * constructor.
-     * @param string $appId
-     */
-    public function __construct($appId = ''){
-        parent::__construct($appId);
-    }
+
 
     /**
-     * @param $accountId
-     * @param $signature
-     * @param $file
-     * @param array $param
-     * @return mixed
-     * @throws CustomException
      * 上传视频
+     * @param string $token
+     * @param int $accountId
+     * @param string $signature
+     * @param SplFileInfo $file
+     * @param array $param
+     * @return array|mixed
+     * @throws Exception
      */
-    public function uploadVideo($accountId, $signature, $file, $param = []){
-        $this->setAccessToken();
+    public function uploadVideo(string $token, int $accountId, string $signature, SplFileInfo $file, array $param = []){
+        $ksSdk = KuaiShou::init($token);
 
-        $ret = $this->sdk->uploadVideo($accountId, $signature, $file, $param);
+        $ret = $ksSdk->video()->upload(array_merge([
+            'advertiser_id' => $accountId,
+            'file'          => $file,
+            'signature'     => $signature,
+            'upload_type'   => 1
+        ],$param));
         Functions::consoleDump($ret);
-
-        // 同步
-        if(!empty($ret['photo_id'])){
-//            $taskKsSyncService = new TaskKsSyncService(KsSyncTypeEnum::VIDEO);
-//            $task = [
-//                'name' => '同步快手视频',
-//                'admin_id' => 0,
-//            ];
-//            $subs = [];
-//            $subs[] = [
-//                'app_id' => $this->sdk->getAppId(),
-//                'account_id' => $accountId,
-//                'admin_id' => 0,
-//                'extends' => [
-//                    'video_id' => $ret['photo_id']
-//                ],
-//            ];
-//            $taskKsSyncService->create($task, $subs);
-        }
 
         return $ret;
     }
 
+
     /**
-     * @param $accountId
-     * @param array $photoIds
-     * @param array $targetAccountIds
-     * @return mixed
-     * @throws CustomException
      * 推送视频
+     * @param string $token
+     * @param int $accountId
+     * @param array $targetAccountIds
+     * @param array $photoIds
+     * @return array
+     * @throws Exception
      */
-    public function pushVideo($accountId, array $targetAccountIds, array $photoIds){
-        $this->setAccessToken();
+    public function pushVideo(string $token,int $accountId, array $targetAccountIds, array $photoIds): array
+    {
+        $ksSdk = KuaiShou::init($token);
 
-        return $this->sdk->pushVideo($accountId, $targetAccountIds, $photoIds);
+        return $ksSdk->video()->share([
+            'advertiser_id'         => $accountId,
+            'photo_ids'             => $photoIds,
+            'share_advertiser_ids'  => $targetAccountIds,
+        ]);
     }
 
-    /**
-     * @param $accounts
-     * @param $page
-     * @param $pageSize
-     * @param array $param
-     * @return mixed
-     * sdk并发获取列表
-     */
-    public function sdkMultiGetList($accounts, $page, $pageSize, $param = []){
-        return $this->sdk->multiGetVideoList($accounts, $page, $pageSize, $param);
-    }
 
-    /**
-     * @param array $option
-     * @return bool
-     * @throws CustomException
-     * 同步
-     */
-    public function sync($option = []){
+    public function sync(array $option = []): bool
+    {
         ini_set('memory_limit', '2048M');
-
-        $accountIds = [];
-        // 账户id过滤
-        if(!empty($option['account_ids'])){
-            $accountIds = $option['account_ids'];
-        }
 
         $param = [];
         if(!empty($option['date'])){
@@ -107,18 +76,20 @@ class KsVideoService extends KsService
             $param['photo_ids'] = $option['ids'];
         }
 
-        $accountGroup = $this->getAccountGroup($accountIds);
+        $accountGroup = KuaiShouService::getAccountGroupByToken($option['account_ids'] ?? []);
 
         $t = microtime(1);
 
-        $pageSize = 100;
-        foreach($accountGroup as $g){
-            $videos = $this->multiGetPageList($g, $pageSize, $param);
-            Functions::consoleDump('count:'. count($videos));
+        foreach($accountGroup as $token => $accountList){
 
-            // 保存
-            foreach($videos as $video) {
-                $this->save($video);
+            $ksSdk = KuaiShou::init($token);
+            $accountChunk = array_chunk($accountList,5);
+            foreach ($accountChunk as $accounts){
+                $accountIds = array_column($accounts,'account_id');
+                $videos = KuaiShouService::multiGet($ksSdk->video(),$accountIds,$param);
+                foreach($videos as $video) {
+                    $this->save($video);
+                }
             }
         }
 
@@ -128,12 +99,9 @@ class KsVideoService extends KsService
         return true;
     }
 
-    /**
-     * @param $video
-     * @return bool
-     * 保存
-     */
-    public function save($video){
+
+    public function save(array $video): bool
+    {
         $ksVideoModel = new KsVideoModel();
         $ksVideo = $ksVideoModel->where('id', $video['photo_id'])->first();
 

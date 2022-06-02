@@ -13,12 +13,7 @@ use App\Sdks\KuaiShou\KuaiShou;
 class KsProgramCreativeReportService extends KsReportService
 {
 
-
-    public function setModelClass(): bool
-    {
-        $this->modelClass = KsProgramCreativeReportModel::class;
-        return true;
-    }
+    public $modelClass = KsProgramCreativeReportModel::class;
 
 
     public function getContainer(KuaiShou $ksSdk): ApiContainer

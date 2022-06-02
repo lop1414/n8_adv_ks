@@ -9,12 +9,7 @@ use App\Sdks\KuaiShou\KuaiShou;
 class KsAccountReportService extends KsReportService
 {
 
-
-    public function setModelClass(): bool
-    {
-        $this->modelClass = KsAccountReportModel::class;
-        return true;
-    }
+    public $modelClass = KsAccountReportModel::class;
 
 
     public function getContainer(KuaiShou $ksSdk): ApiContainer

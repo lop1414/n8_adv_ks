@@ -10,12 +10,7 @@ use App\Sdks\KuaiShou\KuaiShou;
 
 class KsMaterialReportService extends KsReportService
 {
-
-    public function setModelClass(): bool
-    {
-        $this->modelClass = KsMaterialReportModel::class;
-        return true;
-    }
+    public $modelClass = KsMaterialReportModel::class;
 
 
     public function getContainer(KuaiShou $ksSdk): ApiContainer

@@ -24,11 +24,6 @@ class KsReportService extends BaseService
     }
 
 
-    public function setModelClass(): bool
-    {
-        var_dump("实现该方法");
-    }
-
 
     /**
      * api 请求参数
@@ -43,8 +38,6 @@ class KsReportService extends BaseService
     public function sync(array $option = []): bool
     {
         ini_set('memory_limit', '2048M');
-
-        $this->setModelClass();
 
         $t = microtime(1);
 

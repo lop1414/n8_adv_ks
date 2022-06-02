@@ -148,9 +148,9 @@ class KsReportService extends BaseService
      */
     protected function runByAccountCharge(array $accountIds):array
     {
-        $accountReportMap = (new KsAccountReportService())->getAccountReportByDate()->pluck('charge', 'account_id');
+        $accountReportMap = array_column((new KsAccountReportService())->getAccountReportByDate(),'charge','account_id');
 
-        $creativeReportMap = $this->getAccountReportByDate()->pluck('charge', 'account_id');
+        $creativeReportMap = array_column($this->getAccountReportByDate(),'charge','account_id');
 
         $creativeAccountIds = ['xx'];
         foreach($accountReportMap as $accountId => $charge){

@@ -193,7 +193,7 @@ class KsReportService extends BaseService
             ->orderBy('charge', 'DESC')
             ->select(DB::raw("account_id, SUM(charge) charge"))
             ->get();
-        if($report->isEmpey()){
+        if($report->isEmpty()){
             return [];
         }
 

@@ -11,11 +11,11 @@ class AdvConvertCallbackService extends ConvertCallbackService
 {
     /**
      * @param $item
-     * @return bool
+     * @return array
      * @throws CustomException
      * 回传
      */
-    protected function callback($item): bool
+    public function callback($item): array
     {
         $eventTypeMap = $this->getEventTypeMap();
 
@@ -52,12 +52,10 @@ class AdvConvertCallbackService extends ConvertCallbackService
         }
 
         $eventTime = strtotime($item->convert_at);
-        $this->runCallback($item->click,$eventType,$eventTime,$payAmount);
-
-        return true;
+        return $this->runCallback($item->click,$eventType,$eventTime,$payAmount);
     }
 
-    public function runCallback($click,$eventType,$eventTime,$payAmount = 0): bool
+    public function runCallback($click,$eventType,$eventTime,$payAmount = 0): array
     {
         try{
             $activateParam = [
@@ -73,8 +71,9 @@ class AdvConvertCallbackService extends ConvertCallbackService
                 $activateParam['callback'] = 'http://ad.partner.gifshow.com/track/activate/?'. http_build_query($param);
             }
 
-            KuaiShou::init()->track()->activate($activateParam);
-            return true;
+            $result = KuaiShou::init()->track()->activate($activateParam);
+
+            return ['param' => $activateParam, 'result' => $result];
         }catch (\Exception $e){
             throw new CustomException([
                 'code' => 'KS_CONVERT_CALLBACK_ERROR',

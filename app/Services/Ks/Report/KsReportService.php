@@ -37,81 +37,93 @@ class KsReportService extends BaseService
 
     public function sync(array $option = []): bool
     {
-        ini_set('memory_limit', '2048M');
+        try{
+            ini_set('memory_limit', '2048M');
 
-        $t = microtime(1);
+            $t = microtime(1);
 
-        $accountIds = $option['account_ids'] ?? [];
+            $accountIds = $option['account_ids'] ?? [];
 
-        // 并发分片大小
-        $multiChunkSize = min(intval($option['multi_chunk_size'] ?? 0 ),10);
+            // 并发分片大小
+            $multiChunkSize = min(intval($option['multi_chunk_size'] ?? 0 ),10);
 
 
-        // 在跑账户
-        /*if(!empty($option['running'])){
-            $runningAccountIds = $this->getRunningAccountIds();
-            if(!empty($accountIds)){
-                $accountIds = array_intersect($accountIds, $runningAccountIds);
-            }else{
-                $accountIds = $runningAccountIds;
-            }
-        }*/
-
-        list($startDate,$endDate) = Functions::getDateRange($option['date']);
-
-        // 删除
-        if(!empty($option['delete'])){
-
-             (new $this->modelClass())
-                ->whereBetween('stat_datetime', [$startDate .' 00:00:00', $endDate .' 23:59:59'])
-                ->when($accountIds,function ($builder,$accountIds){
-                    return  $builder->whereIn('account_id', $accountIds);
-                })
-                ->delete();
-        }
-
-        if(!empty($option['run_by_account_charge'])){
-            // 处理广告账户id
-            $accountIds = $this->runByAccountCharge($accountIds);
-        }
-
-        // 获取子账户组
-        $accountGroup = KuaiShouService::getAccountGroupByToken($accountIds);
-
-        $pageSize = 200;
-        $charge = 0;
-        $param = array_merge([
-            'start_date'       => $startDate,
-            'end_date'         => $endDate
-        ],$this->getApiReqParams());
-
-        foreach($accountGroup as $token => $accountList){
-            $ksSdk = KuaiShou::init($token);
-
-            $accountChunk = array_chunk($accountList,5);
-            foreach ($accountChunk as $accounts){
-                $saveData = [];
-                $accountIds = array_column($accounts,'account_id');
-                $data = KuaiShouService::multiGet($this->getContainer($ksSdk),$accountIds,$param,1,$pageSize);
-                foreach($data as $item) {
-                    $charge += $item['charge'];
-
-                    if(!$this->itemValid($item)){
-                        continue;
-                    }
-
-                    $item['stat_datetime'] = "{$item['stat_date']} {$item['stat_hour']}:00:00";
-                    $item['extends'] = json_encode($item);
-                    $item['charge'] = bcmul($item['charge'],1000);
-                    $saveData[] = $item;
+            // 在跑账户
+            /*if(!empty($option['running'])){
+                $runningAccountIds = $this->getRunningAccountIds();
+                if(!empty($accountIds)){
+                    $accountIds = array_intersect($accountIds, $runningAccountIds);
+                }else{
+                    $accountIds = $runningAccountIds;
                 }
-                $this->batchSave($saveData);
-            }
-        }
+            }*/
 
-        Functions::consoleDump('charge:'. $charge);
-        $t = microtime(1) - $t;
-        Functions::consoleDump($t);
+            list($startDate,$endDate) = Functions::getDateRange($option['date']);
+
+            // 删除
+            if(!empty($option['delete'])){
+
+                 (new $this->modelClass())
+                    ->whereBetween('stat_datetime', [$startDate .' 00:00:00', $endDate .' 23:59:59'])
+                    ->when($accountIds,function ($builder,$accountIds){
+                        return  $builder->whereIn('account_id', $accountIds);
+                    })
+                    ->delete();
+            }
+
+            if(!empty($option['run_by_account_charge'])){
+                // 处理广告账户id
+                $accountIds = $this->runByAccountCharge($accountIds);
+            }
+
+            // 获取子账户组
+            $accountGroup = KuaiShouService::getAccountGroupByToken($accountIds);
+
+            $pageSize = 200;
+            $charge = 0;
+            $param = array_merge([
+                'start_date'       => $startDate,
+                'end_date'         => $endDate
+            ],$this->getApiReqParams());
+
+            foreach($accountGroup as $token => $accountList){
+                $ksSdk = KuaiShou::init($token);
+
+                $accountChunk = array_chunk($accountList,5);
+                foreach ($accountChunk as $accounts){
+                    $saveData = [];
+                    $accountIds = array_column($accounts,'account_id');
+                    $data = KuaiShouService::multiGet($this->getContainer($ksSdk),$accountIds,$param,1,$pageSize);
+                    foreach($data as $item) {
+                        $charge += $item['charge'];
+
+                        if(!$this->itemValid($item)){
+                            continue;
+                        }
+
+                        $item['stat_datetime'] = "{$item['stat_date']} {$item['stat_hour']}:00:00";
+                        $item['extends'] = json_encode($item);
+                        $item['charge'] = bcmul($item['charge'],1000);
+                        $saveData[] = $item;
+                    }
+                    $this->batchSave($saveData);
+                }
+            }
+
+            Functions::consoleDump('charge:'. $charge);
+            $t = microtime(1) - $t;
+            Functions::consoleDump($t);
+
+        }catch (\Exception $e){
+            throw new CustomException([
+                'code' => 'SYNC_REPORT_ERROR',
+                'message' => '同步报表异常',
+                'log' => true,
+                'data' => [
+                    'option' => $option
+                ],
+            ]);
+        }
 
         return true;
     }

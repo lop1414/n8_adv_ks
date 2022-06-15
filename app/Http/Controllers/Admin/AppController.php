@@ -29,7 +29,8 @@ class AppController extends AdminController
             'app_id'        => $appId,
             'scope'         => '["ad_query","ad_manage","public_dmp_service","report_service","public_agent_service","public_account_service","account_service"]',
             'state'         => $appId.'|'.$userId,
-            'redirect_uri'  => config('common.system_api.'.SystemAliasEnum::ADV_KS.'.url').'/front/ks/grant'
+            'redirect_uri'  => config('common.system_api.'.SystemAliasEnum::ADV_KS.'.url').'/front/ks/grant',
+            'oauth_type'    => 'advertiser'
         ]);
     }
 

@@ -89,8 +89,40 @@ class KsAccountService extends BaseService
         $user->fail_at = date('Y-m-d H:i:s', time() + $info['access_token_expires_in'] - 2000);
         $user->save();
 
-        // 同步账户
-        $this->sync(['user_id' => $userId]);
+        // 同步账户信息
+        $ksSdk = KuaiShou::init($user->access_token);
+        foreach($info['advertiser_ids'] as $advertiserId){
+            $accountInfo = $ksSdk->advertiser()->info(['advertiser_id' => $advertiserId]);
+
+            $ksAccount = (new KsAccountModel())
+                ->where('app_id',$user['app_id'])
+                ->where('account_id',$advertiserId)
+                ->first();
+
+            if(empty($ksAccount)){
+                $ksAccount = new KsAccountModel();
+                $ksAccount->app_id = $user['app_id'];
+                $ksAccount->account_id = $advertiserId;
+                $ksAccount->parent_id = 0;
+                $ksAccount->admin_id = 0;
+                $ksAccount->user_id = $accountInfo['user_id'];
+                $ksAccount->status = StatusEnum::ENABLE;
+                $ksAccount->belong_platform = AdvAccountBelongTypeEnum::LOCAL;
+
+            }
+            if($ksAccount->user_id != $accountInfo['user_id']){
+                continue;
+            }
+
+            $ksAccount->name = $accountInfo['user_name'];
+            $ksAccount->company = $accountInfo['corporation_name'];
+            $ksAccount->extend = [];
+            $ksAccount->access_token = $user->access_token;
+            $ksAccount->refresh_token = '';
+            $ksAccount->fail_at = $user->fail_at;
+            $ksAccount->save();
+
+        }
 
         return true;
     }

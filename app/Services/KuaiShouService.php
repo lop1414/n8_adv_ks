@@ -20,7 +20,7 @@ class KuaiShouService extends BaseService
      * @throws CustomException
      * 获取快手用户
      */
-    static public function getKsUser($userId):array
+    static public function getKsUser($userId)
     {
         $ksUserModel = new KsUserModel();
         $user = $ksUserModel
@@ -36,7 +36,7 @@ class KuaiShouService extends BaseService
                 ],
             ]);
         }
-        return $user->toArray();
+        return $user;
     }
 
 

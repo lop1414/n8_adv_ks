@@ -28,7 +28,7 @@ class KsAccountService extends BaseService
      */
     public function checkAppBelongToUser($appId,$user)
     {
-        if($appId != $user['app_id']){
+        if($appId != $user->app_id){
             throw new CustomException([
                 'code' => 'APP_NOT_BELONG_TO_USER',
                 'message' => '应用程序不属于用户',

@@ -35,8 +35,9 @@ class OauthApiContainer extends ApiContainer
             $appId = $params['app_id'] ?? null;
             $state = $params['state'] ?? null;
             $redirectUri = $params['redirect_uri'] ?? null;
+            $oauthType = $params['oauth_type'] ?? null;
 
-            return $this->apiInstance->oauthAuthorize($appId,$state,$redirectUri);
+            return $this->apiInstance->oauthAuthorize($appId,$state,$redirectUri,$oauthType);
         });
     }
 

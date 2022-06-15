@@ -12,14 +12,15 @@ use GuzzleHttp\Psr7\Request;
 class OauthApi extends Api
 {
 
-    public function oauthAuthorize(int $appId,string $state,string $redirectUri): string
+    public function oauthAuthorize(int $appId,string $state,string $redirectUri,$oauthType): string
     {
         $uri = 'https://developers.e.kuaishou.com/tools/authorize?';
         $uri .= http_build_query([
             'app_id' => $appId,
             'scope' => '["ad_query","ad_manage","public_dmp_service","report_service","public_agent_service","public_account_service","account_service"]',
             'state' => $state,
-            'redirect_uri' => $redirectUri
+            'redirect_uri' => $redirectUri,
+            'oauth_type' => $oauthType
         ]);
 
         return $uri;

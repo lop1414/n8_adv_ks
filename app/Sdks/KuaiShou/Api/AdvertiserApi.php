@@ -40,7 +40,7 @@ class AdvertiserApi extends MultipleApi
 
         // 构建Request对象
         $resourcePath = '/v1/advertiser/info';
-        $uri = $this->config->getHost() . $resourcePath. '?' . http_build_query($param);
+        $uri = $this->config->getHost() . $resourcePath;
         $httpBody = json_encode($param);
         $request = new Request('GET', $uri,[],$httpBody);
 

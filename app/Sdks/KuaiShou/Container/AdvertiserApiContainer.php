@@ -35,14 +35,14 @@ class AdvertiserApiContainer extends ApiContainer
     }
 
 
-    
+
     public function info(array $params): array
     {
         return $this->handleMiddleware('info', $params, function(MiddlewareRequest $request) {
 
             $params = $request->getApiMethodParams();
 
-            return $this->apiInstance->get($params);
+            return $this->apiInstance->info($params);
         });
     }
 }

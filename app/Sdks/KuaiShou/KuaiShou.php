@@ -68,7 +68,7 @@ class KuaiShou extends App
             'Content-Type'=>'application/json',
             'access-token'=> $accessToken
         ]);
-
+        $instance->client = null;
         $instance->config = Config::getDefaultConfig();
         $instance->setAccessToken($accessToken);
         $instance->generateMiddlewareInstance();

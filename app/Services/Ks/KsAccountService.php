@@ -89,22 +89,8 @@ class KsAccountService extends BaseService
         $user->fail_at = date('Y-m-d H:i:s', time() + $info['access_token_expires_in'] - 2000);
         $user->save();
 
-        // 创建任务
-        $taskSyncService = new TaskKsSyncService(KsSyncTypeEnum::ACCOUNT);
-        $task = [
-            'name' => "快手账户同步",
-            'admin_id' => 0,
-        ];
-
-        $subs = [];
-        $subs[] = [
-            'app_id' => $appId,
-            'account_id' => 0,
-            'admin_id' => $task['admin_id'],
-            'extends' =>  ['user_id' => $userId]
-
-        ];
-        $taskSyncService->create($task, $subs);
+        // 同步账户
+        $this->sync(['user_id' => $userId]);
 
         return true;
     }

@@ -11,7 +11,7 @@ class MultipleApi extends Api
      * 并发请求个数
      * @var int
      */
-    protected $concurrency = 5;
+    protected $concurrency = 3;
 
     /**
      * 响应数据

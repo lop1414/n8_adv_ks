@@ -28,13 +28,6 @@ class KuaiShou extends App
 
 
     /**
-     * 请求超时的秒数
-     * @var int
-     */
-    protected $timeout = 30;
-
-
-    /**
      * @var string access token
      */
     protected $accessToken = '';
@@ -134,7 +127,7 @@ class KuaiShou extends App
     {
         if (empty($this->client)) {
             $httpOptions = $this->getHttpOptions();
-            $config = array_merge($httpOptions,['timeout' => $this->timeout]);
+            $config = array_merge($httpOptions,['timeout' => $this->config->getTimeout()]);
             $this->client = new Client($config);
         }
         return $this->client;

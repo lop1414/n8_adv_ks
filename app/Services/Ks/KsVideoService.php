@@ -6,6 +6,7 @@ use App\Common\Helpers\Functions;
 use App\Common\Services\BaseService;
 use App\Models\Ks\KsAccountVideoModel;
 use App\Models\Ks\KsVideoModel;
+use App\Sdks\KuaiShou\Config;
 use App\Sdks\KuaiShou\KuaiShou;
 use App\Services\KuaiShouService;
 use Exception;
@@ -27,6 +28,7 @@ class KsVideoService extends BaseService
      * @throws Exception
      */
     public function uploadVideo(string $token, int $accountId, string $signature, SplFileInfo $file, array $param = []){
+        Config::$timeout = 120;
         $ksSdk = KuaiShou::init($token);
 
         $ret = $ksSdk->video()->upload(array_merge([

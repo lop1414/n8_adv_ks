@@ -22,6 +22,13 @@ class Config
     protected $host = 'https://ad.e.kuaishou.com/rest/openapi';
 
 
+    /**
+     * 请求超时的秒数
+     * @var int
+     */
+    public static $timeout = 30;
+
+
 
     /**
      * 设置 API key
@@ -91,6 +98,10 @@ class Config
     }
 
 
+    public function getTimeout(): int
+    {
+        return self::$timeout;
+    }
 
 
 }

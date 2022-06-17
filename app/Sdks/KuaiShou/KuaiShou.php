@@ -28,6 +28,13 @@ class KuaiShou extends App
 
 
     /**
+     * 请求超时的秒数
+     * @var int
+     */
+    protected $timeout = 30;
+
+
+    /**
      * @var string access token
      */
     protected $accessToken = '';
@@ -100,10 +107,10 @@ class KuaiShou extends App
 
     /**
      * Set guzzle options
-     * @param $options
+     * @param array $options
      * @return $this
      */
-    public function setHttpOptions($options): KuaiShou
+    public function setHttpOptions(array $options): KuaiShou
     {
         $this->globalConfig['http_options'] = $options;
         $this->client = new Client($this->globalConfig['http_options']);
@@ -112,9 +119,9 @@ class KuaiShou extends App
 
     /**
      * Get http options
-     * @return array|mixed
+     * @return array
      */
-    public function getHttpOptions()
+    public function getHttpOptions(): array
     {
         return empty($this->globalConfig['http_options']) ? [] : $this->globalConfig['http_options'];
     }
@@ -127,11 +134,8 @@ class KuaiShou extends App
     {
         if (empty($this->client)) {
             $httpOptions = $this->getHttpOptions();
-            if (!empty($httpOptions)) {
-                $this->client = new Client($httpOptions);
-            } else {
-                $this->client = new Client();
-            }
+            $config = array_merge($httpOptions,['timeout' => $this->timeout]);
+            $this->client = new Client($config);
         }
         return $this->client;
     }

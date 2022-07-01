@@ -45,7 +45,7 @@ class AdUnitApiContainer extends ApiContainer
             $tmpParams[] = array_merge($params,['advertiser_id' => $advertiserId]);
         }
 
-        return $this->handleMiddleware('get', $tmpParams, function(MiddlewareRequest $request) {
+        return $this->handleMiddleware('multipleGet', $tmpParams, function(MiddlewareRequest $request) {
 
             $params = $request->getApiMethodParams();
             return $this->apiInstance->multipleGet($params);

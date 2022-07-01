@@ -26,7 +26,7 @@ class AdvertiserApiContainer extends ApiContainer
 
     public function get(array $params): array
     {
-        return $this->handleMiddleware('get', $params, function(MiddlewareRequest $request) {
+        return $this->handleMiddleware('multipleGet', $params, function(MiddlewareRequest $request) {
 
             $params = $request->getApiMethodParams();
 

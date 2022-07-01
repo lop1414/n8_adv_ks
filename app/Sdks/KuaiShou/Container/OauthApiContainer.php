@@ -45,7 +45,7 @@ class OauthApiContainer extends ApiContainer
     public function accessToken(array $params = []): array
     {
 
-        return $this->handleMiddleware('token', $params, function(MiddlewareRequest $request) {
+        return $this->handleMiddleware('accessToken', $params, function(MiddlewareRequest $request) {
 
             $params = $request->getApiMethodParams();
             $appId = $params['app_id'] ?? null;
@@ -61,7 +61,7 @@ class OauthApiContainer extends ApiContainer
     public function refreshToken(array $params = [])
     {
 
-        return $this->handleMiddleware('token', $params, function(MiddlewareRequest $request) {
+        return $this->handleMiddleware('refreshToken', $params, function(MiddlewareRequest $request) {
 
             $params = $request->getApiMethodParams();
             $appId = $params['app_id'] ?? null;

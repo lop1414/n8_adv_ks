@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use App\Common\Console\ConvertCallbackCommand;
+use App\Common\Console\Monitor\QueueClickMonitorCommand;
 use App\Common\Console\Queue\QueueClickCommand;
 use App\Common\Helpers\Functions;
 use App\Console\Commands\Ks\KsRefreshAccessTokenCommand;
@@ -28,7 +29,8 @@ class Kernel extends ConsoleKernel
 
         // 队列
         QueueClickCommand::class,
-
+        // 监控
+        QueueClickMonitorCommand::class,
 
 
         // 转化回传
@@ -97,6 +99,9 @@ class Kernel extends ConsoleKernel
         if(Functions::isProduction()){
             // 刷新 access_token
             $schedule->command('ks:refresh_access_token')->cron('0 */8 * * *');
+
+            // 监控
+            $schedule->command('monitor:click_queue')->cron('* * * * *');
         }
     }
 }

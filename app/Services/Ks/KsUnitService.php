@@ -2,11 +2,13 @@
 
 namespace App\Services\Ks;
 
+use App\Common\Enums\StatusEnum;
 use App\Common\Helpers\Functions;
 use App\Common\Services\BaseService;
 use App\Models\Ks\KsUnitModel;
 use App\Sdks\KuaiShou\KuaiShou;
 use App\Services\KuaiShouService;
+use Exception;
 
 class KsUnitService extends BaseService
 {
@@ -89,5 +91,40 @@ class KsUnitService extends BaseService
         $ret = $ksAdUnit->save();
 
         return $ret;
+    }
+
+
+    /**
+     * 更新投放状态
+     * @param array $unitIds
+     * @param string $putStatus
+     * @return bool
+     * @throws Exception
+     */
+    public function updatePutStatus(array $unitIds,string $putStatus): bool
+    {
+        $ksAdUnitModel = new KsUnitModel();
+        $ksAdUnits = $ksAdUnitModel->whereIn('id', $unitIds)->get();
+
+        $statusVal = $putStatus == StatusEnum::DISABLE ? 2 : 1;
+        $arr = [];
+
+        foreach ($ksAdUnits as $ksAdUnit){
+            $arr[$ksAdUnit->account_id][] = $ksAdUnit->id;
+        }
+        $accountGroup = KuaiShouService::getAccountGroupByToken(array_keys($arr));
+
+        foreach ($accountGroup as $token => $accountList){
+            $ksSdk = KuaiShou::init($token);
+            foreach ($accountList as $account){
+                $accountId = $account['account_id'];
+                $unitChunk = array_chunk($arr[$accountId],10);
+                foreach ($unitChunk as $unitChunkIds){
+                    $ksSdk->adUnit()->updateStatus($accountId,$unitChunkIds,$statusVal);
+                    (new KsUnitModel())->whereIn('id',$unitChunkIds)->update(['put_status'=>$statusVal]);
+                }
+            }
+        }
+        return true;
     }
 }

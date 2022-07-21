@@ -3,8 +3,12 @@
 namespace App\Http\Controllers\Admin\Ks;
 
 
+use App\Common\Enums\StatusEnum;
+use App\Common\Helpers\Functions;
 use App\Common\Models\ConvertCallbackStrategyModel;
 use App\Models\Ks\KsUnitModel;
+use App\Services\Ks\KsUnitService;
+use Illuminate\Http\Request;
 
 class KsUnitController extends KsController
 {
@@ -86,5 +90,20 @@ class KsUnitController extends KsController
 
             //$builder->where('parent_id', '<>', 0);
         });
+    }
+
+
+    public function batchUpdatePutStatus(Request $request){
+        $param = $request->post();
+        $this->validRule($param, [
+            'unit_ids' => 'required|array',
+            'status' => 'required'
+        ]);
+
+        Functions::hasEnum(StatusEnum::class,$param['status']);
+
+        (new KsUnitService())->updatePutStatus($param['unit_ids'],$param['status']);
+
+        return $this->success();
     }
 }

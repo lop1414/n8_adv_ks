@@ -40,4 +40,24 @@ class AdUnitApi extends MultipleApi
 
         return $this->multipleRequest($uri, $params, 'POST');
     }
+
+
+    public function updateStatus(array $param = []): array
+    {
+
+        // 验证参数
+        $requiredParam = ['advertiser_id'];
+        $this->checkRequiredParam($requiredParam,$param);
+
+        // 构建Request对象
+        $resourcePath = '/v1/ad_unit/update/status';
+        $uri = $this->config->getHost() . $resourcePath;
+        $headers = [];
+        $httpBody = json_encode($param);
+        $request = new Request('POST', $uri,$headers,$httpBody);
+
+        // 请求
+        $response = $this->client->send($request);
+        return $this->handleResponse($response);
+    }
 }

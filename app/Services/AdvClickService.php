@@ -8,6 +8,7 @@ use App\Common\Models\ClickModel;
 use App\Common\Services\ClickService;
 use App\Common\Tools\CustomException;
 use App\Enums\QueueEnums;
+use Illuminate\Support\Facades\DB;
 use Jenssegers\Agent\Agent;
 
 class AdvClickService extends ClickService
@@ -151,5 +152,31 @@ class AdvClickService extends ClickService
         $ret = $clickModel->save();
 
         return $ret;
+    }
+
+    /**
+     * 清除无效点击
+     * @param string $dateTime
+     * @return array
+     */
+    public function cleanInvalidClick(string $dateTime): array
+    {
+        $i = 0;
+        $clickModel = new ClickModel();
+        do{
+            $list = $clickModel
+                ->where('click_at','<=',$dateTime)
+                ->whereRaw("id NOT IN ( SELECT click_id FROM convert_callbacks)")
+                ->limit(100)
+                ->get();
+            foreach ($list as $item){
+                $item->delete();
+                $i++;
+            }
+        }while(!$list->isEmpty());
+
+        return [
+            'del_count' => $i
+        ];
     }
 }

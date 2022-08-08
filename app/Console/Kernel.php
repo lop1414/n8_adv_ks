@@ -6,6 +6,7 @@ use App\Common\Console\ConvertCallbackCommand;
 use App\Common\Console\Monitor\QueueClickMonitorCommand;
 use App\Common\Console\Queue\QueueClickCommand;
 use App\Common\Helpers\Functions;
+use App\Console\Commands\CleanInvalidClickDataCommand;
 use App\Console\Commands\Ks\KsRefreshAccessTokenCommand;
 use App\Console\Commands\Ks\KsSyncCommand;
 use App\Console\Commands\Ks\KsSyncVideoCommand;
@@ -52,6 +53,9 @@ class Kernel extends ConsoleKernel
 
         // 同步渠道-广告组关联
         SyncChannelUnitCommand::class,
+
+        // 清除无效点击
+        CleanInvalidClickDataCommand::class
     ];
 
     /**
@@ -102,6 +106,8 @@ class Kernel extends ConsoleKernel
 
             // 监控
             $schedule->command('monitor:click_queue')->cron('* * * * *');
+
+//            $schedule->command('clean_invalid_click_data  --date=today')->cron('* 1 * * *');
         }
     }
 }

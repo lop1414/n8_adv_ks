@@ -64,8 +64,9 @@ class CleanInvalidClickDataCommand extends BaseCommand
         $advClickService = new AdvClickService();
         foreach($dateList as $date){
             $dateTime = date('Y-m-d H:i:s',strtotime($date) - 60*60*24*7);
+            echo $dateTime."\n";
             $data = $advClickService->cleanInvalidClick($dateTime);
-            echo $dateTime.' 已删除：'.$data['del_count'] . "\n";
+            echo '    已删除：'.$data['del_count'] . "\n";
         }
 
         return true;

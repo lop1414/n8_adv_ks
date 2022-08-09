@@ -167,12 +167,13 @@ class AdvClickService extends ClickService
             $list = $clickModel
                 ->where('click_at','<=',$dateTime)
                 ->whereRaw("id NOT IN ( SELECT click_id FROM convert_callbacks)")
-                ->limit(1000)
+                ->limit(100)
                 ->get();
             foreach ($list as $item){
                 $item->delete();
                 $i++;
             }
+            sleep(1);
         }while(!$list->isEmpty());
 
         return [

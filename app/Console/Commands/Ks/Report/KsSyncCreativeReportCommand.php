@@ -69,6 +69,7 @@ class KsSyncCreativeReportCommand extends BaseCommand
         $ksProgramCreativeReportService->sync($param);
 
         // 程序化创意 分析素材
+        Functions::consoleDump('程序化创意 分析素材');
         $dateRange = Functions::getDateRange($param['date']);
         $dateList = Functions::getDateListByRange($dateRange);
         foreach ($dateList as $date){

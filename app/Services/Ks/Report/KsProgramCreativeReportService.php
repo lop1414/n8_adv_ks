@@ -33,6 +33,7 @@ class KsProgramCreativeReportService extends KsReportService
             $list = $model
                 ->where('id','>',$lastId)
                 ->whereBetween('stat_datetime', ["{$date} 00:00:00", "{$date} 23:59:59"])
+                ->groupBy('photo_id')
                 ->skip(0)
                 ->take(1000)
                 ->orderBy('id')

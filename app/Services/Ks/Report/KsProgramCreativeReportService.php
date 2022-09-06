@@ -39,7 +39,6 @@ class KsProgramCreativeReportService extends KsReportService
                 ->groupBy('photo_id')
                 ->skip(0)
                 ->take(1000)
-                ->orderBy('id')
                 ->get();
 
             foreach ($list as $item){

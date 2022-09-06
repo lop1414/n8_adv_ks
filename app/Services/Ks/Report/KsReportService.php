@@ -49,14 +49,14 @@ class KsReportService extends BaseService
 
 
             // 在跑账户
-            /*if(!empty($option['running'])){
-                $runningAccountIds = $this->getRunningAccountIds();
+            if(!empty($option['running'])){
+                $runningAccountIds = (new KuaiShouService())->getRunningAccountIds();
                 if(!empty($accountIds)){
                     $accountIds = array_intersect($accountIds, $runningAccountIds);
                 }else{
                     $accountIds = $runningAccountIds;
                 }
-            }*/
+            }
 
             list($startDate,$endDate) = Functions::getDateRange($option['date']);
 

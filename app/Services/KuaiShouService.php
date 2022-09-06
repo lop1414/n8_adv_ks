@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Common\Enums\StatusEnum;
 use App\Common\Services\BaseService;
 use App\Common\Tools\CustomException;
+use App\Enums\Ks\KsAdUnitPutStatusEnum;
 use App\Models\Ks\KsAccountModel;
 use App\Models\Ks\KsUserModel;
 use App\Sdks\KuaiShou\Kernel\ApiContainer;
@@ -125,5 +126,29 @@ class KuaiShouService extends BaseService
         $page += 1;
         $tmp = self::multiGet($tmpContainer,$nextPageAccountIds,$param,$page,$pageSize);
         return array_merge($tmp, $list);
+    }
+
+
+    /**
+     * @return mixed
+     * 获取在跑账户id
+     */
+    public function getRunningAccountIds(){
+        // 在跑状态
+        $runningStatus = [
+            KsAdUnitPutStatusEnum::AD_UNIT_PUT_STATUS_DELIVERY_OK,
+        ];
+        $runningStatusStr = implode("','", $runningStatus);
+
+        $ksAccountModel = new KsAccountModel();
+        $ksAccountIds = $ksAccountModel->whereRaw("
+            account_id IN (
+                SELECT account_id FROM ks_units
+                    WHERE `put_status` IN ('{$runningStatusStr}')
+                    GROUP BY account_id
+            )
+        ")->pluck('account_id');
+
+        return $ksAccountIds->toArray();
     }
 }

@@ -3,9 +3,7 @@
 namespace App\Console\Commands\Ks\Report;
 
 use App\Common\Console\BaseCommand;
-use App\Common\Helpers\Functions;
 use App\Services\Ks\Report\KsCreativeReportService;
-use App\Services\Ks\Report\KsProgramCreativeReportService;
 
 class KsSyncCreativeReportCommand extends BaseCommand
 {
@@ -20,7 +18,7 @@ class KsSyncCreativeReportCommand extends BaseCommand
      *
      * @var string
      */
-    protected $description = '同步快手创意报表';
+    protected $description = '同步快手自定义创意报表';
 
     /**
      * Create a new command instance.
@@ -60,21 +58,8 @@ class KsSyncCreativeReportCommand extends BaseCommand
      * 执行
      */
     protected function exec($param){
-        Functions::consoleDump('同步自定义创意消耗');
         $ksCreativeReportService = new KsCreativeReportService();
         $ksCreativeReportService->sync($param);
-
-        Functions::consoleDump('同步程序化创意消耗');
-        $ksProgramCreativeReportService = new KsProgramCreativeReportService();
-        $ksProgramCreativeReportService->sync($param);
-
-        // 程序化创意 分析素材
-        Functions::consoleDump('程序化创意 分析素材');
-        $dateRange = Functions::getDateRange($param['date']);
-        $dateList = Functions::getDateListByRange($dateRange);
-        foreach ($dateList as $date){
-            $ksProgramCreativeReportService->creativeMaterial($date);
-        }
 
         return true;
     }

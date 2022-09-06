@@ -33,7 +33,6 @@ class KsProgramCreativeReportService extends KsReportService
         $ksVideoModel = new KsVideoModel();
         $list = $model
             ->select('photo_id','creative_id')
-            ->where('id','>',$lastId)
             ->whereBetween('stat_datetime', ["{$date} 00:00:00", "{$date} 23:59:59"])
             ->groupBy('photo_id','creative_id')
             ->get();

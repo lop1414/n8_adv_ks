@@ -3,12 +3,15 @@
 namespace App\Services;
 
 use App\Common\Enums\StatusEnum;
+use App\Common\Helpers\Functions;
 use App\Common\Services\BaseService;
 use App\Common\Tools\CustomException;
 use App\Enums\Ks\KsAdUnitPutStatusEnum;
 use App\Models\Ks\KsAccountModel;
 use App\Models\Ks\KsUserModel;
+use App\Models\Ks\Report\KsAccountReportModel;
 use App\Sdks\KuaiShou\Kernel\ApiContainer;
+use Illuminate\Support\Facades\DB;
 
 
 class KuaiShouService extends BaseService
@@ -150,5 +153,36 @@ class KuaiShouService extends BaseService
         ")->pluck('account_id');
 
         return $ksAccountIds->toArray();
+    }
+
+
+    /**
+     * @param $accountIds
+     * @param null $date
+     * @return mixed
+     * @throws CustomException
+     * 获取存在历史消耗账户
+     */
+    public function getHasHistoryCostAccount($accountIds, $date = null){
+        if(empty($date)){
+            $date = date('Y-m-d');
+        }else{
+            Functions::dateCheck($date);
+        }
+        $startDate = date('Y-m-d', strtotime('-3 days', strtotime($date)));
+
+        $ksAccountReportModel = new KsAccountReportModel();
+        $builder = $ksAccountReportModel->whereBetween('stat_datetime', ["{$startDate} 00:00:00", "{$date} 23:59:59"]);
+
+        if(!empty($accountIds)){
+            $builder->whereIn('account_id', $accountIds);
+        }
+
+        $report = $builder->groupBy('account_id')
+            ->orderBy('charge', 'DESC')
+            ->select(DB::raw("account_id, SUM(charge) charge"))
+            ->pluck('account_id');
+
+        return $report->toArray();
     }
 }

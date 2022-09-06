@@ -12,7 +12,7 @@ class KsSyncAccountReportCommand extends BaseCommand
      * 命令行执行命令
      * @var string
      */
-    protected $signature = 'ks:sync_account_report  {--date=} {--account_ids=} {--delete=} {--running=} {--key_suffix=}';
+    protected $signature = 'ks:sync_account_report  {--date=} {--account_ids=} {--delete=} {--has_history_cost=} {--running=} {--key_suffix=}';
 
     /**
      * 命令描述
@@ -49,9 +49,9 @@ class KsSyncAccountReportCommand extends BaseCommand
         }
 
         // key 日期
-//        if(!empty($param['date'])){
-//            $lockKey .= '_'. Functions::getDate($param['date']);
-//        }
+        if(!empty($param['date'])){
+            $lockKey .= '_'. Functions::getDate($param['date']);
+        }
 
         // key 后缀
         if(!empty($param['key_suffix'])){

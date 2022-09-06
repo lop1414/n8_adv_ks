@@ -76,6 +76,11 @@ class KsReportService extends BaseService
                 $accountIds = $this->runByAccountCharge($accountIds);
             }
 
+            if(!empty($option['has_history_cost'])){
+                // 历史消耗
+                $accountIds = (new KuaiShouService())->getHasHistoryCostAccount($accountIds);
+            }
+
             // 获取子账户组
             $accountGroup = KuaiShouService::getAccountGroupByToken($accountIds);
 

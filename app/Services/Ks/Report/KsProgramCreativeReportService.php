@@ -34,7 +34,7 @@ class KsProgramCreativeReportService extends KsReportService
         $list = $model
             ->select('account_id','campaign_id','unit_id','photo_id','creative_id')
             ->whereBetween('stat_datetime', ["{$date} 00:00:00", "{$date} 23:59:59"])
-            ->groupBy('photo_id','creative_id')
+            ->groupBy('account_id','campaign_id','unit_id','photo_id','creative_id')
             ->get();
 
         foreach ($list as $item){

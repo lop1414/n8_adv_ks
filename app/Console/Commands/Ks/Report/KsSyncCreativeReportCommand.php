@@ -60,8 +60,8 @@ class KsSyncCreativeReportCommand extends BaseCommand
      * 执行
      */
     protected function exec($param){
-        $ksCreativeReportService = new KsCreativeReportService();
-        $ksCreativeReportService->sync($param);
+//        $ksCreativeReportService = new KsCreativeReportService();
+//        $ksCreativeReportService->sync($param);
 
         $ksProgramCreativeReportService = new KsProgramCreativeReportService();
         $ksProgramCreativeReportService->sync($param);

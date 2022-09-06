@@ -83,6 +83,8 @@ class KsReportService extends BaseService
 
             // 获取子账户组
             $accountGroup = KuaiShouService::getAccountGroupByToken($accountIds);
+            Functions::consoleDump('账户数:'. count($accountIds));
+
 
             $pageSize = 200;
             $charge = 0;

@@ -60,9 +60,11 @@ class KsSyncCreativeReportCommand extends BaseCommand
      * 执行
      */
     protected function exec($param){
+//        Functions::consoleDump('同步自定义创意消耗');
 //        $ksCreativeReportService = new KsCreativeReportService();
 //        $ksCreativeReportService->sync($param);
 
+        Functions::consoleDump('同步程序化创意消耗');
         $ksProgramCreativeReportService = new KsProgramCreativeReportService();
         $ksProgramCreativeReportService->sync($param);
 

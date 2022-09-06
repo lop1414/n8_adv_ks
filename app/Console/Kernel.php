@@ -13,6 +13,8 @@ use App\Console\Commands\Ks\KsSyncVideoCommand;
 use App\Console\Commands\Ks\Report\KsSyncAccountReportCommand;
 use App\Console\Commands\Ks\Report\KsSyncCreativeReportCommand;
 use App\Console\Commands\Ks\Report\KsSyncMaterialReportCommand;
+use App\Console\Commands\Ks\Report\KsSyncProgramCreativeReportCommand;
+use App\Console\Commands\MaterialCreativeCommand;
 use App\Console\Commands\SyncChannelUnitCommand;
 use App\Console\Commands\Task\TaskKsSyncCommand;
 use App\Console\Commands\Task\TaskKsVideoUploadCommand;
@@ -48,11 +50,15 @@ class Kernel extends ConsoleKernel
         // 快手
         KsSyncAccountReportCommand::class,
         KsSyncCreativeReportCommand::class,
+        KsSyncProgramCreativeReportCommand::class,
         KsSyncMaterialReportCommand::class,
         KsRefreshAccessTokenCommand::class,
 
         // 同步渠道-广告组关联
         SyncChannelUnitCommand::class,
+
+        // 分析素材创意关联
+        MaterialCreativeCommand::class,
 
         // 清除无效点击
         CleanInvalidClickDataCommand::class
@@ -90,7 +96,10 @@ class Kernel extends ConsoleKernel
         $schedule->command('ks:sync_account_report --has_history_cost=1 --date=today')->cron('*/2 * * * *');
         $schedule->command('ks:sync_account_report --date=yesterday --key_suffix=yesterday')->cron('15-20 11 * * *');
 
-        // 快手创意报表同步
+        // 快手程序化创意报表同步
+        $schedule->command('ks:sync_program_creative_report --date=today --run_by_account_charge=1 --multi_chunk_size=3')->cron('*/2 * * * *');
+        $schedule->command('ks:sync_program_creative_report --date=yesterday --key_suffix=yesterday')->cron('10-15 10,15 * * *');
+        // 快手自定义创意报表同步
         $schedule->command('ks:sync_creative_report --date=today --run_by_account_charge=1 --multi_chunk_size=3')->cron('*/2 * * * *');
         $schedule->command('ks:sync_creative_report --date=yesterday --key_suffix=yesterday')->cron('10-15 10,15 * * *');
 
@@ -98,6 +107,9 @@ class Kernel extends ConsoleKernel
         $schedule->command('ks:sync_material_report --date=today --run_by_account_charge=1 --multi_chunk_size=3')->cron('*/10 * * * *');
         $schedule->command('ks:sync_material_report --date=yesterday')->cron('10 9,15 * * *');
 
+        //分析素材创意关联
+        $schedule->command('material_creative --date=today')->cron('*/10 * * * *');
+        $schedule->command('material_creative --date=yesterday')->cron('10-15 10 * * *');
 
         // 正式
         if(Functions::isProduction()){

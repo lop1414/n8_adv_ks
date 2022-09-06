@@ -3,6 +3,7 @@
 namespace App\Services\Ks\Report;
 
 use App\Common\Enums\MaterialTypeEnums;
+use App\Common\Helpers\Functions;
 use App\Datas\KsMaterialData;
 use App\Models\Ks\KsMaterialProgramCreativeModel;
 use App\Models\Ks\KsVideoModel;
@@ -25,6 +26,8 @@ class KsProgramCreativeReportService extends KsReportService
 
     // 创意素材分析
     public function creativeMaterial($date){
+        $t = microtime(1);
+
         $model = new KsProgramCreativeReportModel();
         $ksMaterialData = new KsMaterialData();
         $ksVideoModel = new KsVideoModel();
@@ -79,5 +82,8 @@ class KsProgramCreativeReportService extends KsReportService
 
 
         }while(!$list->isEmpty());
+
+        $t = microtime(1) - $t;
+        Functions::consoleDump($t);
     }
 }

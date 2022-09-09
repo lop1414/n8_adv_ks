@@ -94,6 +94,7 @@ class Kernel extends ConsoleKernel
 
         // 快手账户报表同步
         $schedule->command('ks:sync_account_report --has_history_cost=1 --date=today')->cron('*/2 * * * *');
+        $schedule->command('ks:sync_account_report --date=today')->cron('*/10 * * * *');
         $schedule->command('ks:sync_account_report --date=yesterday --key_suffix=yesterday')->cron('15-20 11 * * *');
 
         // 快手程序化创意报表同步

@@ -108,6 +108,11 @@ $router->group([
     $router->group(['prefix' => 'convert_callback'], function () use ($router) {
         $router->post('callback', '\\App\Common\Controllers\Admin\ConvertCallbackController@callback');
     });
+
+    // 自定义转化回传
+    $router->group(['prefix' => 'custom_convert_callback'], function () use ($router) {
+        $router->post('create', '\\App\Common\Controllers\Admin\CustomConvertCallbackController@create');
+    });
 });
 
 
@@ -125,6 +130,11 @@ $router->group([
     // 转化回传
     $router->group(['prefix' => 'convert_callback'], function () use ($router) {
         $router->post('get', '\\App\Common\Controllers\Front\ConvertCallbackController@get');
+    });
+
+    // 自定义转化回传
+    $router->group(['prefix' => 'custom_convert_callback'], function () use ($router) {
+        $router->post('get', '\\App\Common\Controllers\Front\CustomConvertCallbackController@get');
     });
 
     // 渠道-广告组

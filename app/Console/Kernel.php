@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use App\Common\Console\ConvertCallbackCommand;
+use App\Common\Console\CustomConvertCallbackCommand;
 use App\Common\Console\Monitor\QueueClickMonitorCommand;
 use App\Common\Console\Queue\QueueClickCommand;
 use App\Common\Helpers\Functions;
@@ -38,6 +39,8 @@ class Kernel extends ConsoleKernel
 
         // 转化回传
         ConvertCallbackCommand::class,
+        // 自定义转化回传
+        CustomConvertCallbackCommand::class,
 
         // 同步
         KsSyncVideoCommand::class,
@@ -77,6 +80,9 @@ class Kernel extends ConsoleKernel
 
         // 转化上报
         $schedule->command('convert_callback')->cron('* * * * *');
+
+        // 自定义转化上报
+        $schedule->command('custom_convert_callback')->cron('* * * * *');
 
         // 同步渠道-广告组
         $schedule->command('sync_channel_unit --date=today')->cron('*/2 * * * *');

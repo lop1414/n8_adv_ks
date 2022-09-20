@@ -116,7 +116,7 @@ $router->group([
 
     // 渠道-广告组
     $router->group(['prefix' => 'channel_ad'], function () use ($router) {
-        $router->post('read', 'Admin\ChannelAdController@read');
+        $router->post('read', 'Admin\ChannelUnitController@read');
     });
 });
 

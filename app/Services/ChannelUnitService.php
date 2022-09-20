@@ -299,4 +299,48 @@ class ChannelUnitService extends BaseService
             ]);
         }
     }
+
+
+    /**
+     * @param $data
+     * @return array
+     * @throws CustomException
+     * 详情
+     */
+    public function read($data){
+        $this->validRule($data, [
+            'channel_id' => 'required|integer'
+        ]);
+
+        $channelUnitModel = new ChannelUnitModel();
+        $unitIds = $channelUnitModel->where('channel_id', $data['channel_id'])->pluck('unit_id')->toArray();
+
+        $builder = new KsUnitModel();
+        $builder = $builder->whereIn('id', $unitIds);
+
+        // 过滤
+        if(!empty($data['filtering'])){
+            $builder = $builder->filtering($data['filtering']);
+        }
+
+        $units = $builder->get();
+
+        foreach($units as $unit){
+
+            if(!empty($unit->ks_unit_extends)){
+                $unit->convert_callback_strategy = $unit->ks_unit_extends->convert_callback_strategy;
+                $unit->convert_callback_strategy_group = $unit->ks_unit_extends->convert_callback_strategy_group;
+
+                unset($unit->ks_unit_extends);
+            }else{
+                $unit->convert_callback_strategy = null;
+                $unit->convert_callback_strategy_group = null;
+            }
+        }
+
+        return [
+            'channel_id' => $data['channel_id'],
+            'list' => $units
+        ];
+    }
 }

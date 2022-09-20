@@ -36,4 +36,12 @@ class KsUnitExtendModel extends BaseModel
     public function convert_callback_strategy(){
         return $this->belongsTo('App\Common\Models\ConvertCallbackStrategyModel', 'convert_callback_strategy_id', 'id');
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * 关联回传策略组模型 一对一
+     */
+    public function convert_callback_strategy_group(){
+        return $this->belongsTo('App\Common\Models\ConvertCallbackStrategyGroupModel', 'convert_callback_strategy_group_id', 'id');
+    }
 }

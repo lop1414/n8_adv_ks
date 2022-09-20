@@ -113,6 +113,11 @@ $router->group([
     $router->group(['prefix' => 'custom_convert_callback'], function () use ($router) {
         $router->post('create', '\\App\Common\Controllers\Admin\CustomConvertCallbackController@create');
     });
+
+    // 渠道-广告组
+    $router->group(['prefix' => 'channel_ad'], function () use ($router) {
+        $router->post('read', 'Admin\ChannelAdController@read');
+    });
 });
 
 

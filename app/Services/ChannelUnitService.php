@@ -326,7 +326,7 @@ class ChannelUnitService extends BaseService
         $units = $builder->get();
 
         foreach($units as $unit){
-
+            unset($unit->extends);
             if(!empty($unit->ks_unit_extends)){
                 $unit->convert_callback_strategy = $unit->ks_unit_extends->convert_callback_strategy;
                 $unit->convert_callback_strategy_group = $unit->ks_unit_extends->convert_callback_strategy_group;

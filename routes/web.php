@@ -98,6 +98,16 @@ $router->group([
         $router->post('get', '\\App\Common\Controllers\Admin\ConvertCallbackStrategyController@get');
         $router->post('read', '\\App\Common\Controllers\Admin\ConvertCallbackStrategyController@read');
     });
+
+    // 回传策略组
+    $router->group(['prefix' => 'convert_callback_strategy_group'], function () use ($router) {
+        $router->post('create', '\\App\Common\Controllers\Admin\ConvertCallbackStrategyGroupController@create');
+        $router->post('update', '\\App\Common\Controllers\Admin\ConvertCallbackStrategyGroupController@update');
+        $router->post('select', '\\App\Common\Controllers\Admin\ConvertCallbackStrategyGroupController@select');
+        $router->post('get', '\\App\Common\Controllers\Admin\ConvertCallbackStrategyGroupController@get');
+        $router->post('read', '\\App\Common\Controllers\Admin\ConvertCallbackStrategyGroupController@read');
+    });
+
     // 点击
     $router->group(['prefix' => 'click'], function () use ($router) {
         $router->post('select', 'Admin\ClickController@select');

@@ -323,9 +323,9 @@ class ChannelUnitService extends BaseService
             $builder = $builder->filtering($data['filtering']);
         }
 
-        $units = $builder->get();
+        $res = $builder->listPage($data['page'] ?? 1, $data['pageSize'] ?? 10);;
 
-        foreach($units as $unit){
+        foreach($res['list'] as $unit){
             unset($unit->extends);
             if(!empty($unit->ks_unit_extends)){
                 $unit->convert_callback_strategy = $unit->ks_unit_extends->convert_callback_strategy;
@@ -338,9 +338,7 @@ class ChannelUnitService extends BaseService
             }
         }
 
-        return [
-            'channel_id' => $data['channel_id'],
-            'list' => $units
-        ];
+        $res['channel_id'] = $data['channel_id'];
+        return $res;
     }
 }

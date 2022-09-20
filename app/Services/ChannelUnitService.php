@@ -333,6 +333,7 @@ class ChannelUnitService extends BaseService
         foreach($res['list'] as $unit){
             unset($unit->extends);
 
+            $unit->ks_account;
             $unit->campaign;
             $unit->admin_name = $adminMap[$unit->ks_account->admin_id]['name'];
             if(!empty($unit->ks_unit_extends)){

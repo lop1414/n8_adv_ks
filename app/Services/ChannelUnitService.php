@@ -7,6 +7,7 @@ use App\Common\Enums\PlatformEnum;
 use App\Common\Helpers\Advs;
 use App\Common\Helpers\Functions;
 use App\Common\Services\BaseService;
+use App\Common\Services\SystemApi\CenterApiService;
 use App\Common\Services\SystemApi\UnionApiService;
 use App\Common\Tools\CustomException;
 use App\Models\ChannelUnitLogModel;
@@ -323,10 +324,17 @@ class ChannelUnitService extends BaseService
             $builder = $builder->filtering($data['filtering']);
         }
 
-        $res = $builder->listPage($data['page'] ?? 1, $data['pageSize'] ?? 10);;
+        $res = $builder->listPage($data['page'] ?? 1, $data['pageSize'] ?? 10);
+
+
+        $adminMap = (new CenterApiService())->getAdminUserMap();
+
 
         foreach($res['list'] as $unit){
             unset($unit->extends);
+
+            $unit->campaign;
+            $unit->admin_name = $adminMap[$unit->ks_account->admin_id]['name'];
             if(!empty($unit->ks_unit_extends)){
                 $unit->convert_callback_strategy = $unit->ks_unit_extends->convert_callback_strategy;
                 $unit->convert_callback_strategy_group = $unit->ks_unit_extends->convert_callback_strategy_group;

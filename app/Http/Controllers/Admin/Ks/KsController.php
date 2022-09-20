@@ -21,7 +21,7 @@ class KsController extends AdminController
     public function __construct()
     {
         parent::__construct();
-        $this->adminMap = $this->getAdminUserMap();
+        $this->adminMap = (new CenterApiService())->getAdminUserMap();
     }
 
     /**
@@ -173,13 +173,5 @@ class KsController extends AdminController
         }
 
         return $ksAccount;
-    }
-
-    public function getAdminUserMap($filter = []){
-        $adminUsers = (new CenterApiService())->apiGetAdminUsers($filter);
-        $tmp = array_column($adminUsers,null,'id');
-        // 兼容没有admin_id
-        $tmp[0] = ['name' => ''];
-        return $tmp;
     }
 }

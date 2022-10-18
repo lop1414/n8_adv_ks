@@ -115,7 +115,7 @@ class KsVideoService extends BaseService
         $ksVideo->width = $video['width'];
         $ksVideo->height = $video['height'];
         $ksVideo->url = $video['url'] ?? '';
-        $ksVideo->cover_url = $video['cover_url'];
+        $ksVideo->cover_url = $video['cover_url'] ?? '';
         $ksVideo->signature = $video['signature'];
         $ksVideo->upload_time = $video['upload_time'];
         $ksVideo->photo_name = $video['photo_name'];

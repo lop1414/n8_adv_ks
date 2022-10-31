@@ -324,7 +324,7 @@ class ChannelUnitService extends BaseService
             $builder = $builder->filtering($data['filtering']);
         }
 
-        $res = $builder->listPage($data['page'] ?? 1, $data['pageSize'] ?? 10);
+        $res = $builder->listPage($data['page'] ?? 1, $data['page_size'] ?? 10);
 
 
         $adminMap = (new CenterApiService())->getAdminUserMap();

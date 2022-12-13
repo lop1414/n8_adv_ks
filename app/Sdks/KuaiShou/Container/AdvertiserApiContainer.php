@@ -45,4 +45,25 @@ class AdvertiserApiContainer extends ApiContainer
             return $this->apiInstance->info($params);
         });
     }
+
+
+    /**
+     * 批量获取广告账户流水信息
+     * @param array $advertiserIds
+     * @param array $params
+     * @return array
+     */
+    public function multipleGet(array $advertiserIds, array $params = []): array
+    {
+        $tmpParams = [];
+        foreach ($advertiserIds as $advertiserId){
+            $tmpParams[] = array_merge($params,['advertiser_id' => $advertiserId]);
+        }
+
+        return $this->handleMiddleware('multipleGet', $tmpParams, function(MiddlewareRequest $request) {
+
+            $params = $request->getApiMethodParams();
+            return $this->apiInstance->multipleGetFundDailyFlows($params);
+        });
+    }
 }

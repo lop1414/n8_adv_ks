@@ -48,4 +48,13 @@ class AdvertiserApi extends MultipleApi
         $response = $this->client->send($request);
         return $this->handleResponse($response);
     }
+
+
+    public function multipleGetFundDailyFlows(array $params = []): array
+    {
+        $resourcePath = '/v1/advertiser/fund/daily_flows';
+        $uri = $this->config->getHost() . $resourcePath;
+
+        return $this->multipleRequest($uri, $params, 'POST');
+    }
 }

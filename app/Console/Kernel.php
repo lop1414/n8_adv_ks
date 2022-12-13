@@ -12,6 +12,7 @@ use App\Console\Commands\Ks\KsRefreshAccessTokenCommand;
 use App\Console\Commands\Ks\KsSyncCommand;
 use App\Console\Commands\Ks\KsSyncVideoCommand;
 use App\Console\Commands\Ks\Report\KsSyncAccountReportCommand;
+use App\Console\Commands\Ks\Report\KsAccountFundDailyFlowCommand;
 use App\Console\Commands\Ks\Report\KsSyncCreativeReportCommand;
 use App\Console\Commands\Ks\Report\KsSyncMaterialReportCommand;
 use App\Console\Commands\Ks\Report\KsSyncProgramCreativeReportCommand;
@@ -56,6 +57,7 @@ class Kernel extends ConsoleKernel
         KsSyncProgramCreativeReportCommand::class,
         KsSyncMaterialReportCommand::class,
         KsRefreshAccessTokenCommand::class,
+        KsAccountFundDailyFlowCommand::class,
 
         // 同步渠道-广告组关联
         SyncChannelUnitCommand::class,
@@ -102,6 +104,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('ks:sync_account_report --has_history_cost=1 --date=today')->cron('*/2 * * * *');
         $schedule->command('ks:sync_account_report --date=today')->cron('15 * * * *');
         $schedule->command('ks:sync_account_report --date=yesterday --key_suffix=yesterday')->cron('15-20 11 * * *');
+        // 快手账户流水信息
+        $schedule->command('ks:sync_account_fund_daily_flow --date=yesterday --key_suffix=yesterday')->cron('* 2 * * *');
 
         // 快手程序化创意报表同步
         $schedule->command('ks:sync_program_creative_report --date=today --run_by_account_charge=1 --multi_chunk_size=3')->cron('*/2 * * * *');

@@ -83,7 +83,6 @@ class KsReportService extends BaseService
 
             // 获取子账户组
             $accountGroup = KuaiShouService::getAccountGroupByToken($accountIds);
-            Functions::consoleDump('账户数:'. count($accountIds));
 
 
             $pageSize = 200;
@@ -101,16 +100,16 @@ class KsReportService extends BaseService
                     $saveData = [];
                     $accountIds = array_column($accounts,'account_id');
                     $data = KuaiShouService::multiGet($this->getContainer($ksSdk),$accountIds,$param,1,$pageSize);
+
                     foreach($data as $item) {
-                        $charge += $item['charge'];
 
                         if(!$this->itemValid($item)){
                             continue;
                         }
 
-                        $item['stat_datetime'] = "{$item['stat_date']} {$item['stat_hour']}:00:00";
-                        $item['extends'] = json_encode($item);
-                        $item['charge'] = bcmul($item['charge'],1000);
+                        $this->itemFilter($item);
+
+                        $charge += $item['charge'];
                         $saveData[] = $item;
                     }
                     $this->batchSave($saveData);
@@ -124,7 +123,7 @@ class KsReportService extends BaseService
         }catch (\Exception $e){
             throw new CustomException([
                 'code' => 'SYNC_REPORT_ERROR',
-                'message' => '同步报表异常',
+                'message' => '同步报表异常,('.$e->getMessage().')',
                 'log' => true,
                 'data' => [
                     'option' => $option
@@ -155,6 +154,12 @@ class KsReportService extends BaseService
         }
 
         return $valid;
+    }
+
+    protected function itemFilter(&$item){
+        $item['stat_datetime'] = "{$item['stat_date']} {$item['stat_hour']}:00:00";
+        $item['extends'] = json_encode($item);
+        $item['charge'] = bcmul($item['charge'],1000);
     }
 
 

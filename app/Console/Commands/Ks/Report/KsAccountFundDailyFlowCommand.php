@@ -43,7 +43,7 @@ class KsAccountFundDailyFlowCommand extends BaseCommand
         }
 
         // 锁 key
-        $lockKey = 'ks_sync_agent_report';
+        $lockKey = 'sync_account_fund_daily_flow';
         if(!empty($param['running'])){
             $lockKey .= '_running';
         }

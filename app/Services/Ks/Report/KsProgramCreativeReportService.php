@@ -77,4 +77,29 @@ class KsProgramCreativeReportService extends KsReportService
         $t = microtime(1) - $t;
         Functions::consoleDump($t);
     }
+
+
+    /**
+     * @param $item
+     * @return bool
+     * 校验
+     */
+    protected function itemValid($item): bool
+    {
+        $valid = true;
+
+        if(
+            empty($item['charge']) &&
+            empty($item['show']) &&
+            empty($item['photo_click']) &&
+            empty($item['aclick']) &&
+            empty($item['bclick']) &&
+            empty($item['unit_id']) &&
+            empty($item['creative_id'])
+        ){
+            $valid = false;
+        }
+
+        return $valid;
+    }
 }
